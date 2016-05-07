@@ -1,8 +1,15 @@
 package model;
 
+import java.io.Serializable;
+
 /** Class that provides the functionality for a registered user. */
-public class RegisteredUser {
+public class RegisteredUser implements Serializable {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -7126786747221081727L;
+
     /** The user's username. */
     private String username;
     
