@@ -1,10 +1,41 @@
 package model;
 
-/** A child class of User that provides functionality for a registered user. */
-public class RegisteredUser extends AbstractUser{
+/** Class that provides the functionality for a registered user. */
+public class RegisteredUser {
+    
+    /** The user's username. */
+    private String username;
+    
+    /** The user's first name. */
+    private String firstName;
+    
+    /** The user's last name. */
+    private String lastName;
 
     /** Constructs a RegisteredUser object. */
-    public RegisteredUser() {
-        super();
+    public RegisteredUser(final String uname, final String fname, final String lname) {
+        username = uname;
+        firstName = fname;
+        lastName = lname;
+    }
+    
+    /** Returns the user's username. */
+    public String getUsername() {
+        return username;
+    }
+    
+    /** Returns the user's first name. */
+    public String getFirstName() {
+        return firstName;
+    }
+    
+    /** Returns the user's last name. */
+    public String getLastName() {
+        return lastName;
+    }
+    
+    /** Returns the user's fullname. */
+    public String getName() {
+        return firstName + " " + lastName;
     }
 }
