@@ -2,7 +2,11 @@ package model;
 
 import java.io.Serializable;
 
-/** Class that provides the functionality for a registered user. */
+/** Class that provides the functionality for a registered user. 
+ * 
+ * @author Lisa Taylor
+ * @version 6 May 2016
+ */
 public class RegisteredUser implements Serializable {
     
     /**
@@ -19,7 +23,12 @@ public class RegisteredUser implements Serializable {
     /** The user's last name. */
     private String lastName;
 
-    /** Constructs a RegisteredUser object. */
+    /** Constructs a RegisteredUser object. 
+     * 
+     * @param uname the user's username
+     * @param fname the user's first name
+     * @param lname the user's last name
+     */
     public RegisteredUser(final String uname, final String fname, final String lname) {
         username = uname;
         firstName = fname;
