@@ -1,3 +1,9 @@
+/*****************************************************
+ * Group 3: Lisa Taylor, Nathanael Toporek, Anh Tran *
+ * TCSS 360, Spring 2016                             *
+ * Deliverable #2                                    *
+ *****************************************************/
+
 package view;
 
 import java.util.ArrayList;
@@ -7,7 +13,7 @@ import java.util.Scanner;
  * Class that provides the UI menus for a Program Chair. 
  * 
  * @author Lisa Taylor
- * @version 6 May 2016
+ * @version 7 May 2016
  */
 public class ProgramChairUI {
     
@@ -23,9 +29,6 @@ public class ProgramChairUI {
     /** Holds the current menu choice selection. */
     private int mySelection;
     
-    /** Scanner for reading input. */
-    private Scanner myScanner;
-    
     /** 
      * Constructs a ProgramChair object. 
      * 
@@ -39,7 +42,6 @@ public class ProgramChairUI {
         myName = theName;
         myManuscripts = theManuscripts;
         mySelection = 0;
-        myScanner = new Scanner(System.in);
     }
     
     /** Prints out the header information. */
@@ -52,6 +54,7 @@ public class ProgramChairUI {
      * Displays the main menu selections.
      */
     public void displayMainMenu() {
+        Scanner scanner = new Scanner(System.in);
         printHeader();
         System.out.println(" /-------------------------------------------\\");
         System.out.println("| Program Chair Options                       |");
@@ -64,10 +67,12 @@ public class ProgramChairUI {
         do {
             System.out.println("\nPlease enter a selection: ");
             try {
-                mySelection = Integer.parseInt(myScanner.nextLine());
-            } catch (InvalidEntryException e){
-                System.out.println("Invalid Entry. Must enter a valid corresponding integer. ");
+                mySelection = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e){
+                System.out.println("Invalid Entry. Must enter a valid corresponding integer.");
             }
+            if (mySelection < 1 || mySelection > 4)
+                System.out.println("Invalid Entry. Must enter a valid corresponding integer.");
         } while (mySelection < 0 || mySelection > 4);
         switch(mySelection) {
             case 1:
@@ -89,6 +94,7 @@ public class ProgramChairUI {
      * Also provides menu options to go back or logout.
      */
     private void displaySubmittedManuscriptsMenu() {
+        Scanner scanner = new Scanner(System.in);
         printHeader();
         System.out.println(" /-----------------------------------------------------------------\\");
         System.out.println("| Submitted Manuscripts                                             |");
@@ -106,11 +112,14 @@ public class ProgramChairUI {
         do {
             System.out.println("\nPlease enter a selection: ");
             try {
-                mySelection = Integer.parseInt(myScanner.nextLine());
-            } catch (InvalidEntryException e){
-                System.out.println("Invalid Entry. Must enter a valid corresponding integer. ");
+                mySelection = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e){
+                System.out.println("Invalid Entry. Must enter a valid corresponding integer.");
             }
-        } while (mySelection < 0 || mySelection > 4);
+            if (mySelection < 1 || mySelection > 2)
+                System.out.println("Invalid Entry. Must enter a valid corresponding integer.");
+        } while (mySelection < 1 || mySelection > 2);
+        scanner.close();
         switch(mySelection) {
             case 1:
                 displayMainMenu();
