@@ -87,6 +87,12 @@ public class Manuscript implements Serializable {
 		myReviewers = new ArrayList<Reviewer>();
 		myReviews = new HashMap<Reviewer, Review>();
 	}
+	/**
+	 * Alternate constructor for manuscript that makes this null.
+	 */
+	public Manuscript() {
+		
+	}
 	
 	/**
 	 * Returns the list of reviewers for this manuscript.
@@ -305,7 +311,10 @@ public class Manuscript implements Serializable {
 	 * @throws SecurityException if mySPC == null || the reviewer in question is the author.
 	 */
 	public void addReviewer(Reviewer theReviewer) {
-		if (mySPC == null){
+		
+		if(theReviewer == null) {
+			throw new NullPointerException("Proposed reviewer is null.");
+		} else if (mySPC == null){
 			throw new SecurityException("Please assign a subprogram chair this paper " +
 					"assigning it reviewers.");
 		} else if(theReviewer.getUsername().equals(myOwnersUsername)) {
