@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /** 
- * Class that provides the functionality for a Program Chair. 
+ * Class that provides the UI menus for a Program Chair. 
  * 
  * @author Lisa Taylor
  * @version 6 May 2016
@@ -30,8 +30,8 @@ public class ProgramChairUI {
      * Constructs a ProgramChair object. 
      * 
      * @param theConference the Conference object to be stored
-     * @param fname the user's first name
-     * @param lname the user's last name
+     * @param theName the user's name
+     * @param theManuscripts the list of Manuscripts
      */
     public ProgramChairUI (final String theConference, final String theName,
                          final ArrayList<Manuscript> theManuscripts) {
@@ -54,8 +54,8 @@ public class ProgramChairUI {
     public void displayMainMenu() {
         printHeader();
         System.out.println(" /-------------------------------------------\\");
-        System.out.println("| Home Screen Options                         |");
-        System.out.println("| --------------------                        |");
+        System.out.println("| Program Chair Options                       |");
+        System.out.println("| ----------------------                      |");
         System.out.println("| 1) View Submitted Manuscripts               |");
         System.out.println("| 2) Designate Subprogram Chair               |");
         System.out.println("| 3) Assign Manuscripts to Subprogram Chairs  |");

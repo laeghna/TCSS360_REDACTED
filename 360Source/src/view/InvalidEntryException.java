@@ -1,5 +1,10 @@
 package view;
 
+/** Exception class for invalid entries. 
+ * 
+ * @author Lisa Taylor
+ * @version 6 May 2016
+ */
 public class InvalidEntryException extends Exception {
 
     /**
