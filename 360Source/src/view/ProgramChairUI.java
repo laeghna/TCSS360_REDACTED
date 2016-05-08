@@ -220,7 +220,7 @@ public class ProgramChairUI {
         System.out.println(" ----------------------");
         ArrayList<Manuscript> papers = myConference.getManuscripts();
         for( Manuscript paper : papers ) {
-            System.out.println(" \"" + ++counter + ") %61s |", paper.getTitle() + "\"");
+            System.out.println(" \"" + ++counter + ") " + paper.getTitle() + "\"");
             System.out.println();
         }
         do {

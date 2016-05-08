@@ -90,19 +90,20 @@ public class AuthorUI {
     }
     
     public void displaySubmitManuscriptMenu() {
-        String filename = "";
         Scanner scanner = new Scanner(System.in);
         printHeader();
         System.out.println("\nPlease enter the complete pathname for the Manuscript to be submitted: ");
-        filename = scanner.nextLine();
+        String filename = scanner.nextLine();
         scanner.close();
         try {
             //Code here
         } catch (Exception e) { //Can change the exception one known what type will be thrown
             System.out.println("Invalid pathname. File could not be found.");
+            System.out.println();
             displayMainMenu();
         }
         System.out.println("Manuscript submitted successfully.");
+        System.out.println();
         displayMainMenu();
     }
     
