@@ -22,7 +22,7 @@ import model.RegisteredUser;
  */
 public class ProgramChairUI {
     
-    /** The name of the conference. */
+    /** The Conference object. */
     private Conference myConference;
     
     /** The name of the user. */

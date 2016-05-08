@@ -175,7 +175,7 @@ public class AuthorUI {
         System.out.println(" Submitted Manuscripts");
         System.out.println(" ----------------------");
         for( Manuscript paper : myManuscripts ) {
-            System.out.println(" \"" + ++counter + ") %61s |", paper.getTitle() + "\"");
+            System.out.println(" \"" + ++counter + ") " + paper.getTitle() + "\"");
             System.out.println();
         }
         System.out.println(" Options");
