@@ -78,7 +78,7 @@ public class Review implements Serializable{
      * @exception NullPointerException if reviewer does not exist (null)
      */
     private void setReviewer(Reviewer newReviewer) {
-        if(reviewer == null) {
+        if(newReviewer == null) {
             throw new NullPointerException("No such reviewer");
         }
         reviewer = newReviewer;
