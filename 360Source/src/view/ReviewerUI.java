@@ -29,11 +29,10 @@ public class ReviewerUI {
     /** Holds the current menu choice selection. */
     private int mySelection;
     
-    public ReviewerUI(final String theConference, final String theName,
-                      final ArrayList<Manuscript> theManuscripts) {
+    public ReviewerUI(final String theConference, final String theName) {
         myConference = theConference;
         myName = theName;
-        myManuscripts = theManuscripts;
+        myManuscripts = new ArrayList<Manuscript>();
         mySelection = 0;
     }
     

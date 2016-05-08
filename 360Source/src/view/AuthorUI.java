@@ -30,11 +30,10 @@ public class AuthorUI {
     private int mySelection;
     
     /** Constructs an AuthorUI object. */
-    public AuthorUI(final String theConference, final String theName,
-                    final ArrayList<Manuscript> theManuscripts) {
+    public AuthorUI(final String theConference, final String theName) {
         myConference = theConference;
         myName = theName;
-        myManuscripts = theManuscripts;
+        myManuscripts = new ArrayList<Manuscript>();
         mySelection = 0;
     }
     
