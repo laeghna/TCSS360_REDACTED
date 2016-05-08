@@ -2,6 +2,8 @@ package tests;
 import org.junit.Before;
 import org.junit.Test;
 
+import model.Reviewer;
+
 import static org.junit.Assert.*;
 
 /**

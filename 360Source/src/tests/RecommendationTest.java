@@ -2,6 +2,10 @@ package tests;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import model.Recommendation;
+import model.SubprogramChair;
+
 import static org.junit.Assert.*;
 
 /**
