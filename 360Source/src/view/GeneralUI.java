@@ -10,6 +10,7 @@ import model.Manuscript;
 import model.ProgramChair;
 import model.Recommendation;
 import model.RegisteredUser;
+import model.Review;
 import model.Reviewer;
 import model.Role;
 import model.SubprogramChair;
