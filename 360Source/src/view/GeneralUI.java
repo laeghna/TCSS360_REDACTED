@@ -630,8 +630,95 @@ public class GeneralUI {
 	}
 
 	private void displayReviewerMenu() {
-		// TODO Auto-generated method stub
+		Scanner stdin = new Scanner(System.in);
+		PrintStream stdout = new PrintStream(System.out);
+		String uIn;
+		boolean opSucc = false;
+		Reviewer rev = currConf.getReviewers().get(currUser.getUsername());
 		
+		printHeader();
+		stdout.println(String.format("Logged into conference %s as Subprogram Chair.", currConf.toString()));
+		
+		stdout.println("\n\n" +
+					   "1> View Assigned Manuscripts\n\n" + 
+					   "e> exit");
+		
+		do {
+			
+			stdout.print("Select an action: ");
+			uIn = stdin.nextLine();
+			
+			switch(uIn.charAt(0)) {
+			case '1':
+				opSucc = true;
+				viewManuscripts(rev);
+				break;
+			case 'e':
+				opSucc = true;
+			}
+		} while(!opSucc);
+	}
+	
+	private void viewManuscripts(Reviewer rev) {
+		
+		Scanner stdin = new Scanner(System.in);
+		PrintStream stdout = new PrintStream(System.out);
+		String uIn;
+		boolean opSucc = false;
+		
+		ArrayList<Manuscript> res = new ArrayList<Manuscript>();
+    	for(Manuscript man : currConf.getManuscripts()) {
+    		if(man.getReveiwersUsernames().contains(currUser.getUsername())) {
+    			res.add(man);
+    		}
+    	}
+    	
+    	stdout.println("ALL MANUSCRIPTS ASSIGNED TO ME:\n");
+    	int i = 1;
+		for(Manuscript man : res) {
+			stdout.println(String.format("%d> %s", i++, man.getTitle()));
+		}
+		stdout.println("\ne> exit \n");
+		Manuscript chosnMan = null;
+		do {
+			
+			stdout.print("Select a Manuscript: ");
+			uIn = stdin.nextLine();
+			int option = 0;
+			
+			try {
+				option = Integer.parseInt(uIn);
+			} catch(NumberFormatException ne) {
+				option = 0;
+			}
+			
+			if(option > 0 && option <= res.size()) {
+				
+				opSucc = true;
+				chosnMan = res.get(option - 1);
+				submitReview(chosnMan, rev);
+			} else if(uIn.charAt(0) == 'e') {
+				opSucc = true;
+			} else  {
+				stdout.println("Invalid input. Try again.");
+			}
+		} while (!opSucc);
+	}
+	
+	private void submitReview(Manuscript man, Reviewer rev) {
+		Scanner stdin = new Scanner(System.in);
+		PrintStream stdout = new PrintStream(System.out);
+		String uIn = "";
+		
+		printHeader();
+		stdout.println("Submitting a Review for a Manuscript.\n");
+		
+		stdout.println("Enter the body of your recommendation (type \'exit\' to exit): ");
+		uIn += stdin.nextLine();
+		if(!uIn.equals("exit")) {
+			Review review = new Review(rev, uIn);
+			man.addNewReview(rev, review);			
+		}
 	}
 
 	private void displayProgramChairMenu() {
