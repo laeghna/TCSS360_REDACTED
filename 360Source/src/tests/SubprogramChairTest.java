@@ -61,12 +61,12 @@ public class SubprogramChairTest {
     @Test
     public void testSubmitRecommendation() throws Exception {
         Recommendation rec = new Recommendation(spc, RECOMMENDATION);
-        assertEquals(rec, spc.submitRecommendation(RECOMMENDATION));
+        assertEquals(rec, spc.submitRecommendation(RECOMMENDATION, new Manuscript("Hi","Hi","Hi","/Hi")));
     }
 
     @Test(expected=NullPointerException.class)
     public void testSubmitRecommendation2() throws Exception {
-        spc.submitRecommendation(null);
+        spc.submitRecommendation(null, null);
     }
 
     @Test

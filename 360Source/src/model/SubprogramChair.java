@@ -64,11 +64,14 @@ public class SubprogramChair implements Serializable{
      * @return Object of the Recommendation class to be handled by main
      * @exception  NullPointerException if recommendation is null
      */
-    public Recommendation submitRecommendation(String recommendation) {
+    public Recommendation submitRecommendation(String recommendation, Manuscript theManuscript) {
         if(recommendation == null) {
             throw new NullPointerException("No recommendation found");
         }
-        return new Recommendation(this, recommendation);
+        Recommendation rec = new Recommendation(this, recommendation);
+        
+        theManuscript.setRecommendation(rec);
+        return rec;
     }
 
     /**

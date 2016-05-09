@@ -28,10 +28,12 @@ public class ProgramChairUI {
     private Conference myConference;
     
     /** The name of the user. */
-    private String myName;
+    private RegisteredUser mySelf;
     
     /** Maps each registered user's unique username to its corresponding RegisteredUser object. */
     private HashMap<String, RegisteredUser> registeredUsers;
+    
+    private GeneralUI myParent;
     
     /** Holds the current menu choice selection. */
     private int mySelection;
@@ -43,10 +45,11 @@ public class ProgramChairUI {
      * @param theName the user's name
      * @param theManuscripts the list of Manuscripts
      */
-    public ProgramChairUI (final Conference theConference, final String theName, 
-                           final HashMap<String, RegisteredUser> regUsers) {
-        myConference = theConference;
-        myName = theName;
+    public ProgramChairUI (final Conference theConference, final RegisteredUser me, 
+                           final HashMap<String, RegisteredUser> regUsers, GeneralUI theParent) {
+        myParent = theParent;
+    	myConference = theConference;
+        mySelf = me;
         registeredUsers = regUsers;
         mySelection = 0;
     }
@@ -54,7 +57,7 @@ public class ProgramChairUI {
     /** Prints out the header information. */
     public void printHeader() {
         System.out.println(myConference.toString());
-        System.out.println("Program Chair: " + myName);
+        System.out.println("Program Chair: " + mySelf.toString());
     }
     
     /**

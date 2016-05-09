@@ -9,7 +9,9 @@ package view;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import model.Conference;
 import model.Manuscript;
+import model.RegisteredUser;
 
 /** 
  * Class that provides the UI menus for a Reviewer. 
@@ -20,29 +22,49 @@ import model.Manuscript;
 public class ReviewerUI {
 
     /** The name of the conference. */
-    private String myConference;
+    private Conference myConference;
     
     /** The name of the user. */
-    private String myName;
+    private RegisteredUser mySelf;
     
     /** The list of manuscripts the Author has submitted to a conference. */
     private ArrayList<Manuscript> myManuscripts;
     
+    private GeneralUI myParent;
+    
     /** Holds the current menu choice selection. */
     private int mySelection;
     
-    public ReviewerUI(final String theConference, final String theName) {
+    public ReviewerUI(final Conference theConference, final RegisteredUser me,
+    				  GeneralUI theParent) {
+    	myParent = theParent;
         myConference = theConference;
-        myName = theName;
-        myManuscripts = new ArrayList<Manuscript>();
+        mySelf = me;
+        myManuscripts = getMyManuscripts();
         mySelection = 0;
+    }
+    /* Gets all of the manuscripts associated with this
+     * user for this conference.
+     */
+    private ArrayList<Manuscript> getMyManuscripts() {
+    	
+    	ArrayList<Manuscript> res = new ArrayList<Manuscript>();
+    	
+    	for(Manuscript man : myConference.getManuscripts()) {
+    		
+    		if(man.getReveiwersUsernames().contains(mySelf.getUsername())) {
+    			
+    			res.add(man);
+    		}
+    	}
+    	return res;
     }
     
     /** Prints out the header information. */
     public void printHeader() {
         System.out.println();
         System.out.println(myConference);
-        System.out.println("User: " + myName);
+        System.out.println("User: " + mySelf.toString());
     }
     
     /**

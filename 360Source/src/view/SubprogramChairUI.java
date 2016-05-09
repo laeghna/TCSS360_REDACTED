@@ -9,7 +9,10 @@ package view;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import model.Conference;
 import model.Manuscript;
+import model.RegisteredUser;
+import model.SubprogramChair;
 
 /** 
  * Class that provides the UI menus for a Subprogram Chair. 
@@ -20,28 +23,34 @@ import model.Manuscript;
 public class SubprogramChairUI {
     
     /** The name of the conference. */
-    private String myConference;
+    private Conference myConference;
     
     /** The name of the user. */
-    private String myName;
+    private RegisteredUser mySelf;
+    
+    private SubprogramChair myRole;
     
     /** The list of manuscripts the Author has submitted to a conference. */
     private ArrayList<Manuscript> myManuscripts;
     
+    private GeneralUI myParent;
+    
     /** Holds the current menu choice selection. */
     private int mySelection;
     
-    public SubprogramChairUI(final String theConference, final String theName) {
+    public SubprogramChairUI(final Conference theConference, final RegisteredUser me,
+    						 GeneralUI theParent) {
+    	myParent = theParent;
         myConference = theConference;
-        myName = theName;
-        myManuscripts = new ArrayList<Manuscript>();
+        mySelf = me;
+        myManuscripts = myConference.getSubProgramChair(me.getUsername()).getAssignedManuscripts();
         mySelection = 0;
     }
     
     /** Prints out the header information. */
     public void printHeader() {
         System.out.println(myConference.toString());
-        System.out.println("Program Chair: " + myName);
+        System.out.println("Program Chair: " + mySelf.toString());
     }
     /**
      * Displays the main menu selections.

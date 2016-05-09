@@ -30,7 +30,7 @@ public class InfoGen {
 				"Nicholas", "Lucifer", "Jesus", "FirstName", "Funny"};
 		String[] lnames = {"Smith", "Smith", "Tesla", "Jefferson", "Curious",
 				"Cage", "Saint", "Christ", "Lastname", "Joke"};
-		String[] unames = {"JohnSmith", "JaneSmith", "NTelsa", "TJefferson", "CuriousGeorge",
+		String[] unames = {"JohnSmith", "JaneSmith", "NTesla", "TJefferson", "CuriousGeorge",
 				"God", "Satan", "Messiah", "Username", "Punchline"};
 		
 		String[] cnames = {"All About Potatoes!", "Not About Potatos. :[", "[REDACTED]"};

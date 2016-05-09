@@ -9,7 +9,9 @@ package view;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import model.Conference;
 import model.Manuscript;
+import model.RegisteredUser;
 
 /** 
  * Class that provides the UI menus for an Author who has submitted a manuscript. 
@@ -20,22 +22,26 @@ import model.Manuscript;
 public class AuthorUI {
     
     /** The name of the conference. */
-    private String myConference;
+    private Conference myConference;
     
     /** The name of the user. */
-    private String myName;
+    private RegisteredUser mySelf;
     
     /** The list of manuscripts the Author has submitted to a conference. */
     private ArrayList<Manuscript> myManuscripts;
+    
+    private GeneralUI myParent;
     
     /** Holds the current menu choice selection. */
     private int mySelection;
     
     /** Constructs an AuthorUI object. */
-    public AuthorUI(final String theConference, final String theName) {
+    public AuthorUI(final Conference theConference, final RegisteredUser me, 
+    				GeneralUI theParent) {
+    	myParent = theParent;
         myConference = theConference;
-        myName = theName;
-        myManuscripts = new ArrayList<Manuscript>();
+        mySelf = me;
+        myManuscripts = theConference.getMyManuscripts(me.getUsername());
         mySelection = 0;
     }
     
@@ -43,7 +49,7 @@ public class AuthorUI {
     public void printHeader() {
         System.out.println();
         System.out.println(myConference);
-        System.out.println("User: " + myName);
+        System.out.println("User: " + mySelf.toString());
     }
 
     /**
@@ -61,7 +67,7 @@ public class AuthorUI {
         System.out.println(" 5) Logout");
         System.out.println();
         do {
-            System.out.println("\nPlease enter a selection: ");
+            System.out.print("\nPlease enter a selection: ");
             try {
                 mySelection = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e){
@@ -95,9 +101,13 @@ public class AuthorUI {
         printHeader();
         System.out.println("\nPlease enter the complete pathname for the Manuscript to be submitted: ");
         String filename = scanner.nextLine();
-        scanner.close();
         try {
-            //Code here
+            String Title;
+            System.out.print("Please enter the title to your manuscript: ");
+            Title = scanner.nextLine();
+            Manuscript man = new Manuscript(Title, String.format("%s %s", mySelf.getFirstName(), mySelf.getLastName()),
+            				                mySelf.getUsername(), filename);
+            myConference.addManuscript(man);
         } catch (Exception e) { //Can change the exception one known what type will be thrown
             System.out.println("Invalid pathname. File could not be found.");
             System.out.println();
@@ -105,6 +115,7 @@ public class AuthorUI {
         }
         System.out.println("Manuscript submitted successfully.");
         System.out.println();
+        scanner.close();
         displayMainMenu();
     }
     
@@ -115,7 +126,7 @@ public class AuthorUI {
         printHeader();
         printManuscriptsNumberedList(counter);
         do {
-            System.out.println("\nPlease enter a selection: ");
+            System.out.print("\nPlease enter a selection: ");
             input = scanner.nextLine(); 
             if (input != "a" && input != "b") {
                 System.out.println("Invalid entry. Must enter a valid corresponding letter value.");
@@ -136,7 +147,7 @@ public class AuthorUI {
         printHeader();
         printManuscriptsNumberedList(counter);
         do {
-            System.out.println("\nPlease enter a selection: ");
+            System.out.print("\nPlease enter a selection: ");
             input = scanner.nextLine(); 
             if (input != "a" && input != "b") {
                 System.out.println("Invalid entry. Must enter a valid corresponding integer or letter value.");

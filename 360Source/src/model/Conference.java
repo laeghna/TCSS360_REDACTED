@@ -255,23 +255,23 @@ public class Conference implements Serializable {
 	  * @param theUsername The username of the user that we're searching 
 	  * @return Returns the roles of the specified user in the form of an ArrayList.
 	  */
-	public ArrayList<ROLE> getRoles(String theUsername) {
+	public ArrayList<Role> getRoles(String theUsername) {
 		
-		ArrayList<ROLE> theirRoles = new ArrayList<ROLE>();
+		ArrayList<Role> theirRoles = new ArrayList<Role>();
 		
 		if(theUsername.equals(myProgramChair.getUsername())) {
-			theirRoles.add(ROLE.PROGRAMCHAIR);
+			theirRoles.add(Role.PROGRAMCHAIR);
 		}
 		if(myReviewers.containsKey(theUsername)) {
-			theirRoles.add(ROLE.REVIEWER);
+			theirRoles.add(Role.REVIEWER);
 		}
 		if(mySubprogramChairs.containsKey(theUsername)) {
-			theirRoles.add(ROLE.SUBPROGRAMCHAIR);
+			theirRoles.add(Role.SUBPROGRAMCHAIR);
 		}
 		for(Manuscript m : myManuscripts) {
 			
 			if(m.getOwnersUsername().equals(theUsername)) {
-				theirRoles.add(ROLE.AUTHOR);
+				theirRoles.add(Role.AUTHOR);
 			}
 		}
  		
