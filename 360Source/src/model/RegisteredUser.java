@@ -1,3 +1,9 @@
+/*****************************************************
+ * Group 3: Lisa Taylor, Nathanael Toporek, Anh Tran *
+ * TCSS 360, Spring 2016                             *
+ * Deliverable #2                                    *
+ *****************************************************/
+
 package model;
 
 import java.io.Serializable;
@@ -53,5 +59,9 @@ public class RegisteredUser implements Serializable {
     /** Returns the user's fullname. */
     public String getName() {
         return firstName + " " + lastName;
+    }
+    public String toString() {
+    	
+    	return String.format("%s %s", firstName, lastName);
     }
 }

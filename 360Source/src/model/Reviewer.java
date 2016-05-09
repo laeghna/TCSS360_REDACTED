@@ -18,8 +18,12 @@ public class Reviewer implements Serializable{
     /**
      * Constructor. Instantiates class with username and roles.
      * @param newUserName username of Reviewer
+     * @exception NullPointerException if newUserName is null
      */
     public Reviewer(String newUserName) {
+        if(newUserName == null || newUserName.equals("")) {
+            throw new NullPointerException("Invalid Username");
+        }
         userName = newUserName;
     }
 
@@ -30,7 +34,7 @@ public class Reviewer implements Serializable{
      * @exception NullPointerException if no review exists or is found (null)
      */
     public String submitReview(String review) {
-        if(review == null) {
+        if(review == null || review.equals("")) {
             throw new NullPointerException("No review found");
         }
         return review;

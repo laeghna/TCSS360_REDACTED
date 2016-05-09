@@ -8,6 +8,7 @@ package model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 /**
  * Class that will contain a list of manuscripts used in a given conference.
  * @author Nathanael Toporek, nat96@uw.ed
@@ -55,7 +56,7 @@ public class Manuscript implements Serializable {
 	/**
 	 * A map that maps a reviewer to their review for this paper.
 	 */
-	private HashMap<Reviewer, Review> myReviews;
+	private HashMap<String, Review> myReviews;
 	/**
 	 * Constructor for this manuscript class.
 	 * @param theTitle The title of this manuscript.
@@ -85,7 +86,13 @@ public class Manuscript implements Serializable {
 		mySPC = null;
 		myAcceptance = false;
 		myReviewers = new ArrayList<Reviewer>();
-		myReviews = new HashMap<Reviewer, Review>();
+		myReviews = new HashMap<String, Review>();
+	}
+	/**
+	 * Alternate constructor for manuscript that makes this null.
+	 */
+	public Manuscript() {
+		
 	}
 	
 	/**
@@ -102,7 +109,7 @@ public class Manuscript implements Serializable {
 	public ArrayList<Review> getReviews() {
 		ArrayList<Review> res = new ArrayList<Review>();
 		
-		for(Reviewer key : myReviews.keySet()) {
+		for(String key : myReviews.keySet()) {
 			res.add(myReviews.get(key));
 		}
 		return res;
@@ -172,6 +179,18 @@ public class Manuscript implements Serializable {
 			throw new SecurityException("SPC IS AUTHOR, DENIED.");
 		}
 		mySPC = theSPC;
+	}
+	/**
+	 * Gets the title of this manuscript.
+	 * @return The Title of this manuscript.
+	 */
+	public String getTitle() {
+		
+		return myTitle;
+	}
+	public Set<String> getReveiwersUsernames() {
+		
+		return myReviews.keySet();
 	}
 	/**
 	 * Gets whether or not this paper has been accepted.
@@ -253,7 +272,7 @@ public class Manuscript implements Serializable {
 			throw new IllegalArgumentException("Review already exists for this reviewer.");
 		}
 		
-		myReviews.put(theReviewer, theReview);
+		myReviews.put(theReviewer.getUsername(), theReview);
 	}
 	
 	/**
@@ -297,7 +316,7 @@ public class Manuscript implements Serializable {
 					theReviewer.getUsername() + "! STOP. BEING. STUPID. GHAAAAAAAAA!!!!!!");
 		} 
 		
-		myReviews.put(theReviewer, theReview);
+		myReviews.put(theReviewer.getUsername(), theReview);
 	}
 	/**
 	 * Adds a reviewer to the list of reviewers for this paper.
@@ -305,7 +324,10 @@ public class Manuscript implements Serializable {
 	 * @throws SecurityException if mySPC == null || the reviewer in question is the author.
 	 */
 	public void addReviewer(Reviewer theReviewer) {
-		if (mySPC == null){
+		
+		if(theReviewer == null) {
+			throw new NullPointerException("Proposed reviewer is null.");
+		} else if (mySPC == null){
 			throw new SecurityException("Please assign a subprogram chair this paper " +
 					"assigning it reviewers.");
 		} else if(theReviewer.getUsername().equals(myOwnersUsername)) {

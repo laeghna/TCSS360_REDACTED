@@ -1,30 +1,42 @@
+/*****************************************************
+ * Group 3: Lisa Taylor, Nathanael Toporek, Anh Tran *
+ * TCSS 360, Spring 2016                             *
+ * Deliverable #2                                    *
+ *****************************************************/
+
 package view;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Scanner;
+
+import model.Conference;
+import model.Manuscript;
+import model.ProgramChair;
+import model.RegisteredUser;
 
 /** 
  * Class that provides the UI menus for a Program Chair. 
  * 
  * @author Lisa Taylor
- * @version 6 May 2016
+ * @version 7 May 2016
  */
 public class ProgramChairUI {
     
-    /** The name of the conference. */
-    private String myConference;
+    /** The Conference object. */
+    private Conference myConference;
     
     /** The name of the user. */
-    private String myName;
+    private RegisteredUser mySelf;
     
-    /** The list of manuscripts in a conference. */
-    private ArrayList<Manuscript> myManuscripts;
+    /** Maps each registered user's unique username to its corresponding RegisteredUser object. */
+    private HashMap<String, RegisteredUser> registeredUsers;
+    
+    private GeneralUI myParent;
     
     /** Holds the current menu choice selection. */
     private int mySelection;
-    
-    /** Scanner for reading input. */
-    private Scanner myScanner;
     
     /** 
      * Constructs a ProgramChair object. 
@@ -33,42 +45,45 @@ public class ProgramChairUI {
      * @param theName the user's name
      * @param theManuscripts the list of Manuscripts
      */
-    public ProgramChairUI (final String theConference, final String theName,
-                         final ArrayList<Manuscript> theManuscripts) {
-        myConference = theConference;
-        myName = theName;
-        myManuscripts = theManuscripts;
+    public ProgramChairUI (final Conference theConference, final RegisteredUser me, 
+                           final HashMap<String, RegisteredUser> regUsers, GeneralUI theParent) {
+        myParent = theParent;
+    	myConference = theConference;
+        mySelf = me;
+        registeredUsers = regUsers;
         mySelection = 0;
-        myScanner = new Scanner(System.in);
     }
     
     /** Prints out the header information. */
     public void printHeader() {
-        System.out.println(myConference);
-        System.out.println("Program Chair: " + myName);
+        System.out.println(myConference.toString());
+        System.out.println("Program Chair: " + mySelf.toString());
     }
     
     /**
      * Displays the main menu selections.
      */
     public void displayMainMenu() {
+        Scanner scanner = new Scanner(System.in);
         printHeader();
-        System.out.println(" /-------------------------------------------\\");
-        System.out.println("| Program Chair Options                       |");
-        System.out.println("| ----------------------                      |");
-        System.out.println("| 1) View Submitted Manuscripts               |");
-        System.out.println("| 2) Designate Subprogram Chair               |");
-        System.out.println("| 3) Assign Manuscripts to Subprogram Chairs  |");
-        System.out.println("| 4) Logout                                   |");
-        System.out.println(" \\-------------------------------------------/)");
+        System.out.println(" Program Chair Options");
+        System.out.println(" ----------------------");
+        System.out.println(" 1) View Submitted Manuscripts");
+        System.out.println(" 2) Designate Subprogram Chair");
+        System.out.println(" 3) Assign Manuscripts to Subprogram Chairs");
+        System.out.println(" 4) Logout");
+        System.out.println();
         do {
-            System.out.println("\nPlease enter a selection: ");
+            System.out.println("Please enter a selection: ");
             try {
-                mySelection = Integer.parseInt(myScanner.nextLine());
-            } catch (InvalidEntryException e){
-                System.out.println("Invalid Entry. Must enter a valid corresponding integer. ");
+                mySelection = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e){
+                System.out.println("Invalid Entry. Must enter a valid corresponding integer.");
             }
+            if (mySelection < 1 || mySelection > 4)
+                System.out.println("Invalid Entry. Must enter a valid corresponding integer.");
         } while (mySelection < 0 || mySelection > 4);
+        scanner.close();
         switch(mySelection) {
             case 1:
                 displaySubmittedManuscriptsMenu();
@@ -80,6 +95,7 @@ public class ProgramChairUI {
                 displayAssignManuscriptsMenu();
                 break;
             case 4:
+                //Code here?
                 break;
         }
     }
@@ -89,33 +105,37 @@ public class ProgramChairUI {
      * Also provides menu options to go back or logout.
      */
     private void displaySubmittedManuscriptsMenu() {
+        Scanner scanner = new Scanner(System.in);
         printHeader();
-        System.out.println(" /-----------------------------------------------------------------\\");
-        System.out.println("| Submitted Manuscripts                                             |");
-        System.out.println("| ----------------------                                            |");
-        for(int i = 0; i < myManuscripts.size(); i++) {
-            System.out.format("| \"1) %61s |", myManuscripts[i].getTitle());
-            System.out.format("|       \"Author: %50s |", myManuscripts[i].getAuthor());
-            System.out.format("| \"%64s |");
+        System.out.println(" Submitted Manuscripts");
+        System.out.println(" ----------------------");
+        for( Manuscript paper : myConference.getManuscripts() ) {
+            System.out.println("\"" + paper.getTitle() + "\"");
+            System.out.println("        Author: " + paper.getAuthor());
+            System.out.println();
         }
-        System.out.println("| Options                                                           |");
-        System.out.println("| --------                                                          |");
-        System.out.println("| 1) Back                                                           |");
-        System.out.println("| 2) Logout                                                         |");
-        System.out.println(" \\-----------------------------------------------------------------/)");
+        System.out.println(" Options");
+        System.out.println(" --------");
+        System.out.println(" 1) Back");
+        System.out.println(" 2) Logout");
+        System.out.println();
         do {
-            System.out.println("\nPlease enter a selection: ");
+            System.out.println("Please enter a selection: ");
             try {
-                mySelection = Integer.parseInt(myScanner.nextLine());
-            } catch (InvalidEntryException e){
-                System.out.println("Invalid Entry. Must enter a valid corresponding integer. ");
+                mySelection = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e){
+                System.out.println("Invalid Entry. Must enter a valid corresponding integer.");
             }
-        } while (mySelection < 0 || mySelection > 4);
+            if (mySelection < 1 || mySelection > 2)
+                System.out.println("Invalid Entry. Must enter a valid corresponding integer.");
+        } while (mySelection < 1 || mySelection > 2);
+        scanner.close();
         switch(mySelection) {
             case 1:
                 displayMainMenu();
                 break;
             case 2:
+                //Code here?
                 break;
         }
     }
@@ -124,10 +144,105 @@ public class ProgramChairUI {
      * Displays
      */
     private void displayDesignateSubprogramChairMenu() {
+        Scanner scanner = new Scanner(System.in);
+        String input = "";
+        ProgramChair myRole = myConference.getProgramChair();
+        Iterator<String> it = registeredUsers.keySet().iterator();
+        int counter = 0;
+        if (myRole.getSPCS().size() > 0) {
+            ArrayList<String> subPCs = myRole.getSPCS();
+            System.out.println(" Subprogram Chairs");
+            System.out.println(" ------------------");
+            for (String uname : subPCs) {
+                System.out.println(" Username: " + uname);
+                System.out.println("     Name: " + registeredUsers.get(uname).getName());
+                System.out.println();
+            }
+        }
+        System.out.println("Registered Users");
+        System.out.println("-----------------");
+        while (it.hasNext()) {
+            String uname = it.next();
+            counter = 0;
+            System.out.println(" Username: " + uname);
+            System.out.println("     Name: " + registeredUsers.get(uname).getName());
+            System.out.println();
+        }
+        do {
+            System.out.println("Please enter the username of the Registered User to assign the role");
+            System.out.println("of Subprogram Chair: ");
+            input = scanner.nextLine();
+            if (!registeredUsers.containsKey(input))
+                System.out.println("Invalid username entered.");
+        } while (!registeredUsers.containsKey(input));
         
+        myRole.addSPC(input);
+        myConference.assignSubprogramChair(registeredUsers.get(input));
+        
+        System.out.println(registeredUsers.get(input) + " successfully assigned as Subprogram Chair.");
+        System.out.println("Assign another Subprogram Chair? (y/n: ");
+        input = scanner.nextLine();
+        scanner.close();
+        if (input == "y") {
+            System.out.println();
+            displayDesignateSubprogramChairMenu();
+        } else if (input == "n") {
+            System.out.println("Returning to Main Menu.");
+            System.out.println();
+            displayMainMenu();
+        }
     }
     
     private void displayAssignManuscriptsMenu() {
-        
+        Scanner scanner = new Scanner(System.in);
+        String input = "", selectedSPC = "";
+        ProgramChair myRole = myConference.getProgramChair();
+        if (myRole.getSPCS().isEmpty()) {
+            System.out.println("No Subprogram Chairs have been assigned. Returning to Main Menu.");
+            System.out.println();
+        }
+        ArrayList<String> subPCs = myRole.getSPCS();
+        System.out.println(" Subprogram Chairs");
+        System.out.println(" ------------------");
+        for (String uname : subPCs) {
+            System.out.println(" Username: " + uname);
+            System.out.println("     Name: " + registeredUsers.get(uname).getName());
+            System.out.println();
+        }
+        do {
+            System.out.println("Please enter the username of the Subprogram Chair to assign");
+            System.out.println("a Manuscript to: ");
+            input = scanner.nextLine();
+            if (!myRole.getSPCS().contains(input)) {
+                System.out.println("Invalid username entered.");
+                System.out.println();
+            } else {
+            	selectedSPC = input;
+            }
+        } while (!myRole.getSPCS().contains(input));
+        System.out.println("Manuscript will be assigned to " + registeredUsers.get(input).getName());
+        int counter = 0;
+        System.out.println(" Submitted Manuscripts");
+        System.out.println(" ----------------------");
+        ArrayList<Manuscript> papers = myConference.getManuscripts();
+        for( Manuscript paper : papers ) {
+            System.out.println(" \"" + ++counter + ") " + paper.getTitle() + "\"");
+            System.out.println();
+        }
+        do {
+            System.out.println("Enter the number of the Manuscript to be assigned: ");
+            try {
+                mySelection = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e){
+                System.out.println("Invalid Entry. Must enter a valid corresponding integer.");
+            }
+            if (mySelection < 1 || mySelection > counter)
+                System.out.println("Invalid Entry. Must enter a valid corresponding integer.");
+        } while (mySelection < 1 || mySelection > counter);
+        myConference.getSubProgramChair(selectedSPC).addManuscript(papers.get(mySelection - 1));
+        System.out.println("Paper successfully assigned.");
+        System.out.println("Returning to Main Menu");
+        scanner.close();
+        displayMainMenu();
     }
 }

@@ -90,10 +90,11 @@ public class Conference implements Serializable {
 		} 
 		
 		Date now = new Date();
+		now.setTime(System.currentTimeMillis());
 		
-		if(theSubmissionDeadline.after(now) ||
-		   theReviewDeadline.after(now) ||
-		   theRecommendationDeadline.after(now)) {
+		if(theSubmissionDeadline.before(now) ||
+		   theReviewDeadline.before(now) ||
+		   theRecommendationDeadline.before(now)) {
 			
 			throw new IllegalArgumentException("One or more deadlines have already past!");
 		}
@@ -121,6 +122,34 @@ public class Conference implements Serializable {
 		return myProgramChair;
 	}
 	
+	/**
+	 * Gets the subprogram chair associated with the passes username.
+	 * @param theirUsername The username of the program chair we're searching for.
+	 * @return Returns the associated subprogram chair if they're assigned for this conference.
+	 * 		   Returns null if else.
+	 */
+	public SubprogramChair getSubProgramChair(String theirUsername) {
+		
+		if(mySubprogramChairs.containsKey(theirUsername)) {
+			return mySubprogramChairs.get(theirUsername);
+		} else {
+			return null;
+		}
+	}
+	/**
+	 * Returns the map of usernames to spcs.
+	 * @return All of the spcs for this conference.
+	 */
+	public HashMap<String, SubprogramChair> getSPCs() {
+		return mySubprogramChairs;
+	}
+	/**
+	 * Returns the map of reviewers for this conference.
+	 * @return The Reviewers for this conference.
+	 */
+	public HashMap<String, Reviewer> getReviewers() {
+		return myReviewers;
+	}
 	/**
 	 * Returns all of the manuscripts that this conference contains.
 	 * @return All manuscripts for this conference.
@@ -239,23 +268,23 @@ public class Conference implements Serializable {
 	  * @param theUsername The username of the user that we're searching 
 	  * @return Returns the roles of the specified user in the form of an ArrayList.
 	  */
-	public ArrayList<ROLE> getRoles(String theUsername) {
+	public ArrayList<Role> getRoles(String theUsername) {
 		
-		ArrayList<ROLE> theirRoles = new ArrayList<ROLE>();
+		ArrayList<Role> theirRoles = new ArrayList<Role>();
 		
-		if(theUsername.equals(myProgramChair)) {
-			theirRoles.add(ROLE.PROGRAMCHAIR);
+		if(theUsername.equals(myProgramChair.getUsername())) {
+			theirRoles.add(Role.PROGRAMCHAIR);
 		}
 		if(myReviewers.containsKey(theUsername)) {
-			theirRoles.add(ROLE.REVIEWER);
+			theirRoles.add(Role.REVIEWER);
 		}
 		if(mySubprogramChairs.containsKey(theUsername)) {
-			theirRoles.add(ROLE.SUBPROGRAMCHAIR);
+			theirRoles.add(Role.SUBPROGRAMCHAIR);
 		}
 		for(Manuscript m : myManuscripts) {
 			
 			if(m.getOwnersUsername().equals(theUsername)) {
-				theirRoles.add(ROLE.AUTHOR);
+				theirRoles.add(Role.AUTHOR);
 			}
 		}
  		
