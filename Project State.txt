@@ -1,0 +1,89 @@
+Product State
+Group 3 REDACTED
+Anh Tran, Lisa Taylor, Nathaniel Toporek
+
+
+User stories
+US1. As a Program Chair, I want to view a list of all submitted manuscripts
+US1 is fully implemented. The manuscripts are indexed in the Conference class and handled by the Program Chair in the GeneralUI class.
+
+
+US2. As a Program Chair, I want to make an acceptance decision on a submitted manuscript.
+US2 is fully implemented in the ProgramChair class.
+
+US3. As an Author, I want to submit a manuscript to a conference.
+US3 is fully implemented. The manuscripts are added in the Conference Class and is handled by and Author in the GeneralUI class.
+
+US4. As a Reviewer, I want to submit a review for a manuscript to which I have been assigned.
+US4 is implemented, but its functionality has not been tested. The Reviewer class creates the Review and is stored in the Manuscript class.
+
+US5. As a Program Chair, I want to see which papers are assigned to which Subprogram chairs.
+US5 is fully implemented in the Program Chair class.
+
+US6. As a Program Chair I want to designate a Subprogram Chair for a manuscript.
+US6 is fully implemented in the Program Chair class.
+
+US7. As a Subprogram Chair, I want to assign a reviewer to a manuscript to which I have been assigned.
+US7 is implemented in the SubprogramChair class.
+
+US8. As an Author I want to unsubmit a manuscript.
+US8 is fully implemented. The Author class calls the unsubmit method and is handled in the GeneralUI class
+
+US9. As a Subprogram Chair, I want to submit my recommendation for a paper.
+US9 is fully implemented in the SubprogramChair and Recommendation classes.
+
+US10. As an Author, I want to make changes to my submission.
+US10 is fully implemented in the Author class.
+
+US11. As a user, I want to log in.
+US11 is fully implemented in the driver and RegisteredUser class
+
+
+
+Business rules
+BR1. For each conference, only one user is the Program Chair.
+BR1 is enforced in the conference class.
+
+BR2. A user becomes an Author only by submitting a manuscript.
+BR2 is enforced using the Role class.
+
+BR3. A user can take on more than one role for a given conference.
+BR3 is enforced in the Conference class.
+
+BR4. An Author cannot review his or her own paper.
+BR3 is enforced in the author class.
+
+BR5. A Subprogram Chair cannot be designated for a paper that he or she authored.
+BR4 is enforced in the Conference class.
+
+BR6. A Reviewer cannot review a paper that he or she authored.
+BR6 is enforced in the Conference class.
+
+BR7. A Reviewer can only access those manuscripts assigned to him or her.
+BR7 enforcement is implemented, but has not been tested
+
+BR8. A Reviewer can only access the reviews that he or she submits.
+BR8 enforcement is implemented, but has not not tested
+
+BR9. An Author can only access his or her submitted manuscripts and reviews for these manuscripts.
+BR9 is not fully enforced. The Author can't access reviews, but can view the manuscripts
+
+BR10. A Reviewer can be assigned to review a maximum of 4 papers to review for any conference.
+BR10 is not currently enforced
+
+BR11. A Subprogram Chair can be designated no more than 4 papers for any conference.
+BR10 is not currently enforced
+
+BR12. Authors can only access reviews after the program chair has made a decision
+BR10 is not currently enforced
+
+BR13. All paper submissions must be made on or before the submission deadline.
+BR10 is not currently enforced
+
+
+
+Known Bugs
+1. The User is logged out after each action, returning to the login screen.
+2. When User inputs an empty string, the program will crash.
+3. Back option in menu is non-functional.
+4. Menu will add a second Author options menu below the first one after second Manuscript is added.
