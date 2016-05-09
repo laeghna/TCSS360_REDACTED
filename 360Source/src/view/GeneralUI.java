@@ -270,15 +270,19 @@ public class GeneralUI {
 		
 		case PROGRAMCHAIR:
 			displayProgramChairMenu();
-		
+			break;
+			
 		case SUBPROGRAMCHAIR:
 			displaySubprogramChairMenu();
-		
+			break;
+			
 		case REVIEWER: 
 			displayReviewerMenu();
-		
+			break;
+			
 		case AUTHOR:
 			displayAuthorMenu();
+			break;
 		}
 	}
 
@@ -465,7 +469,12 @@ public class GeneralUI {
 			if(currConf.getReviewers().containsKey(uIn)) {
 				
 				opSucc = true;
-				chosnMan.addReviewer(currConf.getReviewers().get(uIn));
+				try {
+					chosnMan.addReviewer(currConf.getReviewers().get(uIn));
+				} catch(Exception e) {
+					opSucc = false;
+					stdout.println(e.getMessage());
+				}
 			} else if(uIn.charAt(0) == 'e') {
 				opSucc = true;
 			} else  {
