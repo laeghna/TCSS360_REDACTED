@@ -287,8 +287,105 @@ public class GeneralUI {
 	}
 
 	private void displayAuthorMenu() {
-		// TODO Auto-generated method stub
+
+		Scanner stdin = new Scanner(System.in);
+		PrintStream stdout = new PrintStream(System.out);
+		String uIn;
+		boolean opSucc = false;
 		
+		printHeader();
+		stdout.println(String.format("Logged into conference %s as an Author.", currConf.toString()));
+		
+		stdout.println("SELECT A PAPER TO WORK WITH: \n");
+		
+		int i = 1; 
+		for(Manuscript man : currConf.getMyManuscripts(currUser.getUsername())) {
+			
+			stdout.println(String.format("%d> %s", i++, man.getTitle()));
+		}
+		stdout.println("\ne> exit\n");
+		
+		do {
+			
+			stdout.println("Select a manuscript to work with: ");
+			
+			int option = 0;
+			uIn = stdin.nextLine();
+			
+			try{
+				option = Integer.parseInt(uIn);
+			} catch(NumberFormatException ne) {
+				option = 0;
+			}
+			
+			if(option > 0 && option <= currConf.getMyManuscripts(currUser.getUsername()).size()) {
+				opSucc = true;
+				editManuscript(currConf.getMyManuscripts(currUser.getUsername()).get(option - 1));
+			} else if (uIn.charAt(0) == 'e') {
+				opSucc = true;
+			} else  {
+				stdout.println("Invalid input. Try again.");
+			}
+ 		} while(!opSucc);
+	}
+
+	private void editManuscript(Manuscript manuscript) {
+		
+		Scanner stdin = new Scanner(System.in);
+		PrintStream stdout = new PrintStream(System.out);
+		String uIn;
+		boolean opSucc = false;
+		
+		printHeader();
+		stdout.println(String.format("Logged into conference %s as an Author.", currConf.toString()));
+		stdout.println("Editing paper " + manuscript.getTitle() + ".\n");
+		
+		stdout.println("1> Make Changes\n" + 
+					   "2> Unsubmit\n\n" + 
+					   "e> exit\n");
+		
+		do {
+			
+			stdout.print("Select an action: ");
+			uIn = stdin.nextLine();
+			
+			switch(uIn.charAt(0)) {
+			case '1':
+				opSucc = true;
+				changePathname(manuscript);
+				break;
+			case '2':
+				opSucc = true;
+				currConf.getManuscripts().remove(manuscript);
+				break;
+			case 'e':
+				opSucc = true;
+			default:
+				stdout.println("Invalid input. Try again.");
+			}
+		} while(!opSucc);
+	}
+
+	private void changePathname(Manuscript manuscript) {
+		
+		Scanner stdin = new Scanner(System.in);
+		PrintStream stdout = new PrintStream(System.out);
+		String uIn;
+		boolean opSucc = false;
+		
+		printHeader();
+		stdout.println(String.format("Logged into conference %s as an Author.", currConf.toString()));
+		stdout.println("Editing paper " + manuscript.getTitle() + ".\n\n");
+		
+		do {
+			
+			stdout.print("Enter the new pathname to your manuscript, or \'exit\' to quit: ");
+			uIn = stdin.nextLine();
+			opSucc = true;
+			if(!uIn.equals("exit")) {
+				manuscript.setPathname(uIn);
+			}
+		} while(!opSucc);
 	}
 
 	private void displaySubprogramChairMenu() {
