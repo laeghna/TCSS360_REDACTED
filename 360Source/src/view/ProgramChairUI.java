@@ -69,7 +69,7 @@ public class ProgramChairUI {
         System.out.println(" 4) Logout");
         System.out.println();
         do {
-            System.out.println("Please enter a selection: ");
+            System.out.println("Please enter a selection: \n");
             try {
                 mySelection = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e){
@@ -115,7 +115,7 @@ public class ProgramChairUI {
         System.out.println(" 2) Logout");
         System.out.println();
         do {
-            System.out.println("Please enter a selection: ");
+            System.out.println("Please enter a selection: \n");
             try {
                 mySelection = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e){
@@ -165,7 +165,7 @@ public class ProgramChairUI {
         }
         do {
             System.out.println("Please enter the username of the Registered User to assign the role");
-            System.out.println("of Subprogram Chair: ");
+            System.out.println("of Subprogram Chair: \n");
             input = scanner.nextLine();
             if (!registeredUsers.containsKey(input))
                 System.out.println("Invalid username entered.");
@@ -175,7 +175,7 @@ public class ProgramChairUI {
         myConference.assignSubprogramChair(registeredUsers.get(input));
         
         System.out.println(registeredUsers.get(input) + " successfully assigned as Subprogram Chair.");
-        System.out.println("Assign another Subprogram Chair? (y/n: ");
+        System.out.println("Assign another Subprogram Chair? (y/n: \n");
         input = scanner.nextLine();
         scanner.close();
         if (input == "y") {
@@ -207,7 +207,7 @@ public class ProgramChairUI {
         }
         do {
             System.out.println("Please enter the username of the Subprogram Chair to assign");
-            System.out.println("a Manuscript to: ");
+            System.out.println("a Manuscript to: \n");
             input = scanner.nextLine();
             if (!myRole.getSPCS().contains(input)) {
                 System.out.println("Invalid username entered.");
@@ -224,7 +224,7 @@ public class ProgramChairUI {
             System.out.println();
         }
         do {
-            System.out.println("Enter the number of the Manuscript to be assigned: ");
+            System.out.println("Enter the number of the Manuscript to be assigned: \n");
             try {
                 mySelection = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e){

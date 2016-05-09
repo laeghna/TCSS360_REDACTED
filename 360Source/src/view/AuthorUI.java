@@ -59,7 +59,7 @@ public class AuthorUI {
         System.out.println(" 5) Logout");
         System.out.println();
         do {
-            System.out.println("\nPlease enter a selection: ");
+            System.out.println("\nPlease enter a selection: \n");
             try {
                 mySelection = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e){
@@ -91,7 +91,7 @@ public class AuthorUI {
     public void displaySubmitManuscriptMenu() {
         Scanner scanner = new Scanner(System.in);
         printHeader();
-        System.out.println("\nPlease enter the complete pathname for the Manuscript to be submitted: ");
+        System.out.println("Please enter the complete pathname for the Manuscript to be submitted: \n");
         String filename = scanner.nextLine();
         scanner.close();
         try {
@@ -113,7 +113,7 @@ public class AuthorUI {
         printHeader();
         printManuscriptsNumberedList(counter);
         do {
-            System.out.println("\nPlease enter a selection: ");
+            System.out.println("\nPlease enter a selection: \n");
             input = scanner.nextLine(); 
             if (input != "a" && input != "b") {
                 System.out.println("Invalid entry. Must enter a valid corresponding letter value.");
@@ -134,7 +134,7 @@ public class AuthorUI {
         printHeader();
         printManuscriptsNumberedList(counter);
         do {
-            System.out.println("\nPlease enter a selection: ");
+            System.out.println("Please enter a selection: \n");
             input = scanner.nextLine(); 
             if (input != "a" && input != "b") {
                 System.out.println("Invalid entry. Must enter a valid corresponding integer or letter value.");
@@ -155,7 +155,7 @@ public class AuthorUI {
         printHeader();
         printManuscriptsNumberedList(counter);
         do {
-            System.out.println("\nPlease enter a selection: ");
+            System.out.println("Please enter a selection: \n");
             input = scanner.nextLine(); 
             if (input != "a" && input != "b") {
                 System.out.println("Invalid entry. Must enter a valid corresponding integer or letter value.");

@@ -55,7 +55,7 @@ public class ReviewerUI {
         System.out.println(" 2) Logout");
         System.out.println();
         do {
-            System.out.println("\nPlease enter a selection: ");
+            System.out.println("Please enter a selection: \n");
             try {
                 mySelection = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e){
@@ -85,7 +85,7 @@ public class ReviewerUI {
             System.out.println();
         }
         do {
-            System.out.println("Enter the number of the Manuscript to be assigned: ");
+            System.out.println("Enter the number of the Manuscript to be assigned: \n");
             try {
                 mySelection = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e){
@@ -96,7 +96,7 @@ public class ReviewerUI {
         } while (mySelection < 1 || mySelection > counter);
         System.out.println("Submitting review for " + myManuscripts.get(mySelection).getTitle());
         System.out.println();
-        System.out.println("Please enter the full pathname for the review to be submitted: ");
+        System.out.println("Please enter the full pathname for the review to be submitted: \n");
         String filename = scanner.nextLine();
         try {
             //Code here

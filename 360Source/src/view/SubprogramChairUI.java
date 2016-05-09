@@ -47,7 +47,7 @@ public class SubprogramChairUI {
         System.out.println(" 3) Logout");
         System.out.println();
         do {
-            System.out.println("\nPlease enter a selection: ");
+            System.out.println("Please enter a selection: \n");
             try {
                 mySelection = Integer.parseInt(myScanner.nextLine());
             } catch (InvalidEntryException e){
