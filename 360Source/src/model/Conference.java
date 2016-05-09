@@ -90,10 +90,11 @@ public class Conference implements Serializable {
 		} 
 		
 		Date now = new Date();
+		now.setTime(System.currentTimeMillis());
 		
-		if(theSubmissionDeadline.after(now) ||
-		   theReviewDeadline.after(now) ||
-		   theRecommendationDeadline.after(now)) {
+		if(theSubmissionDeadline.before(now) ||
+		   theReviewDeadline.before(now) ||
+		   theRecommendationDeadline.before(now)) {
 			
 			throw new IllegalArgumentException("One or more deadlines have already past!");
 		}
@@ -119,6 +120,21 @@ public class Conference implements Serializable {
 	public ProgramChair getProgramChair() {
 		
 		return myProgramChair;
+	}
+	
+	/**
+	 * Gets the subprogram chair associated with the passes username.
+	 * @param theirUsername The username of the program chair we're searching for.
+	 * @return Returns the associated subprogram chair if they're assigned for this conference.
+	 * 		   Returns null if else.
+	 */
+	public SubprogramChair getSubProgramChair(String theirUsername) {
+		
+		if(mySubprogramChairs.containsKey(theirUsername)) {
+			return mySubprogramChairs.get(theirUsername);
+		} else {
+			return null;
+		}
 	}
 	
 	/**
@@ -243,7 +259,7 @@ public class Conference implements Serializable {
 		
 		ArrayList<ROLE> theirRoles = new ArrayList<ROLE>();
 		
-		if(theUsername.equals(myProgramChair)) {
+		if(theUsername.equals(myProgramChair.getUsername())) {
 			theirRoles.add(ROLE.PROGRAMCHAIR);
 		}
 		if(myReviewers.containsKey(theUsername)) {

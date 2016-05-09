@@ -7,6 +7,9 @@
 package view;
 
 import java.util.ArrayList;
+import java.util.Scanner;
+
+import model.Manuscript;
 
 /** 
  * Class that provides the UI menus for a Subprogram Chair. 
@@ -34,14 +37,21 @@ public class SubprogramChairUI {
         myManuscripts = new ArrayList<Manuscript>();
         mySelection = 0;
     }
-
+    
+    /** Prints out the header information. */
+    public void printHeader() {
+        System.out.println(myConference.toString());
+        System.out.println("Program Chair: " + myName);
+    }
     /**
      * Displays the main menu selections.
      */
     public void displayMainMenu() {
-        printHeader();
-        System.out.println(" Subprogram Chair Options);
-        System.out.println(" -------------------------);
+        
+    	Scanner myScanner = new Scanner(System.in);
+    	printHeader();
+        System.out.println(" Subprogram Chair Options");
+        System.out.println(" -------------------------");
         System.out.println(" 1) Assign Manuscript to Reviewer");
         System.out.println(" 2) Submit Manuscript Recommendation");
         System.out.println(" 3) Logout");
@@ -49,8 +59,8 @@ public class SubprogramChairUI {
         do {
             System.out.println("\nPlease enter a selection: ");
             try {
-                mySelection = Integer.parseInt(myScanner.nextLine());
-            } catch (InvalidEntryException e){
+				mySelection = Integer.parseInt(myScanner.nextLine());
+            } catch (Exception e){
                 System.out.println("Invalid Entry. Must enter a valid corresponding integer. ");
             }
             if (mySelection < 1 || mySelection > 3)
@@ -58,7 +68,7 @@ public class SubprogramChairUI {
         } while (mySelection < 0 || mySelection > 3);
         switch(mySelection) {
             case 1:
-                displayAssignManuscriptsMenu();
+                //displayAssignManuscriptsMenu();
                 break;
             case 2:
                 displaySubmitRecommendationMenu();

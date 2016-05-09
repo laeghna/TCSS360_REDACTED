@@ -6,8 +6,10 @@
 
 package view;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import model.Conference;
 import model.RegisteredUser;
 
 /** Runs the UI for the application.
@@ -15,25 +17,41 @@ import model.RegisteredUser;
  * @author Lisa Taylor
  * @version 7 May 2016
  */
-public class Main {
+public class Driver {
     
     /** Maps each registered user's unique username to its corresponding RegisteredUser object. */
-    private HashMap<String, RegisteredUser> registeredUsers = null;
+    private HashMap<String, RegisteredUser> registeredUsers;
+    
+    private ArrayList<Conference> Conferences;
     
     /** The current registered user. */
     private RegisteredUser currUser = null;
     
-    /**
-     * Private constructor to prevent instantiation of this class.
-     */
-    private Main() {
-        //Nothing to see here
-    }
 
     /** Main method starts the program. Command line arguments are ignored. */
     public static void main(String[] args) {
-        // TODO Auto-generated method stub
-
+    	
+    	
     }
-
+    
+    
+    private void readSerializedData() {
+    	
+    	
+    }
+    
+    private void writeSerializableData() {
+    	
+    	
+    }
+    
+    private RegisteredUser register() {
+    	
+    	return null;
+    }
+    
+    private RegisteredUser login() {
+    	
+    	return null;
+    }
 }

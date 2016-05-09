@@ -9,6 +9,8 @@ package view;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import model.Manuscript;
+
 /** 
  * Class that provides the UI menus for an Author who has submitted a manuscript. 
  * 
@@ -170,7 +172,7 @@ public class AuthorUI {
     }
     
     /** Helper method that prints the list of Manuscripts. */
-    private int printManuscriptsNumberedList(final int counter) {
+    private int printManuscriptsNumberedList(int counter) {
 
         System.out.println(" Submitted Manuscripts");
         System.out.println(" ----------------------");

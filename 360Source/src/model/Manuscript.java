@@ -180,6 +180,14 @@ public class Manuscript implements Serializable {
 		mySPC = theSPC;
 	}
 	/**
+	 * Gets the title of this manuscript.
+	 * @return The Title of this manuscript.
+	 */
+	public String getTitle() {
+		
+		return myTitle;
+	}
+	/**
 	 * Gets whether or not this paper has been accepted.
 	 * @return returns whether or not this paper has been accepted.
 	 */

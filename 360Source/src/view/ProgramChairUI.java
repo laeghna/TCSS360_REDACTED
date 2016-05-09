@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Scanner;
 
+import model.Conference;
+import model.Manuscript;
 import model.ProgramChair;
 import model.RegisteredUser;
 
@@ -104,7 +106,7 @@ public class ProgramChairUI {
         printHeader();
         System.out.println(" Submitted Manuscripts");
         System.out.println(" ----------------------");
-        for( Manuscript paper : myManuscripts ) {
+        for( Manuscript paper : myConference.getManuscripts() ) {
             System.out.println("\"" + paper.getTitle() + "\"");
             System.out.println("        Author: " + paper.getAuthor());
             System.out.println();
@@ -190,12 +192,11 @@ public class ProgramChairUI {
     
     private void displayAssignManuscriptsMenu() {
         Scanner scanner = new Scanner(System.in);
-        String input = "";
+        String input = "", selectedSPC = "";
         ProgramChair myRole = myConference.getProgramChair();
         if (myRole.getSPCS().isEmpty()) {
             System.out.println("No Subprogram Chairs have been assigned. Returning to Main Menu.");
             System.out.println();
-            break;
         }
         ArrayList<String> subPCs = myRole.getSPCS();
         System.out.println(" Subprogram Chairs");
@@ -212,6 +213,8 @@ public class ProgramChairUI {
             if (!myRole.getSPCS().contains(input)) {
                 System.out.println("Invalid username entered.");
                 System.out.println();
+            } else {
+            	selectedSPC = input;
             }
         } while (!myRole.getSPCS().contains(input));
         System.out.println("Manuscript will be assigned to " + registeredUsers.get(input).getName());
@@ -233,7 +236,7 @@ public class ProgramChairUI {
             if (mySelection < 1 || mySelection > counter)
                 System.out.println("Invalid Entry. Must enter a valid corresponding integer.");
         } while (mySelection < 1 || mySelection > counter);
-        myConference.getSubProgramChair().addManuscript(papers.get(mySelection - 1));
+        myConference.getSubProgramChair(selectedSPC).addManuscript(papers.get(mySelection - 1));
         System.out.println("Paper successfully assigned.");
         System.out.println("Returning to Main Menu");
         scanner.close();

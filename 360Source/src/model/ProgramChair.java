@@ -20,12 +20,21 @@ public class ProgramChair implements Serializable {
     /** The list of Subprogram Chairs. */
     private ArrayList<String> mySPCs;
     
+    private String myUsername;
     /** Constructs a ProgramChair object. 
      * 
      * @param theSPCs the Subprogram Chairs
      */
-    public ProgramChair(ArrayList<String> theSPCs) {
+    public ProgramChair(String uname, ArrayList<String> theSPCs) {
         mySPCs = theSPCs;
+        myUsername = uname;
+    }
+    /**
+     * Returns the program chair's username.
+     * @return Program chair's username.
+     */
+    public String getUsername() {
+    	return myUsername;
     }
     
     /** Adds a designated registered user to the list of Subprogram Chairs. 
@@ -58,6 +67,5 @@ public class ProgramChair implements Serializable {
      */
     public void acceptOrRejectManuscript(final Manuscript paper, final boolean decision) {
         paper.setAcceptance(decision);
-        return paper;
     }
 }

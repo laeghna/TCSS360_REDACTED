@@ -60,4 +60,8 @@ public class RegisteredUser implements Serializable {
     public String getName() {
         return firstName + " " + lastName;
     }
+    public String toString() {
+    	
+    	return String.format("%s, %s", firstName, lastName);
+    }
 }
