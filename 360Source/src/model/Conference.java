@@ -136,7 +136,20 @@ public class Conference implements Serializable {
 			return null;
 		}
 	}
-	
+	/**
+	 * Returns the map of usernames to spcs.
+	 * @return All of the spcs for this conference.
+	 */
+	public HashMap<String, SubprogramChair> getSPCs() {
+		return mySubprogramChairs;
+	}
+	/**
+	 * Returns the map of reviewers for this conference.
+	 * @return The Reviewers for this conference.
+	 */
+	public HashMap<String, Reviewer> getReviewers() {
+		return myReviewers;
+	}
 	/**
 	 * Returns all of the manuscripts that this conference contains.
 	 * @return All manuscripts for this conference.
