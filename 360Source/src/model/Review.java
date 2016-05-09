@@ -77,8 +77,8 @@ public class Review implements Serializable{
      * @param newReviewer
      * @exception NullPointerException if reviewer does not exist (null)
      */
-    private void setReviewer(Reviewer newReviewer) {
-        if(reviewer == null) {
+    public void setReviewer(Reviewer newReviewer) {
+        if(newReviewer == null) {
             throw new NullPointerException("No such reviewer");
         }
         reviewer = newReviewer;
@@ -90,7 +90,7 @@ public class Review implements Serializable{
      * @exception IllegalArgumentException if no reviewer is assigned
      * @exception NullPointerException if review does not exist or not found
      */
-    private void setReviewSubmission(String review) {
+    public void setReviewSubmission(String review) {
         if(reviewer == null) {
             throw new IllegalArgumentException("No reviewer assigned. Cannot add submission");
         }
