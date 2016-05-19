@@ -17,6 +17,9 @@ import java.util.ArrayList;
  */
 public class ProgramChair implements Serializable {
 
+    /** UID used during object serialization. */
+    private static final long serialVersionUID = -5771894302008490803L;
+
     /** The list of Subprogram Chairs. */
     private ArrayList<String> mySPCs;
     
