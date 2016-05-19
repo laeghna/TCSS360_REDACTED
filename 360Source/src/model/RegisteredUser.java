@@ -1,7 +1,7 @@
 /*****************************************************
  * Group 3: Lisa Taylor, Nathanael Toporek, Anh Tran *
  * TCSS 360, Spring 2016                             *
- * Deliverable #2                                    *
+ * Deliverable #3                                    *
  *****************************************************/
 
 package model;
@@ -15,9 +15,7 @@ import java.io.Serializable;
  */
 public class RegisteredUser implements Serializable {
     
-    /**
-     * 
-     */
+    /** UID used during object serialization. */
     private static final long serialVersionUID = -7126786747221081727L;
 
     /** The user's username. */
