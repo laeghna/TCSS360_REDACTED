@@ -12,12 +12,14 @@ import java.util.Scanner;
 import model.Conference;
 import model.Manuscript;
 import model.RegisteredUser;
+import model.Reviewer;
+import model.Review;
 
 /** 
  * Class that provides the UI menus for a Reviewer. 
  * 
- * @author Lisa Taylor
- * @version 7 May 2016
+ * @author Lisa Taylor and Anh Tran
+ * @version 22 May 2016
  */
 public class ReviewerUI {
 
@@ -88,19 +90,20 @@ public class ReviewerUI {
             if (mySelection < 1 || mySelection > 2)
                 System.out.println("Invalid Entry. Must enter a valid corresponding integer.");
         } while (mySelection < 0 || mySelection > 2);
-        scanner.close();
+
         switch(mySelection) {
             case 1:
-                displaySubmitReviewsMenu();
+                displaySubmitReviewsMenu(scanner);
                 break;
             case 2:
-                //Code here?
+                //Logout done in GeneralUI
                 break;
         }
+        //scanner.close();
     }
     
-    public void displaySubmitReviewsMenu() {
-        Scanner scanner = new Scanner(System.in);
+    public void displaySubmitReviewsMenu(Scanner scanner) {
+        //Scanner scanner = new Scanner(System.in);
         int counter = 0;
         System.out.println(" Assigned Manuscripts");
         System.out.println(" ---------------------");
@@ -123,7 +126,8 @@ public class ReviewerUI {
         System.out.println("Please enter the full pathname for the review to be submitted: ");
         String filename = scanner.nextLine();
         try {
-            //Code here
+            Reviewer me = new Reviewer(mySelf.getUsername());
+            myManuscripts.get(mySelection).addNewReview(me, new Review(me, filename));
         } catch (Exception e) {  //Can change the exception one known what type will be thrown
             System.out.println("Invalid pathname. File could not be found.");
             System.out.println();
