@@ -6,13 +6,12 @@
 
 package model;
 import java.io.Serializable;
-import java.util.ArrayList;
 
 import enums.Recommendation;
 
 /**
  * @author Anh Tran
- * @version 05/07/2016
+ * @version 05/27/2016
  */
 public class SubprogramChair implements Serializable{
 
@@ -20,27 +19,20 @@ public class SubprogramChair implements Serializable{
 	/**
      * Max amount of manuscripts assigned to Subprogram Chair
      */
-    private static final int MAXPAPERS = 4;
-    /**
-     * Username of Subprogram Chair
-     */
+    public static final int MAXPAPERS = 4;
+
+    //Username of subprogram chair
     private String userName;
 
     /**
-     * List of assigned manuscripts to Subprogram Chair
-     */
-    private ArrayList<Manuscript> assignedManuscripts;
-
-    /**
-     * Constructor. Creates a subprogram chair role.
+     * Creates a subprogram chair role.
      * @param newUserName Username of Subprogram Chair
      * @exception NullPointerException if newUserName is null
      */
     public SubprogramChair(String newUserName) {
-        if(newUserName == null || newUserName == "") {
+        if(newUserName == null || newUserName.equals("")) {
             throw new NullPointerException("Invalid Username");
         }
-        assignedManuscripts = new ArrayList<Manuscript>();
         userName = newUserName;
     }
 
@@ -67,7 +59,7 @@ public class SubprogramChair implements Serializable{
 
     /**
      * Submits recommendation of Subprogram Chair
-     * @param recommendation String that contains the Subprogram Chair's recommendation
+     * @param theRecommendation String that contains the Subprogram Chair's recommendation
      */
     public void submitRecommendation(Manuscript theManuscript, Recommendation theRecommendation) {
         
@@ -81,50 +73,5 @@ public class SubprogramChair implements Serializable{
     public String getUserName() {
         return userName;
     }
-
-    /**
-     * Getter. Gets list of Manuscripts belonging to Subprogram Chair
-     * @return  Subprogram Chair's list of Manuscripts
-     */
-    public ArrayList<Manuscript> getAssignedManuscripts() {
-        return new ArrayList<Manuscript>(assignedManuscripts);
-    }
-
-    /**
-     * Adds Manuscript to Subprogram Chair. Max size is 4.
-     * @param newManuscript Manuscript to be added to Subprogram Chair
-     * @exception  NullPointerException if Manuscript does not exist (null)
-     */
-    public void addManuscript(Manuscript newManuscript) {
-        if(newManuscript == null) {
-            throw new NullPointerException("No manuscript found");
-        }
-        if(assignedManuscripts.size() == MAXPAPERS) {
-            System.out.println("Cannot assign any more manuscripts");
-        }
-        else if(assignedManuscripts.contains(newManuscript)) {
-            System.out.println("Manuscript already added!");
-        }
-        else
-            assignedManuscripts.add(newManuscript);
-    }
-
-    /**
-     * Removes Manuscript from Subprogram Chair List.
-     * @param toRemove Manuscript to be removed from Subprogram Chair
-     * @exception  NullPointerException if Manuscript does not exist (null)
-     */
-    public void removeManuscript(Manuscript toRemove) {
-        if(toRemove == null) {
-            throw new NullPointerException("No manuscript found");
-        }
-        if(assignedManuscripts.isEmpty()) {
-            System.out.println("List is empty. Nothing to remove");
-        }
-        if(!assignedManuscripts.contains(toRemove)) {
-            System.out.println("Manuscript not assigned. No removal");
-        }
-        else
-            assignedManuscripts.remove(toRemove);
-    }
+    
 }
