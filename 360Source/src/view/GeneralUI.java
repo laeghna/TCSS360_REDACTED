@@ -369,11 +369,13 @@ public class GeneralUI {
 			break;
 			
 		case SUBPROGRAMCHAIR:
-			//TODO Implement subprogram chair UI class here.
+			SubprogramChairUI spcUI = new SubprogramChairUI(currConf, currUser, this);
+			backFlag = spcUI.displayMainMenu();
 			break;
 			
-		case REVIEWER: 
-			//TODO Implement reveiwer UI class here.
+		case REVIEWER:
+			ReviewerUI revUI = new ReviewerUI(currConf, currUser, this);
+			backFlag = revUI.displayMainMenu();
 			break;
 			
 		case AUTHOR:
@@ -381,5 +383,9 @@ public class GeneralUI {
 			break;
 		}
 		return backFlag;		
+	}
+
+	public HashMap<String, RegisteredUser> getMyUsers() {
+		return myUsers;
 	}
 }

@@ -8,10 +8,14 @@ package view;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.PrintStream;
 
 import model.Conference;
 import model.Manuscript;
 import model.RegisteredUser;
+import model.Review;
+import model.Reviewer;
+import enums.PageStatus;
 
 /** 
  * Class that provides the UI menus for a Reviewer. 
@@ -69,68 +73,199 @@ public class ReviewerUI {
     
     /**
      * Displays the main menu selections.
+     * author Anh Tran
+     * version May 27 2016
      */
-    public void displayMainMenu() {
-        Scanner scanner = new Scanner(System.in);
-        printHeader();
-        System.out.println(" Reviewer Options");
-        System.out.println(" ----------------------");
-        System.out.println(" 1) Submit Reviews");
-        System.out.println(" 2) Logout");
-        System.out.println();
+    public PageStatus displayMainMenu() {
+
+        PageStatus backCaller = PageStatus.GOTO_MAIN_MENU; //Used to control what the calling method does.
+        PageStatus backCallee = PageStatus.GOTO_MAIN_MENU; //Used to control we do based off the actions taken.
+
+        Scanner myScanner = new Scanner(System.in);
+        PrintStream stdout = new PrintStream(System.out);
+        String userInput = "";
+
         do {
-            System.out.println("\nPlease enter a selection: ");
-            try {
-                mySelection = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e){
-                System.out.println("Invalid Entry. Must enter a valid corresponding integer. ");
-            }
-            if (mySelection < 1 || mySelection > 2)
-                System.out.println("Invalid Entry. Must enter a valid corresponding integer.");
-        } while (mySelection < 0 || mySelection > 2);
-        scanner.close();
-        switch(mySelection) {
-            case 1:
-                displaySubmitReviewsMenu();
-                break;
-            case 2:
-                //Code here?
-                break;
-        }
+            boolean opSucc = false;
+
+            printHeader();
+            stdout.println(" Reviewer Options");
+            stdout.println(" ----------------------");
+            stdout.println(" 1> Submit Reviews\n");
+            stdout.println(" b> Back");
+            stdout.println(" e> Exit\n");
+
+            /*
+            //Not needed. Validation will be done in switch statement.
+            do {
+                System.out.println("\nPlease enter a selection: ");
+                try {
+                    mySelection = Integer.parseInt(scanner.nextLine());
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid Entry. Must enter a valid corresponding integer. ");
+                }
+                if (mySelection < 1 || mySelection > 2)
+                    System.out.println("Invalid Entry. Must enter a valid corresponding integer.");
+            } while (mySelection < 0 || mySelection > 2);
+            scanner.close();
+            */
+
+            do {
+                stdout.print("Select an action: ");
+                userInput = myScanner.nextLine();
+                switch (userInput.charAt(0)) {
+                    case '1':
+                        opSucc = true;
+                        backCallee = displayManuscriptsMenu();
+                        break;
+                    case 'b':
+                        opSucc = true;
+                        backCallee = PageStatus.EXIT; // Exit outer loop.
+                        backCaller = PageStatus.BACK; // Tell calling method to hold.
+                        break;
+                    case 'e':
+                        opSucc = true;
+                        backCallee = PageStatus.EXIT; // Exit outer loop.
+                        backCaller = PageStatus.EXIT; // Tell calling method to retire.
+                        break;
+                    default:
+                        opSucc = false;
+                        stdout.println("Invalid option, try again.");
+                        break;
+                }
+            }while(!opSucc);
+        }while(backCallee == PageStatus.BACK || backCallee == PageStatus.GOTO_MAIN_MENU);
+
+        return backCaller;
     }
-    
-    public void displaySubmitReviewsMenu() {
-        Scanner scanner = new Scanner(System.in);
+
+    /**
+     * Displays the list of manuscripts
+     * author Anh Tran
+     * version May 27 2016
+     */
+    public PageStatus displayManuscriptsMenu() {
+
+        PageStatus backCaller = PageStatus.GOTO_MAIN_MENU; //Used to control what the calling method does.
+        PageStatus backCallee = PageStatus.GOTO_MAIN_MENU; //Used to control we do based off the actions taken.
+
+        Scanner myScanner = new Scanner(System.in);
+        PrintStream stdout = new PrintStream(System.out);
+        String userInput = "";
         int counter = 0;
-        System.out.println(" Assigned Manuscripts");
-        System.out.println(" ---------------------");
-        for( Manuscript paper : myManuscripts ) {
-            System.out.println(" \"" + ++counter + ") " + paper.getTitle() + "\"");
-            System.out.println();
-        }
+
         do {
-            System.out.println("Enter the number of the Manuscript to be assigned: ");
-            try {
-                mySelection = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e){
-                System.out.println("Invalid Entry. Must enter a valid corresponding integer.");
+            boolean opSucc = false;
+
+            stdout.println(" Assigned Manuscripts");
+            stdout.println(" ---------------------");
+            for (Manuscript paper : myManuscripts) {
+                stdout.println(" \"" + ++counter + ") " + paper.getTitle() + "\"");
             }
-            if (mySelection < 1 || mySelection > counter)
-                System.out.println("Invalid Entry. Must enter a valid corresponding integer.");
-        } while (mySelection < 1 || mySelection > counter);
-        System.out.println("Submitting review for " + myManuscripts.get(mySelection).getTitle());
-        System.out.println();
-        System.out.println("Please enter the full pathname for the review to be submitted: ");
-        String filename = scanner.nextLine();
-        try {
-            //Code here
-        } catch (Exception e) {  //Can change the exception one known what type will be thrown
-            System.out.println("Invalid pathname. File could not be found.");
-            System.out.println();
-            displayMainMenu();
-        }
-        System.out.println("Review submitted successfully.");
-        System.out.println();
-        displayMainMenu();
+            stdout.println(" ------------------------------\n");
+            stdout.println(" b> Back");
+            stdout.println(" e> Exit\n");
+
+            /*
+            //No need. Validation is done in next do-while loop.
+            do {
+                System.out.println("Enter the number of the Manuscript to be assigned: ");
+                try {
+                    mySelection = Integer.parseInt(scanner.nextLine());
+                } catch (NumberFormatException e){
+                    System.out.println("Invalid Entry. Must enter a valid corresponding integer.");
+                }
+                if (mySelection < 1 || mySelection > counter)
+                    System.out.println("Invalid Entry. Must enter a valid corresponding integer.");
+            } while (mySelection < 1 || mySelection > counter);
+            */
+
+            do {
+                stdout.print("Select manuscript to submit review for: ");
+                userInput = myScanner.nextLine();
+                int option = 0;
+                try {
+                    option = Integer.parseInt(userInput);
+                } catch(NumberFormatException e) {
+                    option = 0;
+                }
+                if(option > 0 && option <= counter) {
+                    mySelection = option;
+                    backCallee = displaySubmitReviewsMenu();
+                    if(backCallee == PageStatus.EXIT) {
+                        backCaller = PageStatus.EXIT;
+                    }
+                }
+                else if(userInput.charAt(0) == 'b') {
+                    opSucc = true;
+                    backCallee = PageStatus.EXIT; // Exit outer loop.
+                    backCaller = PageStatus.BACK; // Tell calling method to hold.
+                }
+                else if(userInput.charAt(0) == 'e') {
+                    opSucc = true;
+                    backCallee = PageStatus.EXIT; // Exit outer loop.
+                    backCaller = PageStatus.EXIT; // Tell calling method to retire.
+                }
+                else {
+                    opSucc = false;
+                    stdout.println("Invalid option, try again.");
+                }
+            }while(!opSucc);
+        } while (backCallee == PageStatus.BACK);
+
+        return backCaller;
+    }
+
+    /**
+     * Displays the review submission menu
+     * author Anh Tran
+     * version May 27 2016
+     */
+    public PageStatus displaySubmitReviewsMenu() {
+        PageStatus backCaller = PageStatus.GOTO_MAIN_MENU; //Used to control what the calling method does.
+        PageStatus backCallee = PageStatus.GOTO_MAIN_MENU; //Used to control we do based off the actions taken.
+
+        Scanner myScanner = new Scanner(System.in);
+        PrintStream stdout = new PrintStream(System.out);
+        String userInput = "";
+
+        do {
+            boolean opSucc = false;
+
+            stdout.println(" Submit Review Menu");
+            stdout.println(" Enter filename below\n");
+            stdout.println(" b> Back");
+            stdout.println(" e> Exit\n");
+
+            do {
+                stdout.print("Enter filename of review or action: ");
+                userInput = myScanner.nextLine();
+
+                if(userInput.length() > 0) {
+                    opSucc = true;
+                    Reviewer me = new Reviewer(mySelf.getUsername());
+                    myManuscripts.get(mySelection).addNewReview(me, new Review(me, userInput));
+                    stdout.println("Added " + userInput + " review.");
+                    backCallee = PageStatus.EXIT; // Exit outer loop.
+                    backCaller = PageStatus.EXIT; // Tell calling method to retire.
+                }
+                else if(userInput.charAt(0) == 'b') {
+                    opSucc = true;
+                    backCallee = PageStatus.EXIT; // Exit outer loop.
+                    backCaller = PageStatus.BACK; // Tell calling method to hold.
+                }
+                else if(userInput.charAt(0) == 'e') {
+                    opSucc = true;
+                    backCallee = PageStatus.EXIT; // Exit outer loop.
+                    backCaller = PageStatus.EXIT; // Tell calling method to retire.
+                }
+                else {
+                    opSucc = false;
+                    stdout.println("Invalid option, try again.");
+                }
+            }while(!opSucc);
+        }while(backCallee == PageStatus.BACK);
+
+        return backCaller;
     }
 }
