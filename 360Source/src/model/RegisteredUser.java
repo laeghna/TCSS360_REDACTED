@@ -11,7 +11,7 @@ import java.io.Serializable;
 /** Class that provides the functionality for a registered user. 
  * 
  * @author Lisa Taylor
- * @version 6 May 2016
+ * @version 20 May 2016
  */
 public class RegisteredUser implements Serializable {
     
@@ -55,11 +55,11 @@ public class RegisteredUser implements Serializable {
     }
     
     /** Returns the user's fullname. */
-    public String getName() {
+    public String getFullName() {
         return firstName + " " + lastName;
     }
     public String toString() {
     	
-    	return String.format("%s %s", firstName, lastName);
+    	return String.format("%s: %s %s",username, firstName, lastName);
     }
 }
