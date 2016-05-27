@@ -10,15 +10,18 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.Set;
 
+import enums.AcceptanceStatus;
+import enums.PageStatus;
+import enums.Recommendation;
+import enums.Role;
 import model.Conference;
 import model.Manuscript;
 import model.ProgramChair;
-import model.Recommendation;
 import model.RegisteredUser;
 import model.Review;
 import model.Reviewer;
-import model.Role;
 import model.SubprogramChair;
 
 public class GeneralUI {
@@ -37,6 +40,8 @@ public class GeneralUI {
 	
 	public void displayDefaultMenu() {
 		
+		boolean backCaller = false; //Used to control what the calling method does.
+		boolean backCallee = true; //Used to control we do based off the actions taken.
 		String userInput = null;
 		Scanner stdin = new Scanner(System.in);
 		PrintStream stdout = new PrintStream(System.out);
@@ -78,31 +83,56 @@ public class GeneralUI {
 		System.out.println("Logged in as: " + currUser.toString());
 	}
 
-	private void displayLogin() {
+	private PageStatus displayLogin() {
 		
+		PageStatus backCaller = PageStatus.GOTO_MAIN_MENU; //Used to control what the calling method does.
+		PageStatus backCallee = PageStatus.GOTO_MAIN_MENU; //Used to control we do based off the actions taken.
 		String userInput = null;
 		Scanner stdin = new Scanner(System.in);
 		PrintStream stdout = new PrintStream(System.out);
-		boolean loginSuccess = false;
 		
 		do {
+			boolean loginSuccess = false;
 			
-			stdout.print("MSEE CONFERENCE MANAGEMENT SYSTEM\n\n" +
-						 "Please enter your username (type \'back\' to return to the main menu) : ");
-			
-			userInput = stdin.nextLine();
-			
-			if(myUsers.containsKey(userInput)) {
+			do {
 				
-				loginSuccess = true;
-				currUser = myUsers.get(userInput);
-				displayConferenceOptions();
-			}
-		} while(!userInput.equals("back") && !loginSuccess);
+				stdout.print("MSEE CONFERENCE MANAGEMENT SYSTEM\n\n" +
+							 "Please enter your username (type \'b\' to go back, or \'e\' to exit) : ");
+				
+				userInput = stdin.nextLine();
+				
+				if(myUsers.containsKey(userInput)) {
+					
+					loginSuccess = true; // Exit the inner loop.
+					currUser = myUsers.get(userInput); 
+					backCallee = displayConferenceOptions();// Called function determines
+															// what the outer loop does.
+					
+					// If the user wanted to exit somewhere down the option tree, tell the
+					// calling method to exit.
+					if(backCallee == PageStatus.EXIT) {
+						backCaller = PageStatus.EXIT;
+					}
+				} else if(userInput.length() > 0 && userInput.charAt(0) == 'b') {
+					
+					loginSuccess = true; // Exits inner loop
+					backCaller = PageStatus.BACK; // Tell the caller to stay put.
+					backCallee = PageStatus.EXIT; //Exit outer loop.
+				} else if(userInput.length() > 0 && userInput.charAt(0) == 'e') {
+					
+					loginSuccess = true; // Exit the inner loop.
+					backCallee = PageStatus.EXIT; // Exit the outer loop.
+					backCaller = PageStatus.EXIT; // Tell the caller to exit.
+				}
+			} while(!loginSuccess);
+		} while(backCallee == PageStatus.BACK);
+		
+		return backCaller;
 	}
 
 	private void displayRegister() {
 		
+		boolean backCaller = false; //Used to control what the calling method does.
 		Scanner stdin = new Scanner(System.in);
 		String userInput;
 		boolean opSuccess = false;
@@ -113,122 +143,159 @@ public class GeneralUI {
 		
 		System.out.println("\n\nCONFERENCE MANAGEMENT SYSTEM\n\n");
 			
-		System.out.print("Please enter your first name and last name separated by a space: ");
+		System.out.print("Please enter your first name and last name separated by a space, enter \'back\' to go back: ");
 		fName = stdin.next();
-		lName = stdin.nextLine();
-		
-		do {
-			
-			System.out.print("Please enter a unique username for yourself: ");
-			uName = stdin.nextLine();
-			
-			if(!myUsers.containsKey(uName)) {
-				opSuccess = true;
-				RegisteredUser user = new RegisteredUser(uName, fName, lName);
-				myUsers.put(uName, user);
-			}
-		} while(!opSuccess);
+		if(!fName.equals("back")) {
+			lName = stdin.nextLine();
+			do {
+				
+				System.out.print("Please enter a unique username for yourself: ");
+				uName = stdin.nextLine();
+				
+				if(!myUsers.containsKey(uName)) {
+					opSuccess = true;
+					RegisteredUser user = new RegisteredUser(uName, fName, lName);
+					myUsers.put(uName, user);
+				} else {
+					System.out.println("That username is already taken. Try again.\n");
+				}
+			} while(!opSuccess);
+		}
 	}
 	
-	private void displayConferenceOptions() {
-
+	private PageStatus displayConferenceOptions() {
+		
+		PageStatus backCaller = PageStatus.GOTO_MAIN_MENU; //Used to control what the calling method does.
+		PageStatus backCallee = PageStatus.GOTO_MAIN_MENU; //Used to control we do based off the actions taken.
 		String userInput = null;
 		Scanner stdin = new Scanner(System.in);
 		boolean operationSuccess = false;
 		
-		printHeader();
-		System.out.println("\nAvailable Conferences: ");
-		
-		int i = 1;
-		for(Conference c : myConfs) {
-			System.out.println(String.format("%d> %s", i++, c.toString()));
-		}
-		System.out.println("\nb> back\n"+
-						   "e> exit");
-		
-		System.out.print("Enter an option: ");
-		
 		do {
+		
+			printHeader();
+			System.out.println("\nAvailable Conferences: ");
 			
-			userInput = stdin.nextLine();
-			int k;
-			try {
-				k = Integer.parseInt(userInput);
-			} catch(NumberFormatException ne) {
-				k = 0;
+			int i = 1;
+			for(Conference c : myConfs) {
+				System.out.println(String.format("%d> %s", i++, c.toString()));
 			}
+			System.out.println("\nb> back\n"+
+							   "e> exit");
 			
-			if(k > 0 && k <= myConfs.size()) {
+			System.out.print("Enter an option: ");
+			
+			do {
 				
-				operationSuccess = true;
-				currConf = myConfs.get(k - 1);
-				displayConfOptions();
-			} else if (userInput.charAt(0) == 'b' || userInput.charAt(0) == 'e') {
-				operationSuccess = true;
-			}
+				userInput = stdin.nextLine();
+				int k;
+				try {
+					k = Integer.parseInt(userInput);
+				} catch(NumberFormatException ne) {
+					k = 0;
+				}
 				
-		} while(!operationSuccess);
+				if(k > 0 && k <= myConfs.size()) {
+					
+					operationSuccess = true;
+					currConf = myConfs.get(k - 1);
+					backCallee = displayConfOptions();
+					
+					// If the user wanted to exit at some point down the decision tree
+					// tell the calling method to exit.
+					if(backCallee == PageStatus.EXIT) {
+						
+						backCaller = PageStatus.EXIT;
+					}
+					
+				} else if (userInput.length() > 0 && userInput.charAt(0) == 'e') {
+					operationSuccess = true; // Exit inner loop.
+					backCallee = PageStatus.EXIT; // Exit outer loop. 
+					backCaller = PageStatus.EXIT; // Tell calling function to retire.
+				} else if (userInput.length() > 0 && userInput.charAt(0) == 'b') {
+					operationSuccess = true;
+					backCallee = PageStatus.EXIT; // Exit outer loop.
+					backCaller = PageStatus.BACK; //Hold calling method.
+				}
+					
+			} while(!operationSuccess);
+		} while(backCallee == PageStatus.BACK);
+		
+		return backCaller;
 	}
 
-	private void displayConfOptions() {
+	private PageStatus displayConfOptions() {
 
+		PageStatus backCaller = PageStatus.GOTO_MAIN_MENU; //Used to control what the calling method does.
+		PageStatus backCallee = PageStatus.GOTO_MAIN_MENU; //Used to control we do based off the actions taken.
 		String userInput = null;
 		Scanner stdin = new Scanner(System.in);
 		boolean operationSuccess = false;
-		
-		printHeader();
-		
-		System.out.println("Logged into Conference: " + currConf.toString());
-		
-		ArrayList<Role> roles = currConf.getRoles(currUser.getUsername());
-		int i = 1;
-		for(Role r : roles) {
-			
-			switch(r) {
-			
-			case PROGRAMCHAIR:
-				System.out.println(String.format("%d> %s", i++, "Program Chair Options"));
-				break;
-			case SUBPROGRAMCHAIR:
-				System.out.println(String.format("%d> %s", i++, "Subprogram Chair Options"));
-				break;
-			case REVIEWER:
-				System.out.println(String.format("%d> %s", i++, "Reviewer Options"));
-				break;
-			case AUTHOR:
-				System.out.println(String.format("%d> %s", i++, "Author Options"));
-				break;
-			default:
-				break;
-			}
-		}
-		System.out.println(String.format("%d> %s\n", i++, "Submit a Manuscript"));
-		System.out.println("e> Exit\n\n");
-		System.out.print("Select an option for this conference: ");
 		do {
-			userInput = stdin.nextLine();
-			int option = 0;
-			try {
-				option = Integer.parseInt(userInput);
-			} catch(NumberFormatException ne) {
-				option = 0;
-			}
+			printHeader();
+			System.out.println("Logged into Conference: " + currConf.toString());
 			
-			if(option > 0 && option <= roles.size()) {
+			ArrayList<Role> roles = currConf.getRoles(currUser.getUsername());
+			int i = 1;
+			for(Role r : roles) {
 				
-				operationSuccess = true;
-				parseSubMenu(roles.get(option - 1));
-			} else if(option == roles.size() + 1) {
-				operationSuccess = true;
-				displaySubmitManuscriptMenu();
-			} else if(userInput.charAt(0) == 'e') {
-				operationSuccess = true;
+				switch(r) {
+				
+				case PROGRAMCHAIR:
+					System.out.println(String.format("%d> %s", i++, "Program Chair Options"));
+					break;
+				case SUBPROGRAMCHAIR:
+					System.out.println(String.format("%d> %s", i++, "Subprogram Chair Options"));
+					break;
+				case REVIEWER:
+					System.out.println(String.format("%d> %s", i++, "Reviewer Options"));
+					break;
+				case AUTHOR:
+					System.out.println(String.format("%d> %s", i++, "Author Options"));
+					break;
+				default:
+					break;
+				}
 			}
-		} while(!operationSuccess);
+			System.out.println(String.format("%d> %s\n\n", i++, "Submit a Manuscript"));
+			System.out.println("b> back");
+			System.out.println("e> Exit\n\n");
+			System.out.print("Select an option for this conference: ");
+			do {
+				userInput = stdin.nextLine();
+				int option = 0;
+				try {
+					option = Integer.parseInt(userInput);
+				} catch(NumberFormatException ne) {
+					option = 0;
+				}
+				
+				if(option > 0 && option <= roles.size()) {
+					
+					operationSuccess = true;
+					backCallee = parseSubMenu(roles.get(option - 1));
+				} else if(option == roles.size() + 1) {
+					operationSuccess = true;
+					backCallee = displaySubmitManuscriptMenu();
+				} else if(userInput.length() > 0 && userInput.charAt(0) == 'e') {
+					operationSuccess = true; // Exit inner loop
+					backCallee = PageStatus.EXIT; // Exit outer loop
+					backCaller = PageStatus.EXIT; // Tell the calling method to retire.
+				} else if(userInput.length() > 0 && userInput.charAt(0) == 'b') {
+					operationSuccess = true; // Exit the inner loop,
+					backCallee = PageStatus.EXIT; // Exit the outer loop.
+					backCaller = PageStatus.BACK	; // Tell the calling method to hold.
+				}
+			} while(!operationSuccess);
+		} while(backCallee != PageStatus.EXIT);
+		
+		return backCaller;
 	}
 
-	private void displaySubmitManuscriptMenu() {
-
+	private PageStatus displaySubmitManuscriptMenu() {
+		
+		PageStatus backCaller = PageStatus.GOTO_MAIN_MENU; //Used to control what the calling method does.
+		boolean exitFlag = false; // Used to control the second half of this method.
 		String userInput = null;
 		Scanner stdin = new Scanner(System.in);
 		boolean operationSuccess = false;
@@ -236,813 +303,83 @@ public class GeneralUI {
 		printHeader();
 		System.out.println(String.format("Logged into Conference: %s\n\n", currConf.toString()));
 		
-		String Title, pName;
+		String Title, pName = null;
 		
-		System.out.print("Enter the title of your manuscript: ");
+		System.out.print("Enter the title of your manuscript (type \'b\' to go back, or \'e\' to exit): ");
 		
 		do {
 			
 			Title = stdin.nextLine();
-			if(Title.length() > 0) {
+			if (Title.length() == 1 && Title.charAt(0) == 'b'){
+				operationSuccess = true; // Exit this operation.
+				backCaller = PageStatus.BACK; // Tell calling method to hold.
+				exitFlag = true;
+			} else if (Title.length() == 1 && Title.charAt(0) == 'e'){
+				operationSuccess = true; // Exit this operation.
+				backCaller = PageStatus.EXIT; // Tell the calling method to expire.
+				exitFlag = true;
+			} else if(Title.length() > 0) {
 				operationSuccess = true;
 			} else {
 				System.out.print("Try again: ");
 			}
 		} while(!operationSuccess);
 		
-		operationSuccess = false;
+		operationSuccess = exitFlag;
 		
-		System.out.print("Enter the pathname to your manuscript: ");
+		System.out.print("Enter the pathname to your manuscript (type \'b\' to go back, or \'e\' to exit): ");
 		
-		do {
+		while(!operationSuccess) {
 			
 			pName = stdin.nextLine();
-			if(pName.length() > 0) {
+			if (Title.length() == 1 && Title.charAt(0) == 'b'){
+				operationSuccess = true; // Exit this operation.
+				backCaller = PageStatus.BACK; // Tell calling method to hold.
+				exitFlag = true;
+			} else if (Title.length() == 1 && Title.charAt(0) == 'e'){
+				operationSuccess = true; // Exit this operation.
+				backCaller = PageStatus.EXIT; // Tell the calling method to expire.
+				exitFlag = true;
+			} else if(pName.length() > 0) {
 				operationSuccess = true;
 			} else {
 				System.out.print("Try again: ");
 			}
-		} while(!operationSuccess);
+		} 
 		
-		Manuscript man = new Manuscript(Title,
-										String.format("%s %s", currUser.getFirstName(), currUser.getLastName()),
-										currUser.getUsername(),
-										pName);
-		currConf.addManuscript(man);
+		if(!exitFlag) {
+			Manuscript man = new Manuscript(Title,
+											String.format("%s %s", currUser.getFirstName(), currUser.getLastName()),
+											currUser.getUsername(),
+											pName);
+			currConf.addManuscript(man);
+		}
+		
+		return backCaller;
 	}
 
-	private void parseSubMenu(Role role) {
+	private PageStatus parseSubMenu(Role role) {
 
+		PageStatus backFlag = PageStatus.GOTO_MAIN_MENU;
 		switch(role) {
 		
 		case PROGRAMCHAIR:
-			displayProgramChairMenu();
+			ProgramChairUI pcUI = new ProgramChairUI(currConf, currUser, myUsers);
+			backFlag = pcUI.displayMainMenu();
 			break;
 			
 		case SUBPROGRAMCHAIR:
-			displaySubprogramChairMenu();
+			//TODO Implement subprogram chair UI class here.
 			break;
 			
 		case REVIEWER: 
-			displayReviewerMenu();
+			//TODO Implement reveiwer UI class here.
 			break;
 			
 		case AUTHOR:
-			displayAuthorMenu();
+			//TODO Implement author UI class here.
 			break;
 		}
-	}
-
-	private void displayAuthorMenu() {
-
-		Scanner stdin = new Scanner(System.in);
-		PrintStream stdout = new PrintStream(System.out);
-		String uIn;
-		boolean opSucc = false;
-		
-		printHeader();
-		stdout.println(String.format("Logged into conference %s as an Author.", currConf.toString()));
-		
-		stdout.println("SELECT A PAPER TO WORK WITH: \n");
-		
-		int i = 1; 
-		for(Manuscript man : currConf.getMyManuscripts(currUser.getUsername())) {
-			
-			stdout.println(String.format("%d> %s", i++, man.getTitle()));
-		}
-		stdout.println("\ne> exit\n");
-		
-		do {
-			
-			stdout.println("Select a manuscript to work with: ");
-			
-			int option = 0;
-			uIn = stdin.nextLine();
-			
-			try{
-				option = Integer.parseInt(uIn);
-			} catch(NumberFormatException ne) {
-				option = 0;
-			}
-			
-			if(option > 0 && option <= currConf.getMyManuscripts(currUser.getUsername()).size()) {
-				opSucc = true;
-				editManuscript(currConf.getMyManuscripts(currUser.getUsername()).get(option - 1));
-			} else if (uIn.charAt(0) == 'e') {
-				opSucc = true;
-			} else  {
-				stdout.println("Invalid input. Try again.");
-			}
- 		} while(!opSucc);
-	}
-
-	private void editManuscript(Manuscript manuscript) {
-		
-		Scanner stdin = new Scanner(System.in);
-		PrintStream stdout = new PrintStream(System.out);
-		String uIn;
-		boolean opSucc = false;
-		
-		printHeader();
-		stdout.println(String.format("Logged into conference %s as an Author.", currConf.toString()));
-		stdout.println("Editing paper " + manuscript.getTitle() + ".\n");
-		
-		stdout.println("1> Make Changes\n" + 
-					   "2> Unsubmit\n\n" + 
-					   "e> exit\n");
-		
-		do {
-			
-			stdout.print("Select an action: ");
-			uIn = stdin.nextLine();
-			
-			switch(uIn.charAt(0)) {
-			case '1':
-				opSucc = true;
-				changePathname(manuscript);
-				break;
-			case '2':
-				opSucc = true;
-				currConf.getManuscripts().remove(manuscript);
-				break;
-			case 'e':
-				opSucc = true;
-			default:
-				stdout.println("Invalid input. Try again.");
-			}
-		} while(!opSucc);
-	}
-
-	private void changePathname(Manuscript manuscript) {
-		
-		Scanner stdin = new Scanner(System.in);
-		PrintStream stdout = new PrintStream(System.out);
-		String uIn;
-		boolean opSucc = false;
-		
-		printHeader();
-		stdout.println(String.format("Logged into conference %s as an Author.", currConf.toString()));
-		stdout.println("Editing paper " + manuscript.getTitle() + ".\n\n");
-		
-		do {
-			
-			stdout.print("Enter the new pathname to your manuscript, or \'exit\' to quit: ");
-			uIn = stdin.nextLine();
-			opSucc = true;
-			if(!uIn.equals("exit")) {
-				manuscript.setPathname(uIn);
-			}
-		} while(!opSucc);
-	}
-
-	private void displaySubprogramChairMenu() {
-
-		Scanner stdin = new Scanner(System.in);
-		PrintStream stdout = new PrintStream(System.out);
-		String uIn;
-		boolean opSucc = false;
-		SubprogramChair spc = currConf.getSubProgramChair(currUser.getUsername());
-		
-		printHeader();
-		stdout.println(String.format("Logged into conference %s as Subprogram Chair.", currConf.toString()));
-		
-		stdout.println("\n\n" +
-					   "1> Designate a User as a Reviewer\n" + 
-					   "2> Assign a Manuscript to a Reviewer\n" + 
-					   "3> Submit a Recommendation for a Manuscript\n\n" +
-					   "e> exit");
-		
-		do {
-			
-			stdout.print("Select an action: ");
-			uIn = stdin.nextLine();
-			
-			switch(uIn.charAt(0)) {
-			case '1':
-				opSucc = true;
-				designateReviewer();
-				break;
-			case '2':
-				opSucc = true;
-				assignManToReviewer();
-				break;
-			case '3':
-				opSucc = true;
-				submitRecForManuscript();
-				break;
-			case 'e':
-				opSucc = true;
-			}
-		} while(!opSucc);
-	}
-
-	private void submitRecForManuscript() {
-
-		Scanner stdin = new Scanner(System.in);
-		PrintStream stdout = new PrintStream(System.out);
-		String uIn;
-		boolean opSucc = false;
-		SubprogramChair me = currConf.getSubProgramChair(currUser.getUsername());
-		
-		printHeader();
-		stdout.println(String.format("Logged into conference %s as Subprogram Chair.", currConf.toString()));
-		stdout.println("Submitting a Recommendation for a Manuscript.\n");
-		
-		stdout.println("ALL MANUSCRIPTS ASSIGNED TO ME:\n");
-		
-		int i = 1;
-		for(Manuscript man : me.getAssignedManuscripts()) {
-			stdout.println(String.format("%d> %s", i++, man.getTitle()));
-		}
-		stdout.println("\ne> exit \n");
-		Manuscript chosnMan = null;
-		do {
-			
-			stdout.print("Select a Manuscript: ");
-			uIn = stdin.nextLine();
-			int option = 0;
-			
-			try {
-				option = Integer.parseInt(uIn);
-			} catch(NumberFormatException ne) {
-				option = 0;
-			}
-			
-			if(option > 0 && option <= me.getAssignedManuscripts().size()) {
-				
-				opSucc = true;
-				chosnMan = me.getAssignedManuscripts().get(option - 1);
-				submitRecommendation(chosnMan);
-			} else if(uIn.charAt(0) == 'e') {
-				opSucc = true;
-			} else  {
-				stdout.println("Invalid input. Try again.");
-			}
-		} while (!opSucc);
-	}
-	private void submitRecommendation(Manuscript chosnMan) {
-
-		Scanner stdin = new Scanner(System.in);
-		PrintStream stdout = new PrintStream(System.out);
-		String uIn = "";
-		boolean opSucc = false;
-		SubprogramChair me = currConf.getSubProgramChair(currUser.getUsername());
-		
-		printHeader();
-		stdout.println(String.format("Logged into conference %s as Subprogram Chair.", currConf.toString()));
-		stdout.println("Submitting a Recommendation for a Manuscript.\n");
-		
-		stdout.println("Enter the body of your recommendation (type \'exit\' to exit): ");
-		uIn += stdin.nextLine();
-		if(!uIn.equals("exit")) {
-			Recommendation rec = new Recommendation(me, uIn);
-			chosnMan.setRecommendation(rec);
-		}
-	}
-
-	private void assignManToReviewer() {
-
-		Scanner stdin = new Scanner(System.in);
-		PrintStream stdout = new PrintStream(System.out);
-		String uIn;
-		boolean opSucc = false;
-		SubprogramChair me = currConf.getSubProgramChair(currUser.getUsername());
-		
-		printHeader();
-		stdout.println(String.format("Logged into conference %s as Subprogram Chair.", currConf.toString()));
-		stdout.println("Assigning a Reviewer to a Manuscript.\n");
-		
-		stdout.println("ALL MANUSCRIPTS ASSIGNED TO ME:\n");
-		
-		int i = 1;
-		for(Manuscript man : me.getAssignedManuscripts()) {
-			stdout.println(String.format("%d> %s", i++, man.getTitle()));
-		}
-		stdout.println("\ne> exit \n");
-		Manuscript chosnMan = null;
-		do {
-			
-			stdout.print("Select a Manuscript: ");
-			uIn = stdin.nextLine();
-			int option = 0;
-			
-			try {
-				option = Integer.parseInt(uIn);
-			} catch(NumberFormatException ne) {
-				option = 0;
-			}
-			
-			if(option > 0 && option <= me.getAssignedManuscripts().size()) {
-				
-				opSucc = true;
-				chosnMan = me.getAssignedManuscripts().get(option - 1);
-				assignReviewer(chosnMan);
-			} else if(uIn.charAt(0) == 'e') {
-				opSucc = true;
-			} else  {
-				stdout.println("Invalid input. Try again.");
-			}
-		} while (!opSucc);
-	}
-
-	private void assignReviewer(Manuscript chosnMan) {
-		
-		Scanner stdin = new Scanner(System.in);
-		PrintStream stdout = new PrintStream(System.out);
-		String uIn;
-		boolean opSucc = false;
-		SubprogramChair me = currConf.getSubProgramChair(currUser.getUsername());
-		
-		printHeader();
-		stdout.println(String.format("Logged into conference %s as Subprogram Chair.", currConf.toString()));
-		stdout.println("Assigning a Reviewer to a Manuscript.\n");
-		
-		stdout.println("CHOOSE A REVIEWER: "); 
-		
-		int i = 1;
-		for(String key : currConf.getReviewers().keySet()) {
-			
-			stdout.println(String.format("%d> %s, KEY: %s", i++, myUsers.get(key), key));
-		}
-		stdout.println("\ne> exit");
-		do {
-			stdout.print("Please enter the key for the rever you want to assign the manuscript to: ");
-			
-			uIn = stdin.nextLine();
-			
-			if(currConf.getReviewers().containsKey(uIn)) {
-				
-				opSucc = true;
-				try {
-					chosnMan.addReviewer(currConf.getReviewers().get(uIn));
-				} catch(Exception e) {
-					opSucc = false;
-					stdout.println(e.getMessage());
-				}
-			} else if(uIn.charAt(0) == 'e') {
-				opSucc = true;
-			} else  {
-				stdout.println("Invalid input. Try again.");
-			}
-		} while (!opSucc);
-		
-	}
-
-	private void designateReviewer() {
-		
-		Scanner stdin = new Scanner(System.in);
-		PrintStream stdout = new PrintStream(System.out);
-		String uIn;
-		boolean opSucc = false;
-		
-		printHeader();
-		stdout.println(String.format("Logged into conference %s as Subprogram Chair.", currConf.toString()));
-		stdout.println("Assigning a user as a Reviewer.\n");
-		
-		stdout.println("ALL USERS:");
-		int i = 0;
-		
-		String[] unArr = new String[myUsers.keySet().size()];
-		
-		for(String s : myUsers.keySet()) {
-			unArr[i++] = s;
-		}
-		
-		i = 1;		
-		for(String key : unArr) {
-			stdout.println(String.format("%d> %s", i++, myUsers.get(key)));
-		}
-		stdout.println("\ne> exit \n");
-		
-		do{
-			
-			stdout.print("Enter the number corresponding to the user that will become a reviewer: ");
-			int option = 0;
-			uIn = stdin.nextLine();
-			try {
-				option = Integer.parseInt(uIn);
-			} catch(NumberFormatException ne) {
-				option = 0;
-			}
-			
-			if(option > 0 && option <= unArr.length) {
-				opSucc = true;
-				currConf.assignReviewer(myUsers.get(unArr[option - 1]));
-			} else if(uIn.charAt(0) == 'e') {
-				opSucc = true;
-			} else {
-				stdout.println("Invalid input. Try again.");
-			}
-		} while(!opSucc);
-	}
-
-	private void displayReviewerMenu() {
-		Scanner stdin = new Scanner(System.in);
-		PrintStream stdout = new PrintStream(System.out);
-		String uIn;
-		boolean opSucc = false;
-		Reviewer rev = currConf.getReviewers().get(currUser.getUsername());
-		
-		printHeader();
-		stdout.println(String.format("Logged into conference %s as Subprogram Chair.", currConf.toString()));
-		
-		stdout.println("\n\n" +
-					   "1> View Assigned Manuscripts\n\n" + 
-					   "e> exit");
-		
-		do {
-			
-			stdout.print("Select an action: ");
-			uIn = stdin.nextLine();
-			
-			switch(uIn.charAt(0)) {
-			case '1':
-				opSucc = true;
-				viewManuscripts(rev);
-				break;
-			case 'e':
-				opSucc = true;
-			}
-		} while(!opSucc);
-	}
-	
-	private void viewManuscripts(Reviewer rev) {
-		
-		Scanner stdin = new Scanner(System.in);
-		PrintStream stdout = new PrintStream(System.out);
-		String uIn;
-		boolean opSucc = false;
-		
-		ArrayList<Manuscript> res = new ArrayList<Manuscript>();
-    	for(Manuscript man : currConf.getManuscripts()) {
-    		if(man.getReveiwersUsernames().contains(currUser.getUsername())) {
-    			res.add(man);
-    		}
-    	}
-    	
-    	stdout.println("ALL MANUSCRIPTS ASSIGNED TO ME:\n");
-    	int i = 1;
-		for(Manuscript man : res) {
-			stdout.println(String.format("%d> %s", i++, man.getTitle()));
-		}
-		stdout.println("\ne> exit \n");
-		Manuscript chosnMan = null;
-		do {
-			
-			stdout.print("Select a Manuscript: ");
-			uIn = stdin.nextLine();
-			int option = 0;
-			
-			try {
-				option = Integer.parseInt(uIn);
-			} catch(NumberFormatException ne) {
-				option = 0;
-			}
-			
-			if(option > 0 && option <= res.size()) {
-				
-				opSucc = true;
-				chosnMan = res.get(option - 1);
-				submitReview(chosnMan, rev);
-			} else if(uIn.charAt(0) == 'e') {
-				opSucc = true;
-			} else  {
-				stdout.println("Invalid input. Try again.");
-			}
-		} while (!opSucc);
-	}
-	
-	private void submitReview(Manuscript man, Reviewer rev) {
-		Scanner stdin = new Scanner(System.in);
-		PrintStream stdout = new PrintStream(System.out);
-		String uIn = "";
-		
-		printHeader();
-		stdout.println("Submitting a Review for a Manuscript.\n");
-		
-		stdout.println("Enter the body of your recommendation (type \'exit\' to exit): ");
-		uIn += stdin.nextLine();
-		if(!uIn.equals("exit")) {
-			Review review = new Review(rev, uIn);
-			man.addNewReview(rev, review);			
-		}
-	}
-
-	private void displayProgramChairMenu() {
-		
-		Scanner stdin = new Scanner(System.in);
-		PrintStream stdout = new PrintStream(System.out);
-		String uIn;
-		boolean opSucc = false;
-		ProgramChair pc = currConf.getProgramChair();
-		
-		printHeader();
-		stdout.println(String.format("Logged into conference %s as Program Chair.\n\n", currConf.toString()));
-		
-		stdout.println("Options: \n\n" +
-					   "1> At-A-Glance View\n" + 
-					   "2> Accept/Reject a Manuscript\n" + 
-					   "3> Designate a user as a Subprogram Chair\n" + 
-					   "4> Assign a Subprogram Chair a manuscript\n\n" +
-					   "e> Exit");
-		
-		do {
-			
-			stdout.print("Select an action: ");
-			uIn = stdin.nextLine();
-			switch(uIn.charAt(0)) {
-			case '1':
-				opSucc = true;
-				viewAllPapers();
-				break;
-			case '2':
-				opSucc = true;
-				acceptRejectManuscript();
-				break;
-			case '3': 
-				opSucc = true;
-				designateSPC();
-				break;
-			case '4':
-				opSucc = true;
-				assignManToSPC();
-				break;
-			case 'e':
-				opSucc = true;
-				break;
-			default:
-				opSucc = false;
-				stdout.println("Invalid option, try again.");
-			}
-		} while(!opSucc);
-	}
-
-	private void assignManToSPC() {
-		
-		Scanner stdin = new Scanner(System.in);
-		PrintStream stdout = new PrintStream(System.out);
-		String uIn;
-		boolean opSucc = false;
-		ProgramChair pc = currConf.getProgramChair();
-		
-		printHeader();
-		stdout.println(String.format("Logged into conference %s as Program Chair.\n\n", currConf.toString()));
-		
-		stdout.println("\nSELECT A PROGRAM CHAIR TO ASSIGN A MANUSCRIPT:\n");
-		
-		HashMap<String, SubprogramChair> spcs = currConf.getSPCs();
-		
-		int i = 0;
-		
-		//init a username array
-		String[] unArr = new String[spcs.keySet().size()];
-		
-		for(String s : spcs.keySet()) {
-			unArr[i++] = s;
-		}
-		
-		i = 1;
-		//print spcs
-		for(String key : unArr) {
-			stdout.println(String.format("%d> %s %s", i++, myUsers.get(key).getFirstName(), myUsers.get(key).getLastName()));
-		}
-		stdout.println("\ne> exit\n");
-		
-		do {
-			
-			stdout.print("Enter a number corresponding to the SPC you want to assign a paper to: ");
-			
-			uIn = stdin.nextLine();
-			int option = 0;
-			try {
-				option = Integer.parseInt(uIn);
-			} catch(NumberFormatException ne) {
-				option = 0;
-			}
-			
-			if(option > 0 && option <= unArr.length) {
-				opSucc = true;
-				assignMan(spcs.get(unArr[option - 1]));
-			} else if(uIn.charAt(0) == 'e') {
-				opSucc = true;
-			} else {
-				opSucc = false;
-				stdout.println("Invalid Input. Try again.");
-			}
-		} while(!opSucc);
-	}
-
-	private void assignMan(SubprogramChair subprogramChair) {
-		
-		Scanner stdin = new Scanner(System.in);
-		PrintStream stdout = new PrintStream(System.out);
-		String uIn;
-		boolean opSucc = false;
-		ProgramChair pc = currConf.getProgramChair();
-		
-		printHeader();
-		stdout.println(String.format("Logged into conference %s as Program Chair.\n\n", currConf.toString()));
-		stdout.println(String.format("Assigning a manuscript to %s.\n", 
-									 myUsers.get(subprogramChair.getUserName())));
-		
-		stdout.println("AVAILABLE MANUSCRIPTS:\n");
-		int i = 1;
-		for(Manuscript man : currConf.getManuscripts()) {
-			stdout.println(String.format("%d> %s", i++, man.getTitle()));
-		}
-		stdout.println("\ne> exit");
-		
-		do {
-			
-			stdout.print("Enter the number of the manuscript you want to assign: ");
-			int option = 0;
-			uIn = stdin.nextLine();
-			
-			try{
-				option = Integer.parseInt(uIn);
-			} catch(NumberFormatException ne) {
-				option = 0;
-			}
-			
-			if(option > 0 && option <= currConf.getManuscripts().size()) {
-				
-				opSucc = true;
-				Manuscript paper = currConf.getManuscripts().get(option - 1);
-				
-				try {
-					paper.setSPCsUsername(subprogramChair.getUserName());
-					subprogramChair.addManuscript(paper);
-				} catch(Exception e) {
-					
-					stdout.println(e.getMessage());
-					opSucc = false;
-				}
-			} else if(uIn.charAt(0) == 'e') {
-				opSucc = true;
-			} else {
-				stdout.println("Invalid input. Try again.");
-			}
-		} while (!opSucc);
-	}
-
-	private void designateSPC() {
-
-		Scanner stdin = new Scanner(System.in);
-		PrintStream stdout = new PrintStream(System.out);
-		String uIn;
-		boolean opSucc = false;
-		ProgramChair pc = currConf.getProgramChair();
-		
-		printHeader();
-		stdout.println(String.format("Logged into conference %s as Program Chair.\n\n", currConf.toString()));
-		
-		stdout.println("ALL USERS:");
-		int i = 0;
-		
-		String[] unArr = new String[myUsers.keySet().size()];
-		
-		for(String s : myUsers.keySet()) {
-			unArr[i++] = s;
-		}
-		
-		i = 1;		
-		for(String key : unArr) {
-			stdout.println(String.format("%d> %s", i++, myUsers.get(key)));
-		}
-		stdout.println("e> exit \n");
-		do {
-			
-			stdout.print("Enter the number correlating to the user that will become a Subprogram Chair: ");
-			uIn = stdin.nextLine();
-			int option = 0;
-			try {
-				option = Integer.parseInt(uIn);
-			} catch (NumberFormatException ne) {
-				option = 0;
-			}
-			if(option > 0 && option <= unArr.length) {
-				opSucc = true;
-				pc.addSPC(unArr[option - 1]);
-				currConf.assignSubprogramChair(myUsers.get(unArr[option - 1]));
-			} else if(uIn.charAt(0) == 'e') {
-				opSucc = true;
-			} else {
-				opSucc = false;
-				stdout.println("Invalid input, try again.");
-			}
-		} while(!opSucc);
-	}
-
-	private void acceptRejectManuscript() {
-		
-		Scanner stdin = new Scanner(System.in);
-		PrintStream stdout = new PrintStream(System.out);
-		String uIn;
-		boolean opSucc = false;
-		
-		printHeader();
-		stdout.println(String.format("Logged into conference %s as Program Chair.", currConf.toString()));
-		stdout.println("Accepting/Rejecting a Manuscript.\n");
-		stdout.println("AVAILABLE MANUSCRIPTS:\n");
-		
-		int i = 1;
-		for(Manuscript man : currConf.getManuscripts()) {
-			stdout.println(String.format("%d> %s", i++, man.getTitle()));
-		}
-		stdout.println("\ne> exit\n");
-		
-		do {
-			
-			stdout.print("Select the number of the paper to accept/reject: ");
-			int option = 0;
-			uIn = stdin.nextLine();
-			
-			try {
-				option = Integer.parseInt(uIn);
-			} catch(NumberFormatException ne) {
-				option = 0;
-			}
-			
-			if(option > 0 && option <= currConf.getManuscripts().size()) {
-				
-				opSucc = true;
-				acceptReject(currConf.getManuscripts().get(option - 1));
-			} else if(uIn.charAt(0) == 'e') {
-				opSucc = true;
-			} else {
-				stdout.println("Invalid input. Try again.");
-			}
-		} while(!opSucc);
-	}
-
-	private void acceptReject(Manuscript manuscript) {
-		
-		Scanner stdin = new Scanner(System.in);
-		PrintStream stdout = new PrintStream(System.out);
-		String uIn;
-		boolean opSucc = false;
-		
-		printHeader();
-		stdout.println(String.format("Logged into conference %s as Program Chair.", currConf.toString()));
-		stdout.println(String.format("Accepting/Rejecting a %s.\n", manuscript.getTitle()));
-		
-		stdout.println("1> Accept\n" + 
-					   "2> Reject\n\n" + 
-					   "e> exit\n");
-		
-		do {
-			
-			stdout.print("Select an action: ");
-			uIn = stdin.nextLine();
-			
-			switch(uIn.charAt(0)) {
-			
-			case '1':
-				opSucc = true;
-				manuscript.setAcceptance(true);
-				break;
-			case '2':
-				opSucc = true;
-				manuscript.setAcceptance(false);
-				break;
-			case 'e':
-				opSucc = true;
-				break;
-			default:
-				stdout.println("Invalid input. Try again.");
-				break;
-			}
-		} while(!opSucc);
-	}
-
-	private void viewAllPapers() {
-		
-		Scanner stdin = new Scanner(System.in);
-		PrintStream stdout = new PrintStream(System.out);
-		String uIn;
-		boolean opSucc = false;
-		ProgramChair pc = currConf.getProgramChair();
-		
-		printHeader();
-		stdout.println(String.format("Logged into conference %s as Program Chair.\n\n", currConf.toString()));
-		
-		stdout.println("\nAT A GLANCE VIEW: \n");
-		
-		for(Manuscript m : currConf.getManuscripts()) {
-			stdout.println(m.toString());
-			stdout.println("\n\n");
-		}
-		
-		stdout.println("\ne> Exit");
-		do {
-			
-			stdout.print("Enter an Action: ");
-			uIn = stdin.nextLine();
-			if(uIn.charAt(0) == 'e') {
-				opSucc = true;
-			} else {
-				stdout.println("Invalid option, try again.");
-			}
-		} while(!opSucc);
+		return backFlag;		
 	}
 }

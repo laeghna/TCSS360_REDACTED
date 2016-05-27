@@ -16,10 +16,7 @@ import java.util.ArrayList;
 public class Author implements Serializable {
 	
 	
-	/**
-	 * UID used during object serialization.
-	 */
-	private static final long serialVersionUID = 6886028185164053011L;
+	private static final long serialVersionUID = 946681079153846151L;
 	/**
 	 * the username of this Author.
 	 */

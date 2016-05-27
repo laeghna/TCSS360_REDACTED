@@ -4,7 +4,7 @@
  * Deliverable #3                                    *
  *****************************************************/
 
-package model;
+package enums;
 
 public enum Role {
 	

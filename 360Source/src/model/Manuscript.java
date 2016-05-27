@@ -10,6 +10,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
+
+import enums.AcceptanceStatus;
+import enums.Recommendation;
 /**
  * Class that will contain a list of manuscripts used in a given conference.
  * @author Nathanael Toporek, nat96@uw.ed
@@ -18,14 +21,11 @@ import java.util.Set;
 public class Manuscript implements Serializable {
 	
 	
-	/**
-	 * Object serialization ID used in the object serialization process.
-	 */
-	private static final long serialVersionUID = -2930385948672657316L;
+	private static final long serialVersionUID = -3588781903566723074L;
 	/**
 	 * Whether or not this paper has been accepted.
 	 */
-	private boolean myAcceptance;
+	private AcceptanceStatus myAcceptance;
 	/**
 	 * The title of this Manuscript.
 	 */
@@ -85,7 +85,8 @@ public class Manuscript implements Serializable {
 		myPathname = thePathname;
 		myOwnersUsername = theAuthorsUsername;
 		mySPC = null;
-		myAcceptance = false;
+		myAcceptance = AcceptanceStatus.PENDING;
+		myRecommendation = Recommendation.PENDING;
 		myReviewers = new ArrayList<Reviewer>();
 		myReviews = new HashMap<String, Review>();
 	}
@@ -197,7 +198,7 @@ public class Manuscript implements Serializable {
 	 * Gets whether or not this paper has been accepted.
 	 * @return returns whether or not this paper has been accepted.
 	 */
-	public boolean getAcceptance() {
+	public AcceptanceStatus getAcceptance() {
 		return myAcceptance;
 	}
 	
@@ -205,8 +206,8 @@ public class Manuscript implements Serializable {
 	 * Sets the acceptance for this paper.
 	 * @param theAcceptance Whether or not the paper was accepted.
 	 */
-	public void setAcceptance(boolean theAcceptance) {
-		myAcceptance = theAcceptance;
+	public void setAcceptance(AcceptanceStatus theStatus) {
+		myAcceptance = theStatus;
 	}
 	
 	/**
@@ -344,42 +345,40 @@ public class Manuscript implements Serializable {
 	 */
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("TITLE: " + myTitle);
-		sb.append("\nAUTHOR: " + myAuthor);
-		sb.append("\nPATHNAME: " + myPathname);
+		sb.append("TITLE: " + myTitle + ". Recommendation: ");
 		
-		if(mySPC != null) {
-			
-			sb.append("\nSUBPROGRAM CHAIR: " + mySPC);
-			if(myReviewers.size() > 0) {
-				
-				sb.append("\nREVIEWERS: " + myReviewers.get(0).getUsername());
-				for(int i = 1; i < myReviewers.size(); i++) {
-					sb.append(", " + myReviewers.get(i).getUsername());
-				}
-				
-				sb.append("\nREVIEW STATUS: " + getReviewStatus());
-				
-			} else {
-				
-				sb.append("\nREVIEWERS: NONE" + 
-						"\nREVIEW STATUS: N/A");				
-			}
-		} else {
-			sb.append("\nSUBPROGRAM CHAIR: NONE" +
-					"\nREVIEWERS: NONE"  + 
-					"\nREVIEW STATUS: N/A");
-		}
-		if(myRecommendation != null) {
-			sb.append("\nRECOMMENDATION STATUS: SUBMITTED");
-		} else {
-			sb.append("\nRECOMMENDATION STATUS: PENDING");
+		switch(myRecommendation) {
+		
+		case STRONG_ACCEPT:
+			sb.append("Strong Accept. ");
+			break;
+		case ACCEPT:
+			sb.append("Accept. ");
+			break;
+		case REJECT:
+			sb.append("Reject. ");
+			break;
+		case STRONG_REJECT:
+			sb.append("Strong Reject. ");
+			break;
+		default:
+			sb.append("Pending. ");
+			break;
 		}
 		
-		if(myAcceptance == true) {
-			sb.append("\nACCEPTANCE: ACCEPTED");
-		} else {
-			sb.append("\nACCEPTANCE: DENIED");
+		sb.append("Acceptance Status: ");
+		
+		switch (myAcceptance) {
+		
+		case ACCEPTED:
+			sb.append("Accepted. \n");
+			break;
+		case REJECTED:
+			sb.append("Rejected. \n");
+			break;
+		default:
+			sb.append("Pending. \n");
+			break;
 		}
 		
 		return sb.toString();

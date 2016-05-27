@@ -8,15 +8,16 @@ package model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import enums.Recommendation;
+
 /**
  * @author Anh Tran
  * @version 05/07/2016
  */
 public class SubprogramChair implements Serializable{
 
-    //For Serialization only
-    private static final long serialVersionUID = 3523359274963269247L;
-    /**
+	private static final long serialVersionUID = -5435723955102272844L;
+	/**
      * Max amount of manuscripts assigned to Subprogram Chair
      */
     private static final int MAXPAPERS = 4;
@@ -67,17 +68,10 @@ public class SubprogramChair implements Serializable{
     /**
      * Submits recommendation of Subprogram Chair
      * @param recommendation String that contains the Subprogram Chair's recommendation
-     * @return Object of the Recommendation class to be handled by main
-     * @exception  NullPointerException if recommendation is null
      */
-    public Recommendation submitRecommendation(String recommendation, Manuscript theManuscript) {
-        if(recommendation == null) {
-            throw new NullPointerException("No recommendation found");
-        }
-        Recommendation rec = new Recommendation(this, recommendation);
+    public void submitRecommendation(Manuscript theManuscript, Recommendation theRecommendation) {
         
-        theManuscript.setRecommendation(rec);
-        return rec;
+        theManuscript.setRecommendation(theRecommendation);
     }
 
     /**

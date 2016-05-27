@@ -11,9 +11,9 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import enums.Recommendation;
 import model.Author;
 import model.Manuscript;
-import model.Recommendation;
 import model.Review;
 import model.Reviewer;
 import model.SubprogramChair;
@@ -54,7 +54,7 @@ public class ManuscriptTests {
 	@Test(expected = SecurityException.class)
 	public void testRecommendationBeforeSPCisAssigned() {
 
-		Recommendation rec = new Recommendation(new SubprogramChair("pot"), "ato");
+		Recommendation rec = Recommendation.STRONG_REJECT;
 		
 		JohnsDoc.setRecommendation(rec);
 	}

@@ -8,8 +8,8 @@ package tests;
 import org.junit.Before;
 import org.junit.Test;
 
+import enums.Recommendation;
 import model.Manuscript;
-import model.Recommendation;
 import model.Reviewer;
 import model.SubprogramChair;
 
@@ -66,8 +66,11 @@ public class SubprogramChairTest {
     //Will always fail. SubmitRecommendation class makes a new object. Cannot copy another object without it being different.
     @Test
     public void testSubmitRecommendation() throws Exception {
-        Recommendation rec = new Recommendation(spc, RECOMMENDATION);
-        assertEquals(rec, spc.submitRecommendation(RECOMMENDATION, new Manuscript("Hi","Hi","Hi","/Hi")));
+        Recommendation rec = Recommendation.STRONG_ACCEPT;
+        Manuscript man = new Manuscript("Hi","Hi","Hi","/Hi");
+        man.setSPCsUsername(spc.getUserName());
+        spc.submitRecommendation(man, rec);
+        assertEquals(rec, man.getRecommendation());
     }
 
     @Test(expected=NullPointerException.class)

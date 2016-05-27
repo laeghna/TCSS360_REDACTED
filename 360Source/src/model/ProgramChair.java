@@ -9,6 +9,8 @@ package model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import enums.AcceptanceStatus;
+
 /** 
  * Class that provides the UI menus for a Program Chair. 
  * 
@@ -17,10 +19,10 @@ import java.util.ArrayList;
  */
 public class ProgramChair implements Serializable {
 
-    /** UID used during object serialization. */
-    private static final long serialVersionUID = -5771894302008490803L;
 
-    /** The list of Subprogram Chairs. */
+	private static final long serialVersionUID = 4015415883476489118L;
+
+	/** The list of Subprogram Chairs. */
     private ArrayList<String> mySPCs;
     
     private String myUsername;
@@ -68,7 +70,7 @@ public class ProgramChair implements Serializable {
      * @param decision the acceptance or rejection of the Manuscript
      * @return the updated Manuscript
      */
-    public void acceptOrRejectManuscript(final Manuscript paper, final boolean decision) {
+    public void acceptOrRejectManuscript(final Manuscript paper, final AcceptanceStatus decision) {
         paper.setAcceptance(decision);
     }
 }

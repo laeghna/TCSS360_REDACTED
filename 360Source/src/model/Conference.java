@@ -10,6 +10,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
+import enums.Role;
 
 /**
  * Container class for information about a singular conference.
@@ -284,7 +288,7 @@ public class Conference implements Serializable {
 		}
 		for(Manuscript m : myManuscripts) {
 			
-			if(m.getOwnersUsername().equals(theUsername)) {
+			if(m.getOwnersUsername().equals(theUsername) && !theirRoles.contains(Role.AUTHOR)) {
 				theirRoles.add(Role.AUTHOR);
 			}
 		}
