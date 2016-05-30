@@ -10,10 +10,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.PrintStream;
 
+import enums.Recommendation;
 import model.Conference;
 import model.Manuscript;
 import model.RegisteredUser;
 import model.SubprogramChair;
+import model.Reviewer;
 import enums.PageStatus;
 
 /** 
@@ -45,7 +47,7 @@ public class SubprogramChairUI {
     	myParent = theParent;
         myConference = theConference;
         mySelf = me;
-        myManuscripts = myConference.getSubProgramChair(me.getUsername()).getAssignedManuscripts();
+        myManuscripts = myConference.getSPCsManuscripts(me.getUsername());
         mySelection = 0;
     }
     
@@ -57,7 +59,7 @@ public class SubprogramChairUI {
 
     /**
      * author: Anh Tran
-     * version: May 27 2016
+     * version: May 30 2016
      * Displays the main menu selections.
      */
     public PageStatus displayMainMenu() {
@@ -103,7 +105,7 @@ public class SubprogramChairUI {
                         break;
                     case '2':
                         opSucc = true;
-                        backCallee = displaySubmitRecommendationMenu();
+                        backCallee = displayManuscriptToSubmitRecommendationMenu();
                         break;
                     case 'b':
                         opSucc = true;
@@ -128,7 +130,7 @@ public class SubprogramChairUI {
 
     /** Displays assign manuscript menu
      * author Anh Tran
-     * version May 27 2016
+     * version May 30 2016
      */
     public PageStatus displayAssignManuscriptsMenu() {
 
@@ -175,10 +177,12 @@ public class SubprogramChairUI {
                     option = 0;
                 }
                 if(option > 0 && option <= counter) {
-                    backCallee = displaySelectReviewerMenu(myManuscripts.get(mySelection).getTitle());
+                    mySelection = option;
+                    backCallee = displaySelectReviewerMenu();
                     if(backCallee == PageStatus.EXIT) {
                         backCaller = PageStatus.EXIT;
                     }
+                    opSucc = true;
                 }
                 else if(userInput.charAt(0) == 'b') {
                     opSucc = true;
@@ -202,9 +206,9 @@ public class SubprogramChairUI {
 
     /** Displays select user to review menu
      * author Anh Tran
-     * version May 27 2016
+     * version May 30 2016
      */
-    public PageStatus displaySelectReviewerMenu(String title) {
+    public PageStatus displaySelectReviewerMenu() {
 
         PageStatus backCaller = PageStatus.GOTO_MAIN_MENU; //Used to control what the calling method does.
         PageStatus backCallee = PageStatus.GOTO_MAIN_MENU; //Used to control we do based off the actions taken.
@@ -235,8 +239,8 @@ public class SubprogramChairUI {
                     option = 0;
                 }
                 if(option > 0 && option <= counter) {
-
-                    //Assign reviewer to manuscript TODO
+                    opSucc = true;
+                    myManuscripts.get(mySelection).addReviewer(new Reviewer(users[option]));
 
                     if(backCallee == PageStatus.EXIT) {
                         backCaller = PageStatus.EXIT;
@@ -260,8 +264,12 @@ public class SubprogramChairUI {
         }while(backCallee == PageStatus.BACK);
         return backCaller;
     }
-    
-    public PageStatus displaySubmitRecommendationMenu() {
+
+    /** Displays select manuscript to submit recommendation menu
+     * author Anh Tran
+     * version May 30 2016
+     */
+    public PageStatus displayManuscriptToSubmitRecommendationMenu() {
 
         PageStatus backCaller = PageStatus.GOTO_MAIN_MENU; //Used to control what the calling method does.
         PageStatus backCallee = PageStatus.GOTO_MAIN_MENU; //Used to control we do based off the actions taken.
@@ -271,7 +279,110 @@ public class SubprogramChairUI {
         String userInput = "";
         int counter = 0;
 
-        //TODO
+        do {
+            boolean opSucc = false;
+            stdout.println("Select Manuscript to submit recommendation to: \n");
+            for (Manuscript paper : myManuscripts) {
+                stdout.println(" \"" + ++counter + ") " + paper.getTitle() + "\tRecommendation: " + paper.getRecommendation());
+            }
+            stdout.println("b> Back");
+            stdout.println("e> Exit\n");
+            stdout.print("Select Manuscript or action: ");
+            do{
+                userInput = myScanner.nextLine();
+                int option = 0;
+                try {
+                    option = Integer.parseInt(userInput);
+                } catch(NumberFormatException e) {
+                    option = 0;
+                }
+                if(option > 0 && option <= counter) {
+                    mySelection = option;
+                    backCallee = displaySubmitRecommendationMenu();
+                    opSucc = true;
+                    if(backCallee == PageStatus.EXIT) {
+                        backCaller = PageStatus.EXIT;
+                    }
+                }
+                else if(userInput.charAt(0) == 'b') {
+                    opSucc = true;
+                    backCallee = PageStatus.EXIT; // Exit outer loop.
+                    backCaller = PageStatus.BACK; // Tell calling method to hold.
+                }
+                else if(userInput.charAt(0) == 'e') {
+                    opSucc = true;
+                    backCallee = PageStatus.EXIT; // Exit outer loop.
+                    backCaller = PageStatus.EXIT; // Tell calling method to retire.
+                }
+                else {
+                    opSucc = false;
+                    stdout.println("Invalid option, try again.");
+                }
+            }while(!opSucc);
+        }while(backCallee == PageStatus.BACK);
+
+        return backCaller;
+    }
+
+    /** Displays submit recommendation menu
+     * author Anh Tran
+     * version May 30 2016
+     */
+    public PageStatus displaySubmitRecommendationMenu() {
+        PageStatus backCaller = PageStatus.GOTO_MAIN_MENU; //Used to control what the calling method does.
+        PageStatus backCallee = PageStatus.GOTO_MAIN_MENU; //Used to control we do based off the actions taken.
+
+        Scanner myScanner = new Scanner(System.in);
+        PrintStream stdout = new PrintStream(System.out);
+        String userInput = "";
+        int counter = 0;
+
+        do {
+            boolean opSucc = false;
+            stdout.println("Select Recommendation to give to " + myManuscripts.get(mySelection).getTitle() + "\n");
+            stdout.println(" 1> Strong Accect");
+            stdout.println(" 2> Accept");
+            stdout.println(" 3> Reject");
+            stdout.println(" 4> Strong Reject\n");
+            stdout.println("b> Back");
+            stdout.println("e> Exit\n");
+            stdout.print("Select Recommendation or action: ");
+            do {
+                userInput = myScanner.nextLine();
+                switch (userInput.charAt(0)) {
+                    case '1':
+                        opSucc = true;
+                        myManuscripts.get(mySelection).setRecommendation(Recommendation.STRONG_ACCEPT);
+                        break;
+                    case '2':
+                        opSucc = true;
+                        myManuscripts.get(mySelection).setRecommendation(Recommendation.ACCEPT);
+                        break;
+                    case '3':
+                        opSucc = true;
+                        myManuscripts.get(mySelection).setRecommendation(Recommendation.REJECT);
+                        break;
+                    case '4':
+                        opSucc = true;
+                        myManuscripts.get(mySelection).setRecommendation(Recommendation.STRONG_REJECT);
+                        break;
+                    case 'b':
+                        opSucc = true;
+                        backCallee = PageStatus.EXIT; // Exit outer loop.
+                        backCaller = PageStatus.BACK; // Tell calling method to hold.
+                        break;
+                    case 'e':
+                        opSucc = true;
+                        backCallee = PageStatus.EXIT; // Exit outer loop.
+                        backCaller = PageStatus.EXIT; // Tell calling method to retire.
+                        break;
+                    default:
+                        opSucc = false;
+                        stdout.println("Invalid option, try again.");
+                        break;
+                }
+            } while(!opSucc);
+        } while(backCallee == PageStatus.BACK);
 
         return backCaller;
     }

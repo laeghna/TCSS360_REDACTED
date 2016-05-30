@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
 
 /**
  * @author Anh Tran
- * @version 05/07/2016
+ * @version 05/30/2016
  */
 public class SubprogramChairTest {
 
@@ -44,26 +44,26 @@ public class SubprogramChairTest {
     }
 
     @Test(expected=NullPointerException.class)
-    public void testSubprogramChair() throws Exception {
+    public void testSubprogramChairWithNoUsername() throws Exception {
         SubprogramChair sub = new SubprogramChair(null);
     }
 
     @Test(expected=NullPointerException.class)
-    public void testAssignReviewer() throws Exception {
+    public void testAssignReviewerWithNoReviewer() throws Exception {
         spc.assignReviewer(null, rev1);
     }
 
     @Test(expected=NullPointerException.class)
-    public void testAssignReviewer2() throws Exception {
+    public void testAssignReviewerWithNoReview() throws Exception {
         spc.assignReviewer(paper1, null);
     }
 
     @Test(expected=NullPointerException.class)
-    public void testAssignReviewer3() throws Exception {
+    public void testAssignReviewerWithNoReviewerAndNoReview() throws Exception {
         spc.assignReviewer(null, null);
     }
 
-    //Will always fail. SubmitRecommendation class makes a new object. Cannot copy another object without it being different.
+
     @Test
     public void testSubmitRecommendation() throws Exception {
         Recommendation rec = Recommendation.STRONG_ACCEPT;
@@ -74,7 +74,7 @@ public class SubprogramChairTest {
     }
 
     @Test(expected=NullPointerException.class)
-    public void testSubmitRecommendation2() throws Exception {
+    public void testSubmitRecommendationWithNoPaperAndNoRecommendation() throws Exception {
         spc.submitRecommendation(null, null);
     }
 

@@ -44,12 +44,11 @@ public class ReviewerUI {
     	myParent = theParent;
         myConference = theConference;
         mySelf = me;
-        myManuscripts = getMyManuscripts();
+        myManuscripts = theConference.getReviewersManuscripts(me.getUsername());
         mySelection = 0;
     }
-    /* Gets all of the manuscripts associated with this
-     * user for this conference.
-     */
+
+   //No need for this method anymore
     private ArrayList<Manuscript> getMyManuscripts() {
     	
     	ArrayList<Manuscript> res = new ArrayList<Manuscript>();
@@ -74,7 +73,7 @@ public class ReviewerUI {
     /**
      * Displays the main menu selections.
      * author Anh Tran
-     * version May 27 2016
+     * version May 30 2016
      */
     public PageStatus displayMainMenu() {
 
@@ -142,7 +141,7 @@ public class ReviewerUI {
     /**
      * Displays the list of manuscripts
      * author Anh Tran
-     * version May 27 2016
+     * version May 30 2016
      */
     public PageStatus displayManuscriptsMenu() {
 
@@ -219,7 +218,7 @@ public class ReviewerUI {
     /**
      * Displays the review submission menu
      * author Anh Tran
-     * version May 27 2016
+     * version May 30 2016
      */
     public PageStatus displaySubmitReviewsMenu() {
         PageStatus backCaller = PageStatus.GOTO_MAIN_MENU; //Used to control what the calling method does.
@@ -232,7 +231,7 @@ public class ReviewerUI {
         do {
             boolean opSucc = false;
 
-            stdout.println(" Submit Review Menu");
+            stdout.println(" Submit Review for " + myManuscripts.get(mySelection).getTitle());
             stdout.println(" Enter filename below\n");
             stdout.println(" b> Back");
             stdout.println(" e> Exit\n");

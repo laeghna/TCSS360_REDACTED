@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 
 /**
  * @author Anh Tran
- * @version 05/07/2016
+ * @version 05/30/2016
  */
 public class ReviewerTest {
 
@@ -29,12 +29,12 @@ public class ReviewerTest {
     }
 
     @Test(expected=NullPointerException.class)
-    public void testReview() throws Exception {
+    public void testReviewerWithEmptyUserName() throws Exception {
         Reviewer blankUser = new Reviewer(BLANK);
     }
 
     @Test(expected=NullPointerException.class)
-    public void testReview2() throws Exception {
+    public void testReviewerWithNoUsername() throws Exception {
         Reviewer nullUser = new Reviewer(null);
     }
 
@@ -44,12 +44,12 @@ public class ReviewerTest {
     }
 
     @Test(expected=NullPointerException.class)
-    public void testSubmitReview2() throws Exception {
+    public void testSubmitReviewWithNoReview() throws Exception {
         assertEquals(null, rev1.submitReview(null));
     }
 
     @Test(expected=NullPointerException.class)
-    public void testSubmitReview3() throws Exception {
+    public void testSubmitReviewWithBlackReview() throws Exception {
         assertEquals(null, rev1.submitReview(BLANK));
     }
 
@@ -65,7 +65,7 @@ public class ReviewerTest {
     }
 
     @Test
-    public void testGetUsername() throws Exception {
+    public void testGetUsernameOfReviewer() throws Exception {
         assertEquals("user1", rev1.getUsername());
     }
 
