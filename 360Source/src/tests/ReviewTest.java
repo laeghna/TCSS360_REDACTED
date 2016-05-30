@@ -32,18 +32,27 @@ public class ReviewTest {
         review1 = new Review(rev1, REVIEW);
     }
 
+    /**
+     * Tests creation of a Review with an invalid (null) Reviewer 
+     */
     @Test(expected=NullPointerException.class)
-    public void testReview() throws Exception {
+    public void testReviewWithInvalidReviewer() throws Exception {
         Review review = new Review(null);
     }
 
+    /**
+     * Tests creation of a Review with a valid Reviewer, but invalid review data 
+     */
     @Test(expected=NullPointerException.class)
-    public void testReview2() throws Exception {
+    public void testReviewWithValidReviewerButInvalidData() throws Exception {
         Review review = new Review(rev1, null);
     }
 
+    /**
+     * Tests creation of a Review with an invalid Reviewer and invalid review data 
+     */
     @Test(expected=NullPointerException.class)
-    public void testReview3() throws Exception {
+    public void testReviewWithNoReviewerAndNoReviewData() throws Exception {
         Review review = new Review(null, null);
     }
 
@@ -58,12 +67,12 @@ public class ReviewTest {
     }
 
     @Test(expected=NullPointerException.class)
-    public void testSetReviewer() throws Exception {
+    public void testSetReviewerWithInvalidData() throws Exception {
         review1.setReviewer(null);
     }
 
     @Test(expected=NullPointerException.class)
-    public void testSetReviewSubmission() throws Exception {
+    public void testSetReviewSubmissionWithInvalidData() throws Exception {
         review1.setReviewSubmission(null);
     }
 
