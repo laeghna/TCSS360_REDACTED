@@ -22,10 +22,8 @@ import enums.Role;
  */
 public class Conference implements Serializable {
 	
-	/**
-	 * Object UID for serialization.
-	 */
-	private static final long serialVersionUID = -5002295190798265670L;
+
+	private static final long serialVersionUID = 891854980437110888L;
 
 	/**
 	 * The name of this conference.
@@ -162,6 +160,40 @@ public class Conference implements Serializable {
 	public ArrayList<Manuscript> getManuscripts() {
 		
 		return myManuscripts;
+	}
+	
+	/**
+	 * Returns a list of all manuscripts assigned to the given Subprogram Chair.
+	 * @param theirUsername The username of the SPC in question.
+	 * @return A list of all manuscripts assigned to the specified SPC.
+	 */
+	public ArrayList<Manuscript> getSPCsManuscripts(String theirUsername) {
+		
+		ArrayList<Manuscript> res = new ArrayList<Manuscript>();
+		
+		for(Manuscript m : myManuscripts) {
+			if(theirUsername.equals(m.getSPCsUsername()));
+			res.add(m);
+		}
+		
+		return res;
+	}
+	
+	/**
+	 * Returns the list of all manuscripts assigned to the specified reviewer.
+	 * @param theirUsername The username of the reviewer in question.
+	 * @return The list of all manuscripts assigned to the reviewer with theirUsername.
+	 */
+	public ArrayList<Manuscript> getReviewersManuscripts(String theirUsername) {
+		
+		ArrayList<Manuscript> res = new ArrayList<Manuscript>();
+		
+		for(Manuscript m : myManuscripts) {
+			if(m.getReveiwersUsernames().contains(theirUsername)) {
+				res.add(m);
+			}
+		}
+		return res;
 	}
 	/**
 	 * Returns a sublist of the manuscripts, all of which are associated with the

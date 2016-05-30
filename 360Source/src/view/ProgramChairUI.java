@@ -248,8 +248,14 @@ public class ProgramChairUI {
 					Manuscript paper = myConference.getManuscripts().get(option - 1);
 					
 					try {
-						paper.setSPCsUsername(subprogramChair.getUserName());
-						subprogramChair.addManuscript(paper);
+						// If the subprogram chair can be assigned a paper.
+						if(myConference.getSPCsManuscripts(subprogramChair.getUserName()).size() <= SubprogramChair.MAXPAPERS) {
+							paper.setSPCsUsername(subprogramChair.getUserName());
+						} else {
+							System.out.println("SUBPROGRAM CHAIR CANNOT BE ASSIGNED MORE PAPERS. RETURNING TO MAIN MENU.");
+							backCaller = PageStatus.GOTO_MAIN_MENU;
+						}
+						
 					} catch(Exception e) {
 						
 						stdout.println(e.getMessage());

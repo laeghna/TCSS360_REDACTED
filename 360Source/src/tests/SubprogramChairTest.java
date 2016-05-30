@@ -83,40 +83,4 @@ public class SubprogramChairTest {
         assertEquals("SPC1", spc.getUserName());
     }
 
-    @Test
-    public void testGetAssignedManuscripts() throws Exception {
-        ArrayList<Manuscript> test = new ArrayList<Manuscript>();
-        assertEquals(test, spc.getAssignedManuscripts());
-    }
-
-    @Test
-    public void testGetAssignedManuscripts2() throws Exception {
-        ArrayList<Manuscript> test = new ArrayList<Manuscript>();
-        test.add(paper1);
-        test.add(paper2);
-        spc.addManuscript(paper1);
-        spc.addManuscript(paper2);
-        assertEquals(test, spc.getAssignedManuscripts());
-    }
-
-    @Test(expected=NullPointerException.class)
-    public void testAddManuscript() throws Exception {
-        spc.addManuscript(null);
-    }
-
-    @Test
-    public void testRemoveManuscript() throws Exception {
-        ArrayList<Manuscript> test = new ArrayList<Manuscript>();
-        test.add(paper1);
-        spc.addManuscript(paper1);
-        spc.addManuscript(paper2);
-        spc.removeManuscript(paper2);
-        assertEquals(test, spc.getAssignedManuscripts());
-    }
-
-    @Test(expected=NullPointerException.class)
-    public void testRemoveManuscript2() throws Exception {
-        spc.removeManuscript(null);
-    }
-
 }

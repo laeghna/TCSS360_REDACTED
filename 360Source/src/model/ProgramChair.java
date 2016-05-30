@@ -19,8 +19,7 @@ import enums.AcceptanceStatus;
  */
 public class ProgramChair implements Serializable {
 
-
-	private static final long serialVersionUID = 4015415883476489118L;
+	private static final long serialVersionUID = -4256379357013407968L;
 
 	/** The list of Subprogram Chairs. */
     private ArrayList<String> mySPCs;
@@ -61,7 +60,7 @@ public class ProgramChair implements Serializable {
      * @param paper the Manuscript to be assigned
      */
     public void assignManuscriptToSPC(final SubprogramChair subPC, Manuscript paper) {
-        subPC.addManuscript(paper);
+        paper.setSPCsUsername(subPC.getUserName());;
     }
     
     /** Accepts or rejects a Manuscript. 

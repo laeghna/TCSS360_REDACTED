@@ -15,7 +15,8 @@ import enums.Recommendation;
  */
 public class SubprogramChair implements Serializable{
 
-	private static final long serialVersionUID = -5435723955102272844L;
+	private static final long serialVersionUID = -1457319590103576561L;
+
 	/**
      * Max amount of manuscripts assigned to Subprogram Chair
      */
