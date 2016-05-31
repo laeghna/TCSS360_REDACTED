@@ -7,7 +7,6 @@
 package model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 /**
  * Class that contains the functionalities of an Author.
  * @author Nathanael Toporek, nat96@uw.edu

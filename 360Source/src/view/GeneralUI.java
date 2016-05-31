@@ -10,19 +10,11 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.Set;
-
-import enums.AcceptanceStatus;
 import enums.PageStatus;
-import enums.Recommendation;
 import enums.Role;
 import model.Conference;
 import model.Manuscript;
-import model.ProgramChair;
 import model.RegisteredUser;
-import model.Review;
-import model.Reviewer;
-import model.SubprogramChair;
 
 /**
  * Class that provides the default UI for general Users and prepares the role UIs
