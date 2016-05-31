@@ -55,11 +55,11 @@ public class RegisteredUser implements Serializable {
     }
     
     /** Returns the user's fullname. */
-    public String getName() {
+    public String getFullName() {
         return firstName + " " + lastName;
     }
     public String toString() {
     	
-    	return String.format("%s %s", firstName, lastName);
+    	return String.format("%s: %s %s",username, firstName, lastName);
     }
 }
