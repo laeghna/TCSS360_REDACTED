@@ -213,8 +213,14 @@ public class ProgramChairUI {
 			stdout.println(String.format("Logged into conference %s as Program Chair.\n\n", myConference.toString()));
 			stdout.println(String.format("Assigning a manuscript to %s.\n", 
 										 myRegisteredUsers.get(subprogramChair.getUserName())));
+			stdout.println("Assigned Manuscripts: ");
 			
-			stdout.println("Manuscripts\n");
+			for(Manuscript m : myConference.getSPCsManuscripts(subprogramChair.getUserName())) {
+				
+				stdout.println(m.getTitle());
+			}
+			
+			stdout.println("\nAvailable Manuscripts:\n");
 			int i = 1;
 			for(Manuscript man : myConference.getManuscripts()) {
 				stdout.println(String.format("%d> %s", i++, man.getTitle()));

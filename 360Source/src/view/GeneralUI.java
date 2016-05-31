@@ -112,7 +112,7 @@ public class GeneralUI {
                     
                     loginSuccess = true; // Exit the inner loop.
                     currUser = myUsers.get(userInput); 
-                    backCallee = displayConferenceOptions();// Called function determines
+                    backCallee = displayAvailableConferences();// Called function determines
                                                             // what the outer loop does.
                     
                     // If the user wanted to exit somewhere down the option tree, tell the
@@ -172,7 +172,7 @@ public class GeneralUI {
         }
     }
     
-    private PageStatus displayConferenceOptions() {
+    private PageStatus displayAvailableConferences() {
         
         PageStatus backCaller = PageStatus.GOTO_MAIN_MENU; //Used to control what the calling method does.
         PageStatus backCallee = PageStatus.GOTO_MAIN_MENU; //Used to control we do based off the actions taken.
@@ -211,7 +211,7 @@ public class GeneralUI {
                     
                     operationSuccess = true;
                     currConf = myConfs.get(k - 1);
-                    backCallee = displayConfOptions();
+                    backCallee = displayConferenceRoleOptions();
                     
                     // If the user wanted to exit at some point down the decision tree
                     // tell the calling method to exit.
@@ -236,7 +236,7 @@ public class GeneralUI {
         return backCaller;
     }
 
-    private PageStatus displayConfOptions() {
+    private PageStatus displayConferenceRoleOptions() {
 
         PageStatus backCaller = PageStatus.GOTO_MAIN_MENU; //Used to control what the calling method does.
         PageStatus backCallee = PageStatus.GOTO_MAIN_MENU; //Used to control we do based off the actions taken.
