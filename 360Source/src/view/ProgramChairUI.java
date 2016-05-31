@@ -7,9 +7,7 @@
 package view;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Scanner;
 
 import enums.AcceptanceStatus;
@@ -24,23 +22,20 @@ import model.SubprogramChair;
  * Class that provides the UI menus for a Program Chair. 
  * 
  * @author Lisa Taylor
- * @version 7 May 2016
+ * @version 30 May 2016
  */
 public class ProgramChairUI {
     
-    /** The Conference object. */
+    /** The current Conference. */
     private Conference myConference;
     
-    /** The name of the user. */
-    private RegisteredUser mySelf;
+    /** The current User. */
+    private RegisteredUser myUser;
     
     private ProgramChair myRole;
     
     /** Maps each registered user's unique username to its corresponding RegisteredUser object. */
-    private HashMap<String, RegisteredUser> myUsers;
-    
-    /** Holds the current menu choice selection. */
-    private int mySelection;
+    private HashMap<String, RegisteredUser> myRegisteredUsers;
     
     /** 
      * Constructs a ProgramChair object. 
@@ -53,17 +48,17 @@ public class ProgramChairUI {
                            final HashMap<String, RegisteredUser> regUsers) {
     	
     	myConference = theConference;
-        mySelf = me;
-        myUsers = regUsers;
-        myRole = myConference.getProgramChair();
-        mySelection = 0;
-        
+        myUser = me;
+        myRegisteredUsers = regUsers;
+        myRole = myConference.getProgramChair();        
     }
     
     /** Prints out the header information. */
-    public void printHeader() {
-        System.out.println(myConference.toString());
-        System.out.println("Program Chair: " + mySelf.toString());
+    private void printHeader() {
+        System.out.println("MSEE CONFERENCE MANAGEMENT SYSTEM");
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println("Conference: " + myConference.toString());
+        System.out.println("Program Chair: " + myUser.getFullName());
     }
     
     /**
@@ -83,19 +78,18 @@ public class ProgramChairUI {
 			boolean opSucc = false;
 			
 			printHeader();
-			stdout.println(String.format("Logged into conference %s as Program Chair.\n\n", myConference.toString()));
 			
-			stdout.println("Options: \n\n" +
-						   "1> At-A-Glance View\n" + 
-						   "2> Accept/Reject a Manuscript\n" + 
-						   "3> Designate a user as a Subprogram Chair\n" + 
-						   "4> Assign a Subprogram Chair a manuscript\n\n" +
-						   "b> Back\n" +
-						   "e> Exit");
+			stdout.println(" Program Chair Options "
+			           + "\n ----------------------"
+			           + "\n 1> View Manuscripts"
+			           + "\n 2> Accept/Reject Manuscript" 
+			           + "\n 3> Designate Subprogram Chair" 
+			           + "\n 4> Assign Manuscript to Subprogram Chair");
+		     printSubMenuBackAndExit();
 			
 			do {
 				
-				stdout.print("Select an action: ");
+				System.out.print(" Please enter a selection: ");
 				uIn = stdin.nextLine();
 				switch(uIn.charAt(0)) {
 				case '1':
@@ -108,11 +102,11 @@ public class ProgramChairUI {
 					break;
 				case '3': 
 					opSucc = true;
-					backCallee = designateSPC();
+					backCallee = displayDesignateSPCMenu();
 					break;
 				case '4':
 					opSucc = true;
-					backCallee = assignManToSPC();
+					backCallee = displayAssignManuscriptToSPCMenu();
 					break;
 				case 'b': 
 					opSucc = true; // Exit inner loop.
@@ -126,7 +120,8 @@ public class ProgramChairUI {
 					break;
 				default:
 					opSucc = false;
-					stdout.println("Invalid option, try again.");
+                    System.out.println("Invalid entry. Please enter a valid corresponding"
+                                     + "integer or letter value."); 
 					break;
 				}
 			} while(!opSucc);
@@ -134,7 +129,7 @@ public class ProgramChairUI {
 		
 		return backCaller;
     }
-    private PageStatus assignManToSPC() {
+    private PageStatus displayAssignManuscriptToSPCMenu() {
 		
     	PageStatus backCaller = PageStatus.GOTO_MAIN_MENU; //Used to control what the calling method does.
 		PageStatus backCallee = PageStatus.GOTO_MAIN_MENU; //Used to control we do based off the actions taken.
@@ -142,10 +137,9 @@ public class ProgramChairUI {
 		PrintStream stdout = new PrintStream(System.out);
 		String uIn;
 		boolean opSucc = false;
-		ProgramChair pc = myConference.getProgramChair();
+
 		do {
 			printHeader();
-			stdout.println(String.format("Logged into conference %s as Program Chair.\n\n", myConference.toString()));
 			
 			stdout.println("\nSELECT A PROGRAM CHAIR TO ASSIGN A MANUSCRIPT:\n");
 			
@@ -163,14 +157,13 @@ public class ProgramChairUI {
 			i = 1;
 			//print spcs
 			for(String key : unArr) {
-				stdout.println(String.format("%d> %s %s", i++, myUsers.get(key).getFirstName(), myUsers.get(key).getLastName()));
+				stdout.println(String.format("%d> %s", i++, myRegisteredUsers.get(key).getFullName()));
 			}
-			stdout.println("\nb> back" +
-						   "\ne> exit\n");
+	        printSubMenuBackAndExit();
 			
 			do {
 				
-				stdout.print("Enter a number corresponding to the SPC you want to assign a paper to: ");
+				stdout.print("Please enter the corresponding number of the SPC to assign a Manuscript: ");
 				
 				uIn = stdin.nextLine();
 				int option = 0;
@@ -213,26 +206,24 @@ public class ProgramChairUI {
 		Scanner stdin = new Scanner(System.in);
 		PrintStream stdout = new PrintStream(System.out);
 		String uIn;
-		boolean opSucc = false;
-		ProgramChair pc = myConference.getProgramChair();
+		boolean operationSuccess = false;
 		
 		do {
 			printHeader();
 			stdout.println(String.format("Logged into conference %s as Program Chair.\n\n", myConference.toString()));
 			stdout.println(String.format("Assigning a manuscript to %s.\n", 
-										 myUsers.get(subprogramChair.getUserName())));
+										 myRegisteredUsers.get(subprogramChair.getUserName())));
 			
-			stdout.println("AVAILABLE MANUSCRIPTS:\n");
+			stdout.println("Manuscripts\n");
 			int i = 1;
 			for(Manuscript man : myConference.getManuscripts()) {
 				stdout.println(String.format("%d> %s", i++, man.getTitle()));
 			}
-			stdout.println("\nb> back" +
-						   "\ne> exit\n");
+	        printSubMenuBackAndExit();
 			
 			do {
 				
-				stdout.print("Enter the number of the manuscript you want to assign: ");
+				stdout.print("Please enter the corresponding number of the Manuscript to assign: ");
 				int option = 0;
 				uIn = stdin.nextLine();
 				
@@ -244,7 +235,7 @@ public class ProgramChairUI {
 				
 				if(option > 0 && option <= myConference.getManuscripts().size()) {
 					
-					opSucc = true;
+					operationSuccess = true;
 					Manuscript paper = myConference.getManuscripts().get(option - 1);
 					
 					try {
@@ -259,26 +250,28 @@ public class ProgramChairUI {
 					} catch(Exception e) {
 						
 						stdout.println(e.getMessage());
-						opSucc = false;
+						operationSuccess = false;
 					}
 				} else if(uIn.charAt(0) == 'e') {
-					opSucc = true; // Exit the inner loop.
+					operationSuccess = true; // Exit the inner loop.
 					backCallee = PageStatus.EXIT; // Exit the outer loop.
 					backCaller = PageStatus.EXIT; // Tell the caller to exit.
 				} else if(uIn.length() > 0 && uIn.charAt(0) == 'b') {
-					opSucc = true; // Exit the inner loop.
+					operationSuccess = true; // Exit the inner loop.
 					backCallee = PageStatus.EXIT; // Exit the outer loop.
 					backCaller = PageStatus.BACK; // Tell the caller to hold.
 				} else {
-					stdout.println("Invalid input. Try again.");
+				    operationSuccess = false;
+                    System.out.println("Invalid entry. Please enter a valid corresponding"
+                                     + "integer or letter value."); 
 				}
-			} while (!opSucc);
+			} while (!operationSuccess);
 		} while(backCallee == PageStatus.BACK);
 		
 		return backCaller;
 	}
 
-	private PageStatus designateSPC() {
+	private PageStatus displayDesignateSPCMenu() {
 		
 		PageStatus backCaller = PageStatus.GOTO_MAIN_MENU; //Used to control what the calling method does.
 		PageStatus backCallee = PageStatus.GOTO_MAIN_MENU; //Used to control we do based off the actions taken.
@@ -290,26 +283,26 @@ public class ProgramChairUI {
 		
 		do {
 			printHeader();
-			stdout.println(String.format("Logged into conference %s as Program Chair.\n\n", myConference.toString()));
 			
-			stdout.println("ALL USERS:");
+			System.out.println(" Registered Users"
+			               + "\n -----------------");
+			
 			int i = 0;
 			
-			String[] unArr = new String[myUsers.keySet().size()];
+			String[] unArr = new String[myRegisteredUsers.keySet().size()];
 			
-			for(String s : myUsers.keySet()) {
+			for(String s : myRegisteredUsers.keySet()) {
 				unArr[i++] = s;
 			}
 			
 			i = 1;		
 			for(String key : unArr) {
-				stdout.println(String.format("%d> %s", i++, myUsers.get(key)));
+				stdout.println(String.format("%d> %s", i++, myRegisteredUsers.get(key)));
 			}
-			stdout.println("\nb> back" + 
-						   "\ne> exit \n");
+	        printSubMenuBackAndExit();
 			do {
 				
-				stdout.print("Enter the number correlating to the user that will become a Subprogram Chair: ");
+				stdout.print(" Please enter the corresponding number of the user to designate as Subprogram Chair: ");
 				uIn = stdin.nextLine();
 				int option = 0;
 				try {
@@ -320,7 +313,7 @@ public class ProgramChairUI {
 				if(option > 0 && option <= unArr.length) {
 					opSucc = true;
 					pc.addSPC(unArr[option - 1]);
-					myConference.assignSubprogramChair(myUsers.get(unArr[option - 1]));
+					myConference.assignSubprogramChair(myRegisteredUsers.get(unArr[option - 1]));
 				} else if(uIn.length() > 0 && uIn.charAt(0) == 'e') {
 					opSucc = true; // Exit inner loop.
 					backCallee = PageStatus.EXIT; // Exit outer loop.
@@ -331,7 +324,8 @@ public class ProgramChairUI {
 					backCaller = PageStatus.BACK; // Tell calling method to hold.
 				} else {
 					opSucc = false;
-					stdout.println("Invalid input, try again.");
+                    System.out.println("Invalid entry. Please enter a valid corresponding"
+                                     + "integer or letter value."); 
 				}
 			} while(!opSucc);
 		} while (backCallee == PageStatus.BACK);
@@ -358,8 +352,7 @@ public class ProgramChairUI {
 			for(Manuscript man : myConference.getManuscripts()) {
 				stdout.println(String.format("%d> %s", i++, man.getTitle()));
 			}
-			stdout.println("\nb> back" + 
-						   "\ne> exit\n");
+	        printSubMenuBackAndExit();
 			
 			do {
 				
@@ -405,7 +398,7 @@ public class ProgramChairUI {
 		Scanner stdin = new Scanner(System.in);
 		PrintStream stdout = new PrintStream(System.out);
 		String uIn;
-		boolean opSucc = false;
+		boolean operationSuccess = false;
 		
 		printHeader();
 		stdout.println(String.format("Logged into conference %s as Program Chair.", myConference.toString()));
@@ -426,10 +419,9 @@ public class ProgramChairUI {
 			stdout.println("Pending.");
 		}
 		
-		stdout.println("1> Accept\n" + 
-					   "2> Reject\n\n" + 
-					   "b> back" +
-					   "e> exit\n");
+		stdout.println("1> Accept" + 
+					   "2> Reject");
+		printSubMenuBackAndExit();
 		
 		do {
 			
@@ -439,25 +431,27 @@ public class ProgramChairUI {
 			switch(uIn.charAt(0)) {
 			
 			case '1':
-				opSucc = true;
+				operationSuccess = true;
 				manuscript.setAcceptance(AcceptanceStatus.ACCEPTED);
 				break;
 			case '2':
-				opSucc = true;
+				operationSuccess = true;
 				manuscript.setAcceptance(AcceptanceStatus.REJECTED);
 				break;
 			case 'e':
-				opSucc = true;
+				operationSuccess = true;
 				backCaller = PageStatus.EXIT;
 				break;
 			case 'b':
-				opSucc = true;
+				operationSuccess = true;
 				backCaller = PageStatus.BACK;
 			default:
-				stdout.println("Invalid input. Try again.");
+			    operationSuccess = false;
+                System.out.println("Invalid entry. Please enter a valid corresponding"
+                                 + "integer or letter value."); 
 				break;
 			}
-		} while(!opSucc);
+		} while(!operationSuccess);
 		
 		return backCaller;
 	}
@@ -468,11 +462,9 @@ public class ProgramChairUI {
 		Scanner stdin = new Scanner(System.in);
 		PrintStream stdout = new PrintStream(System.out);
 		String uIn;
-		boolean opSucc = false;
-		ProgramChair pc = myConference.getProgramChair();
+		boolean operationSuccess = false;
 		
 		printHeader();
-		stdout.println(String.format("Logged into conference %s as Program Chair.\n\n", myConference.toString()));
 		
 		stdout.println("\nAT A GLANCE VIEW: \n");
 		
@@ -481,23 +473,32 @@ public class ProgramChairUI {
 			stdout.println("\n\n");
 		}
 		
-		stdout.println("\nb> Back" + 
-					   "\ne> Exit");
+		printSubMenuBackAndExit();
 		do {
 			
 			stdout.print("Enter an Action: ");
 			uIn = stdin.nextLine();
 			if(uIn.length() > 0 && uIn.charAt(0) == 'e') {
-				opSucc = true; // Exit the loop.
+				operationSuccess = true; // Exit the loop.
 				backCaller = PageStatus.EXIT; // Tell the caller to exit.
 			} else if(uIn.length() > 0 && uIn.charAt(0) == 'b') {
-				opSucc = true; // Exit the loop.
+				operationSuccess = true; // Exit the loop.
 				backCaller = PageStatus.BACK; // Tell the caller to hold.
 			} else {
-				stdout.println("Invalid option, try again.");
+			    operationSuccess = false;
+                System.out.println("Invalid entry. Please enter a valid corresponding"
+                                 + "integer or letter value."); 
 			}
-		} while(!opSucc);
+		} while(!operationSuccess);
 		
 		return backCaller;
 	}
+	
+    private void printSubMenuBackAndExit() {
+        
+        System.out.println("\n --"
+                         + "\n b> Back"
+                         + "\n e> Exit/Logout"
+                         + "\n");
+    }
 }

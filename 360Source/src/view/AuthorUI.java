@@ -43,7 +43,8 @@ public class AuthorUI {
     private PageStatus backCallee;
     
     /** Constructs an AuthorUI object. */
-    public AuthorUI(final Conference theConference, final RegisteredUser theUser, GeneralUI theParent) {
+    public AuthorUI(final Conference theConference, final RegisteredUser theUser, 
+                    final GeneralUI theParent) {
         
         myConference = theConference;
         myUser = theUser;
@@ -56,7 +57,7 @@ public class AuthorUI {
     }
     
     /** Helper method that prints out the header information for a menu. */
-    public void printHeader() {
+    private void printHeader() {
         
         System.out.println("MSEE CONFERENCE MANAGEMENT SYSTEM");
         System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
@@ -147,7 +148,7 @@ public class AuthorUI {
      * @param stdin scans the user input
      * @return the page status to determine whether or not the calling method should hold or retire
      */
-    public PageStatus displayViewMyManuscriptsMenu(Scanner stdin) {
+    private PageStatus displayViewMyManuscriptsMenu(Scanner stdin) {
         
         boolean operationSuccess = false;
         String userInput = "";
@@ -191,7 +192,7 @@ public class AuthorUI {
         return backCaller;
     }
     
-    public PageStatus displayMakeManuscriptChangesMenu(Scanner stdin) {
+    private PageStatus displayMakeManuscriptChangesMenu(Scanner stdin) {
 
         boolean operationSuccess = false;
         String userInput = "";
@@ -241,7 +242,7 @@ public class AuthorUI {
         return backCaller;
     }
     
-    public PageStatus displayUnsubmitManuscriptMenu(Scanner stdin) {
+    private PageStatus displayUnsubmitManuscriptMenu(Scanner stdin) {
         
         boolean operationSuccess = false;
         String userInput = "";
