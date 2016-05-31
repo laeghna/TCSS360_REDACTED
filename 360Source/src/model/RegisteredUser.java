@@ -11,7 +11,7 @@ import java.io.Serializable;
 /** Class that provides the functionality for a registered user. 
  * 
  * @author Lisa Taylor
- * @version 6 May 2016
+ * @version 30 May 2016
  */
 public class RegisteredUser implements Serializable {
     

@@ -24,6 +24,14 @@ import model.Review;
 import model.Reviewer;
 import model.SubprogramChair;
 
+/**
+ * Class that provides the default UI for general Users and prepares the role UIs
+ * for RegisteredUsers.
+ * 
+ * @author Nathan Toporek
+ * @author Lisa Taylor
+ * @version 30 May, 2016
+ */
 public class GeneralUI {
     
     private ArrayList<Conference> myConfs;
