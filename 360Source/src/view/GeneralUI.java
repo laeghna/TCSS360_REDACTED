@@ -379,7 +379,8 @@ public class GeneralUI {
 			break;
 			
 		case AUTHOR:
-			//TODO Implement author UI class here.
+			AuthorUI authUI = new AuthorUI(currConf, currUser, this);
+			authUI.displayMainMenu();
 			break;
 		}
 		return backFlag;		
