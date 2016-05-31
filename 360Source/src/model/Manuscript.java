@@ -190,6 +190,12 @@ public class Manuscript implements Serializable {
 		
 		return myTitle;
 	}
+	
+	public void setTitle(String theTitle) {
+	    
+	    myTitle = theTitle;
+	}
+	
 	public Set<String> getReveiwersUsernames() {
 		
 		return myReviews.keySet();
