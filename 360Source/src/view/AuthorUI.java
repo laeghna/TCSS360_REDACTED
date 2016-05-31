@@ -9,6 +9,8 @@ package view;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import enums.PageStatus;
+import model.Author;
 import model.Conference;
 import model.Manuscript;
 import model.RegisteredUser;
@@ -17,185 +19,368 @@ import model.RegisteredUser;
  * Class that provides the UI menus for an Author who has submitted a manuscript. 
  * 
  * @author Lisa Taylor
- * @version 7 May 2016
+ * @version 30 May 2016
  */
 public class AuthorUI {
     
-    /** The name of the conference. */
+    /** The current Conference. */
     private Conference myConference;
     
-    /** The name of the user. */
-    private RegisteredUser mySelf;
+    /** The current User. */
+    private RegisteredUser myUser;
     
-    /** The list of manuscripts the Author has submitted to a conference. */
-    private ArrayList<Manuscript> myManuscripts;
+    private Author myRole;
     
     private GeneralUI myParent;
     
-    /** Holds the current menu choice selection. */
-    private int mySelection;
+    /** The list of manuscripts the Author has submitted the current Conference. */
+    private ArrayList<Manuscript> myManuscripts;
+    
+    /** Controls what the calling method does. */
+    private PageStatus backCaller;
+    
+    /** Controls what to do based off the actions taken. */
+    private PageStatus backCallee;
     
     /** Constructs an AuthorUI object. */
-    public AuthorUI(final Conference theConference, final RegisteredUser me, 
-    				GeneralUI theParent) {
-    	myParent = theParent;
+    public AuthorUI(final Conference theConference, final RegisteredUser theUser, GeneralUI theParent) {
+        
         myConference = theConference;
-        mySelf = me;
-        myManuscripts = theConference.getMyManuscripts(me.getUsername());
-        mySelection = 0;
+        myUser = theUser;
+        myParent = theParent;
+        myRole = new Author(theUser.getUsername());
+        myManuscripts = theConference.getMyManuscripts(theUser.getUsername());
+
+        backCaller = PageStatus.GOTO_MAIN_MENU;
+        backCallee = PageStatus.GOTO_MAIN_MENU;
     }
     
-    /** Prints out the header information. */
+    /** Helper method that prints out the header information for a menu. */
     public void printHeader() {
-        System.out.println();
-        System.out.println(myConference);
-        System.out.println("User: " + mySelf.toString());
+        
+        System.out.println("MSEE CONFERENCE MANAGEMENT SYSTEM");
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println("Conference: " + myConference.toString());
+        System.out.println("Author: " + myUser.getFullName());
     }
 
     /**
      * Displays the main menu selections.
      */
-    public void displayMainMenu() {
-        Scanner scanner = new Scanner(System.in);
-        printHeader();
-        System.out.println(" Author Options");
-        System.out.println(" ---------------");
-        System.out.println(" 1) Submit a Manuscript");
-        System.out.println(" 2) View My Submitted Manuscripts");
-        System.out.println(" 3) Make Changes to a Submitted Manuscript");
-        System.out.println(" 4) Unsubmit a Manuscript");
-        System.out.println(" 5) Logout");
-        System.out.println();
+    public PageStatus displayMainMenu() {
+        
+        Scanner scanInput = new Scanner(System.in);
+        boolean operationSuccess = false;
+        String userInput = "";
+        
         do {
-            System.out.print("\nPlease enter a selection: ");
-            try {
-                mySelection = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e){
-                System.out.println("Invalid Entry. Must enter a valid corresponding integer.");
-            }
-            if (mySelection < 1 || mySelection > 5)
-                System.out.println("Invalid Entry. Must enter a valid corresponding integer.");
-        } while (mySelection < 1 || mySelection > 5);
-        scanner.close();
-        switch(mySelection) {
-            case 1:
-                displaySubmitManuscriptMenu();
-                break;
-            case 2:
-                displayViewMyManuscriptsMenu();
-                break;
-            case 3:
-                displayMakeManuscriptChangesMenu();
-                break;
-            case 4:
-                displayUnsubmitManuscriptMenu();
-                break;
-            case 5:
-                //Code here?
-                break;
-        }
+                
+            printHeader();
+            System.out.println(" Author Options"
+                           + "\n ---------------"
+                           + "\n 1> Submit a Manuscript"
+                           + "\n 2> View My Submitted Manuscripts"
+                           + "\n 3> Make Changes to a Submitted Manuscript"
+                           + "\n 4> Unsubmit a Manuscript");
+            printSubMenuBackAndExit();
+            do {
+                
+                System.out.print("Please enter a selection: ");
+                userInput = scanInput.nextLine();
+                if (userInput.length() > 1 || Character.isWhitespace(userInput.charAt(0))) {
+                    
+                    System.out.println("Invalid entry. Please enter a valid corresponding"
+                                     + "integer or letter value."); 
+                    operationSuccess = false;
+                } else {
+                
+                    switch(userInput.charAt(0)) {
+                    
+                    case '1':
+                        operationSuccess = true;
+                        backCallee = myParent.displaySubmitManuscriptMenu();
+                        break;
+                        
+                    case '2':
+                        operationSuccess = true;
+                        backCallee = displayViewMyManuscriptsMenu(scanInput);
+                        break;
+                        
+                    case '3':
+                        operationSuccess = true;
+                        backCallee = displayMakeManuscriptChangesMenu(scanInput);
+                        break;
+                        
+                    case '4':
+                        operationSuccess = true;
+                        backCallee = displayUnsubmitManuscriptMenu(scanInput);
+                        break;
+                        
+                    case 'b':
+                        operationSuccess = true;
+                        backCallee = PageStatus.EXIT; // Exit outer loop.
+                        backCaller = PageStatus.BACK; // Tell calling method to hold.
+                        break;
+                        
+                    case 'e':
+                        operationSuccess = true;
+                        backCallee = PageStatus.EXIT; // Exit outer loop.
+                        backCaller = PageStatus.EXIT; // Tell calling method to retire.
+                        break;
+                        
+                    default:
+                        operationSuccess = false;
+                        System.out.println("Invalid entry. Please enter a valid corresponding"
+                                         + "integer or letter value."); 
+                        break;
+                    }
+                }
+            } while (!operationSuccess);
+        } while (backCallee == PageStatus.BACK || backCallee == PageStatus.GOTO_MAIN_MENU);
+        
+        return backCaller;
     }
     
-    public void displaySubmitManuscriptMenu() {
-        Scanner scanner = new Scanner(System.in);
-        printHeader();
-        System.out.println("\nPlease enter the complete pathname for the Manuscript to be submitted: ");
-        String filename = scanner.nextLine();
-        try {
-            String Title;
-            System.out.print("Please enter the title to your manuscript: ");
-            Title = scanner.nextLine();
-            Manuscript man = new Manuscript(Title, String.format("%s %s", mySelf.getFirstName(), mySelf.getLastName()),
-            				                mySelf.getUsername(), filename);
-            myConference.addManuscript(man);
-        } catch (Exception e) { //Can change the exception one known what type will be thrown
-            System.out.println("Invalid pathname. File could not be found.");
-            System.out.println();
-            displayMainMenu();
-        }
-        System.out.println("Manuscript submitted successfully.");
-        System.out.println();
-        scanner.close();
-        displayMainMenu();
-    }
-    
-    public void displayViewMyManuscriptsMenu() {
-        Scanner scanner = new Scanner(System.in);
+    /**
+     * Displays the manuscripts the Author has submitted to the current Conference.
+     * 
+     * @param stdin scans the user input
+     * @return the page status to determine whether or not the calling method should hold or retire
+     */
+    public PageStatus displayViewMyManuscriptsMenu(Scanner stdin) {
+        
+        boolean operationSuccess = false;
+        String userInput = "";
         int counter = 0;
-        String input = "";
+        
         printHeader();
         printManuscriptsNumberedList(counter);
+        printSubMenuBackAndExit();
+        
         do {
             System.out.print("\nPlease enter a selection: ");
-            input = scanner.nextLine(); 
-            if (input != "a" && input != "b") {
-                System.out.println("Invalid entry. Must enter a valid corresponding letter value.");
+            userInput = stdin.nextLine(); 
+            if (userInput.length() > 1 || Character.isWhitespace(userInput.charAt(0))) {
+                
+                System.out.println("Invalid entry. Please enter a valid corresponding"
+                                 + "integer or letter value."); 
+                operationSuccess = false;
+            } else {
+            
+                switch(userInput.charAt(0)) {
+                    
+                case 'b':
+                    operationSuccess = true;
+                    backCaller = PageStatus.BACK; // Tell calling method to hold.
+                    break;
+                    
+                case 'e':
+                    operationSuccess = true;
+                    backCaller = PageStatus.EXIT; // Tell calling method to retire.
+                    break;
+                    
+                default:
+                    operationSuccess = false;
+                    System.out.println("Invalid entry. Please enter a valid corresponding"
+                                     + "integer or letter value."); 
+                    break;
+                }
             }
-        } while (input != "a" && input != "b");
-        if (input == "a") {
-            displayMainMenu();
-        } else if (input == "b") {
-            //Code here
-        }
-        scanner.close();
+        } while (!operationSuccess);    
+        
+        return backCaller;
     }
     
-    public void displayMakeManuscriptChangesMenu() {
-        Scanner scanner = new Scanner(System.in);
+    public PageStatus displayMakeManuscriptChangesMenu(Scanner stdin) {
+
+        boolean operationSuccess = false;
+        String userInput = "";
         int counter = 0;
-        String input = "";
+        
+        do {
+            printHeader();
+            printManuscriptsNumberedList(counter);
+            printSubMenuBackAndExit();
+            
+            do {
+                System.out.print("\nPlease enter a selection: ");
+                userInput = stdin.nextLine(); 
+                if (userInput.length() > 1 || Character.isWhitespace(userInput.charAt(0))) {
+                    
+                    System.out.println("Invalid entry. Please enter a valid corresponding"
+                                     + "integer or letter value."); 
+                    operationSuccess = false;
+                } else if (Character.isDigit(userInput.charAt(0))) {
+                    
+                    int index = Integer.parseInt(userInput) - 1;
+                    backCallee = displayModificationsMenu(stdin, myManuscripts.get(index));
+                } else {
+                
+                    switch(userInput.charAt(0)) {
+                        
+                    case 'b':
+                        operationSuccess = true;
+                        backCaller = PageStatus.BACK; // Tell calling method to hold.
+                        break;
+                        
+                    case 'e':
+                        operationSuccess = true;
+                        backCaller = PageStatus.EXIT; // Tell calling method to retire.
+                        break;
+                        
+                    default:
+                        operationSuccess = false;
+                        System.out.println("Invalid entry. Please enter a valid corresponding"
+                                         + "integer or letter value."); 
+                        break;
+                    }
+                }
+            } while (!operationSuccess);    
+        } while (backCallee == PageStatus.BACK);
+
+        return backCaller;
+    }
+    
+    public PageStatus displayUnsubmitManuscriptMenu(Scanner stdin) {
+        
+        boolean operationSuccess = false;
+        String userInput = "";
+        int counter = 0;
+        
         printHeader();
         printManuscriptsNumberedList(counter);
+        printSubMenuBackAndExit();
+        
         do {
+            
             System.out.print("\nPlease enter a selection: ");
-            input = scanner.nextLine(); 
-            if (input != "a" && input != "b") {
-                System.out.println("Invalid entry. Must enter a valid corresponding integer or letter value.");
+            userInput = stdin.nextLine(); 
+            if (userInput.length() > 1 || Character.isWhitespace(userInput.charAt(0))) {
+                
+                System.out.println("Invalid entry. Please enter a valid corresponding"
+                                 + "integer or letter value."); 
+                operationSuccess = false;
+            } else if (Character.isDigit(userInput.charAt(0))) {
+                
+                int index = Integer.parseInt(userInput) - 1;
+                myRole.removeManuscript(myManuscripts.get(index));
+                String title = myManuscripts.get(index).getTitle();
+                myManuscripts.remove(index);
+                System.out.println("\n\"" + title + "\" removed successfully.");
+                printManuscriptsNumberedList(counter);
+                backCaller = PageStatus.BACK; //Tell the calling method to hold.
+            } else {
+            
+                switch(userInput.charAt(0)) {
+                    
+                case 'b':
+                    operationSuccess = true;
+                    backCaller = PageStatus.BACK; // Tell calling method to hold.
+                    break;
+                    
+                case 'e':
+                    operationSuccess = true;
+                    backCaller = PageStatus.EXIT; // Tell calling method to retire.
+                    break;
+                    
+                default:
+                    operationSuccess = false;
+                    System.out.println("Invalid entry. Please enter a valid corresponding"
+                                     + "integer or letter value."); 
+                    break;
+                }
             }
-        } while (input != "a" && input != "b");
-        if (input == "a") {
-            displayMainMenu();
-        } else if (input == "b") {
-            //Code here
-        }
-        scanner.close();
+        } while (!operationSuccess);
+        
+        return backCaller;
     }
     
-    public void displayUnsubmitManuscriptMenu() {
-        Scanner scanner = new Scanner(System.in);
-        int counter = 0;
-        String input = "";
+    private PageStatus displayModificationsMenu(Scanner stdin, Manuscript theManuscript) {
+        
+        boolean operationSuccess = false;
+        String userInput = "";
+        
         printHeader();
-        printManuscriptsNumberedList(counter);
+        System.out.println("\n Manuscript: " + theManuscript.getTitle()
+                         + "\n"
+                         + "\n Changes to Make"
+                         + "\n ----------------"
+                         + "\n 1> Change Title"
+                         + "\n 2> Resubmit Manuscript");
+        printSubMenuBackAndExit();
+        
         do {
-            System.out.println("\nPlease enter a selection: ");
-            input = scanner.nextLine(); 
-            if (input != "a" && input != "b") {
-                System.out.println("Invalid entry. Must enter a valid corresponding integer or letter value.");
+            
+            System.out.print("\nPlease enter a selection: ");
+            userInput = stdin.nextLine(); 
+            if (userInput.length() > 1 || Character.isWhitespace(userInput.charAt(0))) {
+                
+                System.out.println("Invalid entry. Please enter a valid corresponding"
+                                 + "integer or letter value."); 
+                operationSuccess = false;
+            } else {
+            
+                switch(userInput.charAt(0)) {
+                
+                case '1':
+                    operationSuccess = true;
+                    System.out.println("\nEnter the new Title for the Manuscript: ");
+                    userInput = stdin.nextLine();
+                    theManuscript.setTitle(userInput);
+                    System.out.println("\nManuscript title successfully changed to \"" + theManuscript.getTitle() + "\".");
+                    backCaller = PageStatus.BACK; // Tell calling method to hold.
+                    break;
+                    
+                case '2':
+                    operationSuccess = true;
+                    System.out.println("Enter the full pathname for the file: ");
+                    userInput = stdin.nextLine();
+                    myRole.editManuscript(theManuscript, userInput);
+                    System.out.println("\nManuscript successfully uploaded.");
+                    backCaller = PageStatus.BACK; // Tell calling method to hold.
+                    break;
+                    
+                case 'b':
+                    operationSuccess = true;
+                    backCaller = PageStatus.BACK; // Tell calling method to hold.
+                    break;
+                    
+                case 'e':
+                    operationSuccess = true;
+                    backCaller = PageStatus.EXIT; // Tell calling method to retire.
+                    break;
+                    
+                default:
+                    operationSuccess = false;
+                    System.out.println("Invalid entry. Please enter a valid corresponding"
+                                     + "integer or letter value."); 
+                    break;
+                }
             }
-        } while (input != "a" && input != "b");
-        if (input == "a") {
-            displayMainMenu();
-        } else if (input == "b") {
-            //Code here
-        }
-        scanner.close();
+        } while (!operationSuccess);
+        
+        return backCaller;
     }
     
     /** Helper method that prints the list of Manuscripts. */
     private int printManuscriptsNumberedList(int counter) {
 
-        System.out.println(" Submitted Manuscripts");
-        System.out.println(" ----------------------");
-        for( Manuscript paper : myManuscripts ) {
-            System.out.println(" \"" + ++counter + ") " + paper.getTitle() + "\"");
-            System.out.println();
+        counter = 0;
+        System.out.println("\n Submitted Manuscripts"
+                         + "\n ----------------------");
+        
+        for( Manuscript man : myManuscripts ) {
+            System.out.println("\n " + ++counter + ") \"" + man.getTitle() + "\"");
         }
-        System.out.println(" Options");
-        System.out.println(" --------");
-        System.out.println(" a) Back");
-        System.out.println(" b) Logout");
-        System.out.println();
+
         return counter;
+    }
+    
+    private void printSubMenuBackAndExit() {
+        
+        System.out.println("\n --"
+                         + "\n b> Back"
+                         + "\n e> Exit/Logout"
+                         + "\n");
     }
 }
