@@ -249,32 +249,32 @@ public class GeneralUI {
             
             ArrayList<Role> roles = currConf.getRoles(currUser.getUsername());
             int i = 1;
+            System.out.println("\n Options"
+                             + "\n --------");
             for(Role r : roles) {
                 
                 switch(r) {
                 
                 case PROGRAMCHAIR:
-                    System.out.println(String.format("%d> %s", i++, "Program Chair Options"));
+                    System.out.println(String.format(" %d> %s", i++, "Program Chair Options"));
                     break;
                 case SUBPROGRAMCHAIR:
-                    System.out.println(String.format("%d> %s", i++, "Subprogram Chair Options"));
+                    System.out.println(String.format(" %d> %s", i++, "Subprogram Chair Options"));
                     break;
                 case REVIEWER:
-                    System.out.println(String.format("%d> %s", i++, "Reviewer Options"));
+                    System.out.println(String.format(" %d> %s", i++, "Reviewer Options"));
                     break;
                 case AUTHOR:
-                    System.out.println(String.format("%d> %s", i++, "Author Options"));
+                    System.out.println(String.format(" %d> %s", i++, "Author Options"));
                     break;
                 default:
                     break;
                 }
             }
-            System.out.println("\n Options"
-                             + "\n --------"
-                             + "\n 1> Submit a Manuscript"
-                             + "\n --"
-                             + "\n b> Back"
-                             + "\n e> Exit/Logout");
+            System.out.println(" " + i++ + "> Submit a Manuscript"
+                                  + "\n --"
+                                  + "\n b> Back"
+                                  + "\n e> Exit/Logout");
             System.out.print("\n Please enter a selection: ");
             do {
                 userInput = stdin.nextLine();
