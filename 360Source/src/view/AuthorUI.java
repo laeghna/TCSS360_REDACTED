@@ -77,21 +77,28 @@ public class AuthorUI {
         do {
                 
             printHeader();
-            System.out.println(" Author Options"
-                           + "\n ---------------"
-                           + "\n 1> Submit a Manuscript"
-                           + "\n 2> View My Submitted Manuscripts"
-                           + "\n 3> Make Changes to a Submitted Manuscript"
-                           + "\n 4> Unsubmit a Manuscript");
+            System.out.println("\n Author Options"
+                             + "\n ---------------"
+                             + "\n 1> Submit a Manuscript"
+                             + "\n 2> View My Submitted Manuscripts"
+                             + "\n 3> Make Changes to a Submitted Manuscript"
+                             + "\n 4> Unsubmit a Manuscript");
             printSubMenuBackAndExit();
             do {
                 
                 System.out.print("Please enter a selection: ");
                 userInput = scanInput.nextLine();
+                System.out.println("\n");
+                
+                if (userInput.length() == 0) {
+                    
+                    userInput = " ";
+                }
+                
                 if (userInput.length() > 1 || Character.isWhitespace(userInput.charAt(0))) {
                     
                     System.out.println("Invalid entry. Please enter a valid corresponding"
-                                     + "integer or letter value."); 
+                                     + "integer or letter value.\n\n"); 
                     operationSuccess = false;
                 } else {
                 
@@ -100,6 +107,7 @@ public class AuthorUI {
                     case '1':
                         operationSuccess = true;
                         backCallee = myParent.displaySubmitManuscriptMenu();
+                        myManuscripts = myConference.getMyManuscripts(myUser.getUsername());
                         break;
                         
                     case '2':
@@ -132,7 +140,7 @@ public class AuthorUI {
                     default:
                         operationSuccess = false;
                         System.out.println("Invalid entry. Please enter a valid corresponding"
-                                         + "integer or letter value."); 
+                                         + "integer or letter value.\n\n"); 
                         break;
                     }
                 }
@@ -159,12 +167,19 @@ public class AuthorUI {
         printSubMenuBackAndExit();
         
         do {
-            System.out.print("\nPlease enter a selection: ");
+            System.out.print("\n Please enter a selection: ");
             userInput = stdin.nextLine(); 
+            System.out.println("\n");
+            
+            if (userInput.length() == 0) {
+                
+                userInput = " ";
+            }
+            
             if (userInput.length() > 1 || Character.isWhitespace(userInput.charAt(0))) {
                 
                 System.out.println("Invalid entry. Please enter a valid corresponding"
-                                 + "integer or letter value."); 
+                                 + "integer or letter value.\n\n"); 
                 operationSuccess = false;
             } else {
             
@@ -183,7 +198,7 @@ public class AuthorUI {
                 default:
                     operationSuccess = false;
                     System.out.println("Invalid entry. Please enter a valid corresponding"
-                                     + "integer or letter value."); 
+                                     + "integer or letter value.\n\n"); 
                     break;
                 }
             }
@@ -206,33 +221,43 @@ public class AuthorUI {
             do {
                 System.out.print("\nPlease enter a selection: ");
                 userInput = stdin.nextLine(); 
+                System.out.println("\n");
+                
+                if (userInput.length() == 0) {
+                    
+                    userInput = " ";
+                }
+                
                 if (userInput.length() > 1 || Character.isWhitespace(userInput.charAt(0))) {
                     
                     System.out.println("Invalid entry. Please enter a valid corresponding"
-                                     + "integer or letter value."); 
+                                     + "integer or letter value.\n\n"); 
                     operationSuccess = false;
                 } else if (Character.isDigit(userInput.charAt(0))) {
                     
                     int index = Integer.parseInt(userInput) - 1;
                     backCallee = displayModificationsMenu(stdin, myManuscripts.get(index));
+                    operationSuccess = true;
                 } else {
                 
                     switch(userInput.charAt(0)) {
                         
                     case 'b':
                         operationSuccess = true;
+                        backCallee = PageStatus.EXIT; // Exit outer loop.
                         backCaller = PageStatus.BACK; // Tell calling method to hold.
                         break;
                         
                     case 'e':
                         operationSuccess = true;
+                        backCallee = PageStatus.EXIT; // Exit outer loop.
                         backCaller = PageStatus.EXIT; // Tell calling method to retire.
                         break;
                         
                     default:
                         operationSuccess = false;
                         System.out.println("Invalid entry. Please enter a valid corresponding"
-                                         + "integer or letter value."); 
+                                         + "integer or letter value.\n\n"); 
                         break;
                     }
                 }
@@ -254,12 +279,19 @@ public class AuthorUI {
         
         do {
             
-            System.out.print("\nPlease enter a selection: ");
+            System.out.print("\n Please enter a selection: ");
             userInput = stdin.nextLine(); 
+            System.out.println("\n");
+            
+            if (userInput.length() == 0) {
+                
+                userInput = " ";
+            }
+            
             if (userInput.length() > 1 || Character.isWhitespace(userInput.charAt(0))) {
                 
-                System.out.println("Invalid entry. Please enter a valid corresponding"
-                                 + "integer or letter value."); 
+                System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                 + " integer or letter value.\n\n"); 
                 operationSuccess = false;
             } else if (Character.isDigit(userInput.charAt(0))) {
                 
@@ -267,8 +299,10 @@ public class AuthorUI {
                 myRole.removeManuscript(myManuscripts.get(index));
                 String title = myManuscripts.get(index).getTitle();
                 myManuscripts.remove(index);
-                System.out.println("\n\"" + title + "\" removed successfully.");
+                System.out.println("\"" + title + "\" removed successfully.\n");
                 printManuscriptsNumberedList(counter);
+                System.out.println("\n");
+                operationSuccess = true;
                 backCaller = PageStatus.BACK; //Tell the calling method to hold.
             } else {
             
@@ -286,8 +320,8 @@ public class AuthorUI {
                     
                 default:
                     operationSuccess = false;
-                    System.out.println("Invalid entry. Please enter a valid corresponding"
-                                     + "integer or letter value."); 
+                    System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                     + " integer or letter value.\n\n"); 
                     break;
                 }
             }
@@ -312,12 +346,13 @@ public class AuthorUI {
         
         do {
             
-            System.out.print("\nPlease enter a selection: ");
+            System.out.print(" Please enter a selection: ");
             userInput = stdin.nextLine(); 
+            System.out.println("\n");
             if (userInput.length() > 1 || Character.isWhitespace(userInput.charAt(0))) {
                 
-                System.out.println("Invalid entry. Please enter a valid corresponding"
-                                 + "integer or letter value."); 
+                System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                 + " integer or letter value.\n\n"); 
                 operationSuccess = false;
             } else {
             
@@ -325,19 +360,20 @@ public class AuthorUI {
                 
                 case '1':
                     operationSuccess = true;
-                    System.out.println("\nEnter the new Title for the Manuscript: ");
+                    System.out.print(" Enter the new Title for the Manuscript: ");
                     userInput = stdin.nextLine();
                     theManuscript.setTitle(userInput);
-                    System.out.println("\nManuscript title successfully changed to \"" + theManuscript.getTitle() + "\".");
+                    System.out.println("\n Manuscript title successfully changed to \"" + theManuscript.getTitle() + "\".\n\n");
                     backCaller = PageStatus.BACK; // Tell calling method to hold.
                     break;
                     
                 case '2':
                     operationSuccess = true;
-                    System.out.println("Enter the full pathname for the file: ");
+                    System.out.println(" Enter the full pathname for the file: ");
                     userInput = stdin.nextLine();
+                    System.out.println("\n");
                     myRole.editManuscript(theManuscript, userInput);
-                    System.out.println("\nManuscript successfully uploaded.");
+                    System.out.println("\n \"" + theManuscript.getTitle() + "\" successfully uploaded.\n\n");
                     backCaller = PageStatus.BACK; // Tell calling method to hold.
                     break;
                     
@@ -354,7 +390,7 @@ public class AuthorUI {
                 default:
                     operationSuccess = false;
                     System.out.println("Invalid entry. Please enter a valid corresponding"
-                                     + "integer or letter value."); 
+                                     + "integer or letter value.\n\n"); 
                     break;
                 }
             }
@@ -371,7 +407,7 @@ public class AuthorUI {
                          + "\n ----------------------");
         
         for( Manuscript man : myManuscripts ) {
-            System.out.println("\n " + ++counter + ") \"" + man.getTitle() + "\"");
+            System.out.println(" " + ++counter + ") \"" + man.getTitle() + "\"");
         }
 
         return counter;
@@ -379,9 +415,9 @@ public class AuthorUI {
     
     private void printSubMenuBackAndExit() {
         
-        System.out.println("\n --"
-                         + "\n b> Back"
-                         + "\n e> Exit/Logout"
-                         + "\n");
+        System.out.print(" --"
+                     + "\n b> Back"
+                     + "\n e> Exit/Logout"
+                     + "\n\n");
     }
 }
