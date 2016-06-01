@@ -19,7 +19,7 @@ import enums.PageStatus;
  * Class that provides the UI menus for a Reviewer. 
  * 
  * @author Lisa Taylor
- * @version 30 May 2016
+ * @version 3 May 2016
  */
 public class ReviewerUI {
 
@@ -73,18 +73,25 @@ public class ReviewerUI {
         do {
 
             printHeader();
-            System.out.println(" Reviewer Options"
-                           + "\n -----------------"
-                           + "\n 1> Submit Reviews");
+            System.out.println("\n Reviewer Options"
+                             + "\n -----------------"
+                             + "\n 1> Submit Reviews");
             printSubMenuBackAndExit();
 
             do {
-                System.out.print("Please enter a selection: ");
+                System.out.print(" Please enter a selection: ");
                 userInput = scanInput.nextLine();
+                System.out.println("\n");
+                
+                if (userInput.length() == 0) {
+                    
+                    userInput = " ";
+                }
+                
                 if (userInput.length() > 1 || Character.isWhitespace(userInput.charAt(0))) {
                     
-                    System.out.println("Invalid entry. Please enter a valid corresponding"
-                                     + "integer or letter value."); 
+                    System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                     + " integer or letter value.\n\n"); 
                     operationSuccess = false;
                 } else {
                     
@@ -106,8 +113,8 @@ public class ReviewerUI {
                         break;
                     default:
                         operationSuccess = false;
-                        System.out.println("Invalid entry. Please enter a valid corresponding"
-                                         + "integer or letter value."); 
+                        System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                         + " integer or letter value.\n\n"); 
                         break;
                     }
                 }
@@ -133,8 +140,9 @@ public class ReviewerUI {
             printSubMenuBackAndExit();
 
             do {
-                System.out.print("Please enter the corresponding number of the Manuscript to Review: ");
+                System.out.print(" Please enter the corresponding number of the Manuscript to Review: ");
                 userInput = stdin.nextLine();
+                System.out.println("\n");
                 int option = 0;
                 try {
                     option = Integer.parseInt(userInput);
@@ -160,8 +168,8 @@ public class ReviewerUI {
                 }
                 else {
                     operationSuccess = false;
-                    System.out.println("Invalid entry. Please enter a valid corresponding"
-                                     + "integer or letter value."); 
+                    System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                     + " integer or letter value."); 
                 }
             }while(!operationSuccess);
         } while (backCallee == PageStatus.BACK);
@@ -180,11 +188,10 @@ public class ReviewerUI {
         do {
 
             System.out.println(" Submit Review for " + myManuscripts.get(mySelection).getTitle());
-            System.out.println(" Enter filename below\n");
             printSubMenuBackAndExit();
 
             do {
-                System.out.print("Enter filename of review or action: ");
+                System.out.print(" Please enter filename of review or action: ");
                 userInput = stdin.nextLine();
 
                 if(userInput.length() > 0) {
@@ -207,8 +214,8 @@ public class ReviewerUI {
                 }
                 else {
                     operationSuccess = false;
-                    System.out.println("Invalid entry. Please enter a valid corresponding"
-                                     + "integer or letter value."); 
+                    System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                     + " integer or letter value.\n\n"); 
                 }
             }while(!operationSuccess);
         }while(backCallee == PageStatus.BACK);
@@ -224,7 +231,7 @@ public class ReviewerUI {
                          + "\n ---------------------");
         
         for( Manuscript man : myManuscripts ) {
-            System.out.println("\n " + ++counter + ") \"" + man.getTitle() + "\"");
+            System.out.println(" " + ++counter + ") \"" + man.getTitle() + "\"");
         }
 
         return counter;
@@ -232,9 +239,9 @@ public class ReviewerUI {
     
     private void printSubMenuBackAndExit() {
         
-        System.out.println("\n --"
-                         + "\n b> Back"
-                         + "\n e> Exit/Logout"
-                         + "\n");
+        System.out.print(" --"
+                     + "\n b> Back"
+                     + "\n e> Exit/Logout"
+                     + "\n\n");
     }
 }

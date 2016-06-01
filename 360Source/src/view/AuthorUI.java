@@ -19,7 +19,7 @@ import model.RegisteredUser;
  * Class that provides the UI menus for an Author who has submitted a manuscript. 
  * 
  * @author Lisa Taylor
- * @version 30 May 2016
+ * @version 3 May 2016
  */
 public class AuthorUI {
     
@@ -86,7 +86,7 @@ public class AuthorUI {
             printSubMenuBackAndExit();
             do {
                 
-                System.out.print("Please enter a selection: ");
+                System.out.print(" Please enter a selection: ");
                 userInput = scanInput.nextLine();
                 System.out.println("\n");
                 
