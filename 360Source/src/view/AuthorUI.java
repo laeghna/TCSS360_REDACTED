@@ -296,7 +296,7 @@ public class AuthorUI {
             } else if (Character.isDigit(userInput.charAt(0))) {
                 
                 int index = Integer.parseInt(userInput) - 1;
-                myRole.removeManuscript(myManuscripts.get(index));
+                myRole.removeManuscript(myManuscripts.get(index), myConference);
                 String title = myManuscripts.get(index).getTitle();
                 myManuscripts.remove(index);
                 System.out.println("\"" + title + "\" removed successfully.\n");

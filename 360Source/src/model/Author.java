@@ -60,14 +60,13 @@ public class Author implements Serializable {
 	 * @throws NullPointerException if theManuscript == null
 	 * @throws SecurityException if myUsername != theManuscript.getOwnersUsername()
 	 */
-	public void removeManuscript(Manuscript theManuscript) {
+	public void removeManuscript(Manuscript theManuscript, Conference theConf) {
 		
 		if(theManuscript == null) {
 			throw new NullPointerException("This manuscript is non-existent, my dude.");
 		} else if(!(theManuscript.getOwnersUsername().equals(myUsername))) {
 			throw new SecurityException("SARCASTIC EXCEPTION SAYS YOU SHOULD NOT BE DOING THIS.");
 		}
-		
-		theManuscript = null;
+		theConf.getManuscripts().remove(theManuscript);
 	}
 }
