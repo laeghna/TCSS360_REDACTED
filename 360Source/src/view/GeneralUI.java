@@ -57,24 +57,25 @@ public class GeneralUI {
             
             userInput = stdin.nextLine();
             System.out.println();
-            
-            switch(userInput.charAt(0)) {
-                
-            case '1':
-                displayLogin();
-                break;
-            
-            case '2':
-                displayRegister();
-                break;
-            
-            case 'x':
-                break;
-                
-            default:
-                stdout.println("Invalid entry. Please enter a valid corresponding"
-                             + "integer or letter value.");
-                break;
+            if(userInput.length() > 0) {
+	            switch(userInput.charAt(0)) {
+	                
+	            case '1':
+	                displayLogin();
+	                break;
+	            
+	            case '2':
+	                displayRegister();
+	                break;
+	            
+	            case 'x':
+	                break;
+	                
+	            default:
+	                stdout.println("Invalid entry. Please enter a valid corresponding"
+	                             + "integer or letter value.");
+	                break;
+	            }
             }
             
         } while (userInput.charAt(0) != 'x');   
