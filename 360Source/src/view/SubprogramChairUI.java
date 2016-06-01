@@ -79,6 +79,7 @@ public class SubprogramChairUI {
             stdout.println(" -------------------------");
             stdout.println(" 1> Assign Manuscript to Reviewer");
             stdout.println(" 2> Submit Manuscript Recommendation");
+            stdout.println(" 3> Assign User as a Reviewer");
             printSubMenuBackAndExit();
 
             do {
@@ -108,6 +109,10 @@ public class SubprogramChairUI {
                         operationSuccess = true;
                         backCallee = displayManuscriptToSubmitRecommendationMenu();
                         break;
+                        case '3':
+                            operationSuccess = true;
+                            backCallee = displayAssignReviewerMenu();
+                            break;
                     case 'b':
                         operationSuccess = true;
                         backCallee = PageStatus.EXIT; // Exit outer loop.
@@ -390,5 +395,64 @@ public class SubprogramChairUI {
                      + "\n b> Back"
                      + "\n e> Exit/Logout"
                      + "\n\n");
+    }
+
+    private PageStatus  displayAssignReviewerMenu() {
+        PageStatus backCaller = PageStatus.GOTO_MAIN_MENU; //Used to control what the calling method does.
+        PageStatus backCallee = PageStatus.GOTO_MAIN_MENU; //Used to control we do based off the actions taken.
+
+        Scanner myScanner = new Scanner(System.in);
+        PrintStream stdout = new PrintStream(System.out);
+        boolean operationSuccess = false;
+        String userInput = "";
+        int counter = 0;
+
+        do {
+            printHeader();
+            stdout.println("\n Select User to be a Reviewer\n");
+            String[] users = (String[]) myParent.getMyUsers().keySet().toArray(); //Casting with abandon
+            for (int i = 0; i < users.length; i++) {
+                stdout.println(" \"" + ++counter + ") " + users[i] + "\"");
+            }
+            printSubMenuBackAndExit();
+
+            do {
+                stdout.print(" Please enter your selection: ");
+                userInput = myScanner.nextLine();
+                System.out.println("\n");
+                int option = 0;
+                try {
+                    option = Integer.parseInt(userInput);
+                } catch(NumberFormatException e) {
+                    option = 0;
+                }
+                if(option > 0 && option <= counter) {
+                    operationSuccess = true;
+
+                    myConference.assignReviewer(myParent.getMyUsers().get(users[option]));
+
+                    if(backCallee == PageStatus.EXIT) {
+                        backCaller = PageStatus.EXIT;
+                    }
+                }
+                else if(userInput.charAt(0) == 'b') {
+                    operationSuccess = true;
+                    backCallee = PageStatus.EXIT; // Exit outer loop.
+                    backCaller = PageStatus.BACK; // Tell calling method to hold.
+                }
+                else if(userInput.charAt(0) == 'e') {
+                    operationSuccess = true;
+                    backCallee = PageStatus.EXIT; // Exit outer loop.
+                    backCaller = PageStatus.EXIT; // Tell calling method to retire.
+                }
+                else {
+                    operationSuccess = false;
+                    System.out.println(" Invalid entry. Please enter a valid corresponding"
+                            + " integer or letter value.\n\n");
+                }
+            }while(!operationSuccess);
+        }while(backCallee == PageStatus.BACK);
+
+        return backCaller;
     }
 }
