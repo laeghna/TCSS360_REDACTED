@@ -21,6 +21,8 @@ public class Reviewer implements Serializable{
      */
     private String userName;
 
+    public static int MAX_REVIEWS = 4;
+    
     /**
      * Constructor. Instantiates class with username and roles.
      * @param newUserName username of Reviewer

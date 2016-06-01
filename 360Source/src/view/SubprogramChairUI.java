@@ -109,10 +109,10 @@ public class SubprogramChairUI {
                         operationSuccess = true;
                         backCallee = displayManuscriptToSubmitRecommendationMenu();
                         break;
-                        case '3':
-                            operationSuccess = true;
-                            backCallee = displayAssignReviewerMenu();
-                            break;
+                    case '3':
+                        operationSuccess = true;
+                        backCallee = displayAssignReviewerMenu();
+                        break;
                     case 'b':
                         operationSuccess = true;
                         backCallee = PageStatus.EXIT; // Exit outer loop.
@@ -128,6 +128,9 @@ public class SubprogramChairUI {
                         System.out.println(" Invalid entry. Please enter a valid corresponding"
                                          + " integer or letter value.\n\n"); 
                         break;
+                    }
+                    if(backCallee == PageStatus.EXIT) {
+                    	backCaller = PageStatus.EXIT;
                     }
                 }
             }while(!operationSuccess);
@@ -213,15 +216,20 @@ public class SubprogramChairUI {
         PrintStream stdout = new PrintStream(System.out);
         boolean operationSuccess = false;
         String userInput = "";
-        int counter = 0;
 
         do {
             
             printHeader();
-            stdout.println("\n Select Reviewer to review " + myManuscripts.get(mySelection).getTitle() + "\n");
-            String[] users = (String[]) myParent.getMyUsers().keySet().toArray(); //Casting with abandon
+            stdout.println("\n Select Reviewer to review " + myManuscripts.get(mySelection - 1).getTitle() + "\n");
+            String[] users = new String [myConference.getReviewers().keySet().size()]; //Casting with abandon
+
+            int j = 0;
+            for(String username : myConference.getReviewers().keySet()) {
+            	users[j++] = username;
+            }
             for (int i = 0; i < users.length; i++) {
-                stdout.println(" \"" + ++counter + ") " + users[i] + "\"");
+                stdout.println(String.format("%d> %s", i + 1, 
+                		myParent.getMyUsers().get(users[i]).getFullName()));
             }
             printSubMenuBackAndExit();
 
@@ -235,10 +243,30 @@ public class SubprogramChairUI {
                 } catch(NumberFormatException e) {
                     option = 0;
                 }
-                if(option > 0 && option <= counter) {
+                if(option > 0 && option <= myConference.getReviewers().size()) {
                     operationSuccess = true;
-                    myManuscripts.get(mySelection).addReviewer(new Reviewer(users[option]));
-
+                    Reviewer rev = myConference.getReviewers().get(users[option - 1]);
+                    // Gets the manuscript that we want to assign a reviewer to.
+                    Manuscript m =  myManuscripts.get(mySelection - 1);
+                    int opt = -1;
+                    for(int i = 0; i < myConference.getManuscripts().size(); i++) {
+                    	
+                    	if(myConference.getManuscripts().get(i).getTitle().equals(m.getTitle())) {
+                    		opt = i;
+                    		i = myConference.getManuscripts().size() + 100;
+                    	}
+                    }
+                    
+                    if(myConference.getReviewersManuscripts(rev.getUsername()).size() < Reviewer.MAX_REVIEWS) {
+                    	try {
+                    		myConference.getManuscripts().get(opt).addReviewer(rev);
+                    	} catch(Exception e) {
+                    		System.out.println(" " + e.getMessage() +"\n\n");
+                    	}
+                    } else {
+                    	System.out.println(" User has already been assigned the maximum number of manuscripts to review.\n\n");
+                    }
+                    
                     if(backCallee == PageStatus.EXIT) {
                         backCaller = PageStatus.EXIT;
                     }
@@ -340,7 +368,7 @@ public class SubprogramChairUI {
         do {
 
             printHeader();
-            stdout.println("\n Select Recommendation to give to " + myManuscripts.get(mySelection).getTitle() + "\n");
+            stdout.println("\n Select Recommendation to give to " + myManuscripts.get(mySelection - 1).getTitle() + "\n");
             stdout.println("---------------------------------------------");
             stdout.println(" 1> Strong Accect");
             stdout.println(" 2> Accept");
@@ -353,19 +381,19 @@ public class SubprogramChairUI {
                 switch (userInput.charAt(0)) {
                     case '1':
                         operationSuccess = true;
-                        myManuscripts.get(mySelection).setRecommendation(Recommendation.STRONG_ACCEPT);
+                        myManuscripts.get(mySelection - 1).setRecommendation(Recommendation.STRONG_ACCEPT);
                         break;
                     case '2':
                         operationSuccess = true;
-                        myManuscripts.get(mySelection).setRecommendation(Recommendation.ACCEPT);
+                        myManuscripts.get(mySelection - 1).setRecommendation(Recommendation.ACCEPT);
                         break;
                     case '3':
                         operationSuccess = true;
-                        myManuscripts.get(mySelection).setRecommendation(Recommendation.REJECT);
+                        myManuscripts.get(mySelection - 1).setRecommendation(Recommendation.REJECT);
                         break;
                     case '4':
                         operationSuccess = true;
-                        myManuscripts.get(mySelection).setRecommendation(Recommendation.STRONG_REJECT);
+                        myManuscripts.get(mySelection - 1).setRecommendation(Recommendation.STRONG_REJECT);
                         break;
                     case 'b':
                         operationSuccess = true;
@@ -410,7 +438,12 @@ public class SubprogramChairUI {
         do {
             printHeader();
             stdout.println("\n Select User to be a Reviewer\n");
-            String[] users = (String[]) myParent.getMyUsers().keySet().toArray(); //Casting with abandon
+            String[] users = new String [myParent.getMyUsers().keySet().toArray().length]; //Casting with abandon
+
+            for(int i = 0; i < users.length; i++) {
+            	users[i] = (String) myParent.getMyUsers().keySet().toArray()[i];
+            }
+            
             for (int i = 0; i < users.length; i++) {
                 stdout.println(" \"" + ++counter + ") " + users[i] + "\"");
             }
@@ -429,7 +462,8 @@ public class SubprogramChairUI {
                 if(option > 0 && option <= counter) {
                     operationSuccess = true;
 
-                    myConference.assignReviewer(myParent.getMyUsers().get(users[option]));
+                    Reviewer rev = new Reviewer(myParent.getMyUsers().get(users[option - 1]).getUsername());
+                    myConference.assignReviewer(rev);
 
                     if(backCallee == PageStatus.EXIT) {
                         backCaller = PageStatus.EXIT;

@@ -136,7 +136,7 @@ public class ReviewerUI {
         do {
             
             printHeader();
-            printManuscriptsNumberedList(counter);
+            counter = printManuscriptsNumberedList(counter);
             printSubMenuBackAndExit();
 
             do {
@@ -151,6 +151,8 @@ public class ReviewerUI {
                 }
                 if(option > 0 && option <= counter) {
                     mySelection = option;
+                    
+                    operationSuccess = true;
                     backCallee = displaySubmitReviewsMenu(stdin);
                     if(backCallee == PageStatus.EXIT) {
                         backCaller = PageStatus.EXIT;
@@ -187,7 +189,7 @@ public class ReviewerUI {
 
         do {
 
-            System.out.println(" Submit Review for " + myManuscripts.get(mySelection).getTitle());
+            System.out.println(" Submit Review for " + myManuscripts.get(mySelection - 1).getTitle());
             printSubMenuBackAndExit();
 
             do {
@@ -195,12 +197,14 @@ public class ReviewerUI {
                 userInput = stdin.nextLine();
 
                 if(userInput.length() > 0) {
-                    operationSuccess = true;
-                    Reviewer me = new Reviewer(myUser.getUsername());
-                    myManuscripts.get(mySelection).addNewReview(me, new Review(me, userInput));
+                    Reviewer me = myConference.getReviewers().get(myUser.getUsername());
+                    Manuscript m = myManuscripts.get(mySelection - 1);
+                    m.addNewReview(me, new Review(me, userInput));
                     System.out.println(" Added " + userInput + " review.");
+                    
+                    operationSuccess = true;
                     backCallee = PageStatus.EXIT; // Exit outer loop.
-                    backCaller = PageStatus.EXIT; // Tell calling method to retire.
+                    backCaller = PageStatus.GOTO_MAIN_MENU; // Tell calling method to retire.
                 }
                 else if(userInput.charAt(0) == 'b') {
                     operationSuccess = true;
@@ -230,7 +234,7 @@ public class ReviewerUI {
         System.out.println("\n Assigned Manuscripts"
                          + "\n ---------------------");
         
-        for( Manuscript man : myManuscripts ) {
+        for( Manuscript man : myConference.getReviewersManuscripts(myUser.getUsername()) ) {
             System.out.println(" " + ++counter + ") \"" + man.getTitle() + "\"");
         }
 
