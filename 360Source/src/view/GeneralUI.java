@@ -42,6 +42,7 @@ public class GeneralUI {
         
         String userInput = null;
         Scanner stdin = new Scanner(System.in);
+        boolean operationSuccess = false;
         PrintStream stdout = new PrintStream(System.out);
         
         do {
@@ -57,25 +58,35 @@ public class GeneralUI {
             
             userInput = stdin.nextLine();
             System.out.println();
-            if(userInput.length() > 0) {
-	            switch(userInput.charAt(0)) {
-	                
-	            case '1':
-	                displayLogin();
-	                break;
-	            
-	            case '2':
-	                displayRegister();
-	                break;
-	            
-	            case 'x':
-	                break;
-	                
-	            default:
-	                stdout.println("Invalid entry. Please enter a valid corresponding"
-	                             + "integer or letter value.");
-	                break;
-	            }
+            
+            if (userInput.length() > 1 || Character.isWhitespace(userInput.charAt(0))) {
+                
+                System.out.println("Invalid entry. Please enter a valid corresponding"
+                                 + "integer or letter value.\n\n"); 
+                operationSuccess = false;
+            } else {
+            
+                switch(userInput.charAt(0)) {
+                
+                case '1':
+                    operationSuccess = true;
+                    displayLogin();
+                    break;
+                
+                case '2':
+                    operationSuccess = true;
+                    displayRegister();
+                    break;
+                
+                case 'x':
+                    break;
+                    
+                default:
+                    operationSuccess = false;
+                    stdout.println("Invalid entry. Please enter a valid corresponding"
+                                 + "integer or letter value.");
+                    break;
+                }
             }
             
         } while (userInput.length() > 0 && userInput.charAt(0) != 'x');   
@@ -250,32 +261,32 @@ public class GeneralUI {
             
             ArrayList<Role> roles = currConf.getRoles(currUser.getUsername());
             int i = 1;
+            System.out.println("\n Options"
+                             + "\n --------");
             for(Role r : roles) {
                 
                 switch(r) {
                 
                 case PROGRAMCHAIR:
-                    System.out.println(String.format("%d> %s", i++, "Program Chair Options"));
+                    System.out.println(String.format(" %d> %s", i++, "Program Chair Options"));
                     break;
                 case SUBPROGRAMCHAIR:
-                    System.out.println(String.format("%d> %s", i++, "Subprogram Chair Options"));
+                    System.out.println(String.format(" %d> %s", i++, "Subprogram Chair Options"));
                     break;
                 case REVIEWER:
-                    System.out.println(String.format("%d> %s", i++, "Reviewer Options"));
+                    System.out.println(String.format(" %d> %s", i++, "Reviewer Options"));
                     break;
                 case AUTHOR:
-                    System.out.println(String.format("%d> %s", i++, "Author Options"));
+                    System.out.println(String.format(" %d> %s", i++, "Author Options"));
                     break;
                 default:
                     break;
                 }
             }
-            System.out.println("\n Options"
-                             + "\n --------"
-                             + "\n 1> Submit a Manuscript"
-                             + "\n --"
-                             + "\n b> Back"
-                             + "\n e> Exit/Logout");
+            System.out.println(" " + i++ + "> Submit a Manuscript"
+                                  + "\n --"
+                                  + "\n b> Back"
+                                  + "\n e> Exit/Logout");
             System.out.print("\n Please enter a selection: ");
             do {
                 userInput = stdin.nextLine();
