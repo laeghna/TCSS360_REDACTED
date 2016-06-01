@@ -8,11 +8,16 @@ package tests;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import model.Author;
+import model.Conference;
 import model.Manuscript;
+import model.ProgramChair;
 
 /**
  * A class to hold tests for the author class.
@@ -32,6 +37,8 @@ public class AuthorTests {
 	private Manuscript JohnsDoc;
 	private Manuscript JanesDoc;
 	
+	private Conference Conf;
+	
 	/**
 	 * An initializer method for the tests.
 	 */
@@ -43,6 +50,14 @@ public class AuthorTests {
 		
 		JohnsDoc = new Manuscript("Potatoes", JohnsName, JohnsUsername, "/");
 		JanesDoc = new Manuscript("Potats", JanesName, JanesUsername, "/potato");
+		
+		Conference Conf = new Conference("Potats", new ProgramChair("Feg", new ArrayList<String>()),
+										new Date(System.currentTimeMillis() + 1000L),
+										new Date(System.currentTimeMillis() + 1000L),
+										new Date(System.currentTimeMillis() + 1000L));
+		
+		Conf.addManuscript(JanesDoc);
+		Conf.addManuscript(JohnsDoc);
 	}
 	
 	/**
@@ -51,7 +66,7 @@ public class AuthorTests {
 	@Test(expected=NullPointerException.class)
 	public void testRemoveNull() {
 		
-		JohnSmith.removeManuscript(null);;
+		JohnSmith.removeManuscript(null, Conf);
 	}
 	/**
 	 * Tests removing a paper not owned by the current author.
@@ -59,7 +74,7 @@ public class AuthorTests {
 	@Test(expected=SecurityException.class)
 	public void testJohnRemovesJanesPaper() {
 		
-		JohnSmith.removeManuscript(JanesDoc);
+		JohnSmith.removeManuscript(JanesDoc, Conf);
 	}
 	/**
 	 * Tests editing a null paper.
@@ -86,9 +101,11 @@ public class AuthorTests {
 	@Test
 	public void testJohnRemovesHisPaper() {
 		
-		JohnSmith.removeManuscript(JohnsDoc);
+		JohnSmith.removeManuscript(JohnsDoc, Conf);
+
+		ArrayList<Manuscript> m = Conf.getMyManuscripts(JohnsUsername);
 		
-		assertNull(JohnsDoc);
+		assertEquals(m.size(), 0);
 	}
 	/**
 	 * Tests editing a paper owned by the calling author.
