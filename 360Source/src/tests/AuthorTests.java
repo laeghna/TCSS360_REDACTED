@@ -51,7 +51,7 @@ public class AuthorTests {
 		JohnsDoc = new Manuscript("Potatoes", JohnsName, JohnsUsername, "/");
 		JanesDoc = new Manuscript("Potats", JanesName, JanesUsername, "/potato");
 		
-		Conference Conf = new Conference("Potats", new ProgramChair("Feg", new ArrayList<String>()),
+		Conf = new Conference("Potats", new ProgramChair("Feg", new ArrayList<String>()),
 										new Date(System.currentTimeMillis() + 1000L),
 										new Date(System.currentTimeMillis() + 1000L),
 										new Date(System.currentTimeMillis() + 1000L));

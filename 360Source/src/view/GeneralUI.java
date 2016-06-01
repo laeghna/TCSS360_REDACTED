@@ -321,7 +321,6 @@ public class GeneralUI {
     }
 
     public PageStatus displaySubmitManuscriptMenu() {
-        
         PageStatus backCaller = PageStatus.GOTO_MAIN_MENU; //Used to control what the calling method does.
         boolean exitFlag = false; // Used to control the second half of this method.
         Scanner stdin = new Scanner(System.in);
@@ -379,8 +378,15 @@ public class GeneralUI {
                                             String.format("%s %s", currUser.getFirstName(), currUser.getLastName()),
                                             currUser.getUsername(),
                                             pName);
-            currConf.addManuscript(man);
-            System.out.println("\n \"" + Title + "\" was submitted succesfully.\n\n");
+            
+            
+            try {
+            	currConf.addManuscript(man);
+            	System.out.println("\n \"" + Title + "\" was submitted succesfully.\n\n");
+            } catch (Exception e) {
+            	System.out.println(e.getMessage());
+            }
+            
         }
         
         return backCaller;
