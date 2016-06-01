@@ -268,7 +268,7 @@ public class Conference implements Serializable {
 	 * @throws NullPointerException If theUser == null.
 	 * @throws IllegalArgumentException If myReviewers.containsKey(theUser.getUsername())
 	 */
-	public void assignReviewer(RegisteredUser theUser) 
+	public void assignReviewer(Reviewer theUser) 
 			throws NullPointerException, IllegalArgumentException{
 		
 		if(theUser == null) {

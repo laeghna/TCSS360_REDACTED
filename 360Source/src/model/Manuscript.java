@@ -196,9 +196,15 @@ public class Manuscript implements Serializable {
 	    myTitle = theTitle;
 	}
 	
-	public Set<String> getReveiwersUsernames() {
+	public ArrayList<String> getReveiwersUsernames() {
 		
-		return myReviews.keySet();
+		ArrayList<String> run = new ArrayList<String>();
+		
+		for(Reviewer r : myReviewers) {
+			run.add(r.getUsername());
+		}
+		
+		return run;
 	}
 	/**
 	 * Gets whether or not this paper has been accepted.
@@ -274,8 +280,6 @@ public class Manuscript implements Serializable {
 			throw new NullPointerException("One or more args are null.");
 		} else if(!myReviewers.contains(theReviewer)) {
 			throw new SecurityException("You are not allowed to submit a review for this paper.");
-		} else if (!theReviewer.getUsername().equals(theReview.getReviewer())) {
-			throw new SecurityException("Inconsistency between review and reviewer.");
 		} else if(myReviews.containsKey(theReviewer)) {
 			throw new IllegalArgumentException("Review already exists for this reviewer.");
 		}
