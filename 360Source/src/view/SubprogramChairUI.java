@@ -311,7 +311,7 @@ public class SubprogramChairUI {
             printHeader();
             stdout.println("\n Select Manuscript to submit recommendation to: \n");
             for (Manuscript paper : myManuscripts) {
-                stdout.println(" \"" + ++counter + ") " + paper.getTitle() + "\tRecommendation: " + paper.getRecommendation());
+                stdout.println(" " + ++counter + ") \"" + paper.getTitle() + "\"\tRecommendation: " + paper.getRecommendation());
             }
             printSubMenuBackAndExit();
             stdout.println(" Please enter your selection: ");
