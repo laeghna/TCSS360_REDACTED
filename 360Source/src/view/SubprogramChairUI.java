@@ -75,7 +75,7 @@ public class SubprogramChairUI {
         do {
 
             printHeader();
-            stdout.println(" Subprogram Chair Options");
+            stdout.println("\n Subprogram Chair Options");
             stdout.println(" -------------------------");
             stdout.println(" 1> Assign Manuscript to Reviewer");
             stdout.println(" 2> Submit Manuscript Recommendation");
@@ -146,8 +146,9 @@ public class SubprogramChairUI {
         int counter = 0;
 
         do {
-
-            stdout.println(" Manuscripts to Assign");
+            
+            printHeader();
+            stdout.println("\n Manuscripts to Assign");
             stdout.println(" ----------------------");
             for (Manuscript paper : myManuscripts) {
                 stdout.println(" \"" + ++counter + ") " + paper.getTitle() + "\"");
@@ -210,6 +211,8 @@ public class SubprogramChairUI {
         int counter = 0;
 
         do {
+            
+            printHeader();
             stdout.println("\n Select Reviewer to review " + myManuscripts.get(mySelection).getTitle() + "\n");
             String[] users = (String[]) myParent.getMyUsers().keySet().toArray(); //Casting with abandon
             for (int i = 0; i < users.length; i++) {
@@ -272,7 +275,8 @@ public class SubprogramChairUI {
 
         do {
 
-            stdout.println(" Select Manuscript to submit recommendation to: \n");
+            printHeader();
+            stdout.println("\n Select Manuscript to submit recommendation to: \n");
             for (Manuscript paper : myManuscripts) {
                 stdout.println(" \"" + ++counter + ") " + paper.getTitle() + "\tRecommendation: " + paper.getRecommendation());
             }
@@ -330,7 +334,9 @@ public class SubprogramChairUI {
 
         do {
 
-            stdout.println(" Select Recommendation to give to " + myManuscripts.get(mySelection).getTitle() + "\n");
+            printHeader();
+            stdout.println("\n Select Recommendation to give to " + myManuscripts.get(mySelection).getTitle() + "\n");
+            stdout.println("---------------------------------------------");
             stdout.println(" 1> Strong Accect");
             stdout.println(" 2> Accept");
             stdout.println(" 3> Reject");
