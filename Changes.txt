@@ -1,0 +1,26 @@
+Changes Group 3 REDACTED
+Anh Tran
+Lisa Taylor
+Nathaniel Toporek
+
+We kept the same responsibilities. Nathan worked on ProgramChairUI, and GeneralUI, Anh worked on SubprogramChairUI, and ReviewerUI, and Lisa worked on AuthorUI
+
+We changed Recommendations from an Object created when a recommendation is given from an SPC, to Enums because recommendations were not defined as a string but as values ranging from Strong Reject to Strong Accept.
+
+We changed acceptance status from a Boolean to enums, so we can differentiate between pending papers and rejected / accepted papers.
+
+We added a getManuscript function to the Conference class that contained the manuscripts belonging to a specific subprogram chair or reviewer, so we did not have to track of multiple lists of Manuscripts.
+
+We got an exit functionality working using enums, instead of exiting after every action.
+
+We separated our UI to multiple classes based on role for ease of reuse.
+
+We changed test names to match specification and finalized conference tests.
+
+We fixed removeManuscript in the author class, so it actually removed the paper.
+
+We fixed the many edge cases when printing out Lists. The selection will start with 1, but the array starts with 0, so we had to compensate for that.
+
+We had serialization problems while testing. Every time there was a problem, it got saved during serialization, so we had to reset everything.
+
+Many of our lists were null when we passed them, so whenever we needed to list manuscripts, it would be empty. The problem was in the Manuscript classs.
