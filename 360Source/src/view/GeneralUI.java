@@ -42,7 +42,6 @@ public class GeneralUI {
         
         String userInput = null;
         Scanner stdin = new Scanner(System.in);
-        boolean operationSuccess = false;
         PrintStream stdout = new PrintStream(System.out);
         
         do {
@@ -59,22 +58,24 @@ public class GeneralUI {
             userInput = stdin.nextLine();
             System.out.println();
             
+            if (userInput.length() == 0) {
+                
+                userInput = " ";
+            }
+            
             if (userInput.length() > 1 || Character.isWhitespace(userInput.charAt(0))) {
                 
-                System.out.println("Invalid entry. Please enter a valid corresponding"
-                                 + "integer or letter value.\n\n"); 
-                operationSuccess = false;
+                System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                 + " integer or letter value.\n\n"); 
             } else {
             
                 switch(userInput.charAt(0)) {
                 
                 case '1':
-                    operationSuccess = true;
                     displayLogin();
                     break;
                 
                 case '2':
-                    operationSuccess = true;
                     displayRegister();
                     break;
                 
@@ -82,9 +83,8 @@ public class GeneralUI {
                     break;
                     
                 default:
-                    operationSuccess = false;
-                    stdout.println("Invalid entry. Please enter a valid corresponding"
-                                 + "integer or letter value.");
+                    stdout.println(" Invalid entry. Please enter a valid corresponding"
+                                  + "integer or letter value.\n\n");
                     break;
                 }
             }
@@ -348,7 +348,7 @@ public class GeneralUI {
             } else if(Title.length() > 0) {
                 operationSuccess = true;
             } else {
-                System.out.print("Try again: ");
+                System.out.print(" Try again: ");
             }
         } while(!operationSuccess);
         
@@ -370,7 +370,7 @@ public class GeneralUI {
             } else if(pName.length() > 0) {
                 operationSuccess = true;
             } else {
-                System.out.print("Try again: ");
+                System.out.print(" Try again: ");
             }
         } 
         
