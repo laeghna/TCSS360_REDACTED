@@ -29,33 +29,36 @@ public class InfoGen {
 	
 	public static void main(String... theArgs) {
 		
-		String[] fnames = {"John","Jane","Nicholai","Thomas", "George",
-				"Nicholas", "Lucifer", "Jesus", "FirstName", "Funny"};
-		String[] lnames = {"Smith", "Smith", "Tesla", "Jefferson", "Curious",
-				"Cage", "Saint", "Christ", "Lastname", "Joke"};
-		String[] unames = {"JohnSmith", "JaneSmith", "NTesla", "TJefferson", "CuriousGeorge",
-				"God", "Satan", "Messiah", "Username", "Punchline"};
+		String[] pcfn = {"Anh", "Nathan", "Lisa"};
+		String[] pcln = {"Tran", "Toporek", "Taylor"};
+		String[] pcun = {"lordandy", "nat96", "laeghna"};
 		
-		String[] cnames = {"All About Potatoes!", "Not About Potatos. :[", "[REDACTED]"};
+		String[] cns = {"9th European Conference on Intellectual Capital",
+					    "12th International Conference on Cyber Warfare and Security",
+						"15th European Conference on eLearning"};
 		
 		HashMap<String, RegisteredUser> Map = new HashMap<String, RegisteredUser>();
 		ArrayList<Conference> conferences = new ArrayList<Conference>();
 		
-		for(int i = 0; i < fnames.length; i++) {
+		for(int i = 0; i < cns.length; i++) {
 			
-			String key = unames[i];
-			RegisteredUser ru = new RegisteredUser(unames[i], fnames[i], lnames[i]);
+			String key = pcun[i];
+			RegisteredUser ru = new RegisteredUser(pcun[i], pcfn[i], pcln[i]);
 			
 			Map.put(key, ru);
 		}
 		
-		for(int i = 0; i < cnames.length; i++) {
+		for(int i = 0; i < cns.length; i++) {
 			
 			Date Deadlines = new Date();
 			Deadlines.setTime(System.currentTimeMillis() + 31556926000L);
-			ProgramChair pc = new ProgramChair(unames[i], new ArrayList<String>());
+			ProgramChair pc = new ProgramChair(pcun[i], new ArrayList<String>());
 			
-			Conference c = new Conference(cnames[i], pc, Deadlines, Deadlines, Deadlines);
+			if(i == 0) {
+				Deadlines = new Date(System.currentTimeMillis() + 1L);
+			}
+			
+			Conference c = new Conference(cns[i], pc, Deadlines, Deadlines, Deadlines);
 			conferences.add(c);
 		}
 		
