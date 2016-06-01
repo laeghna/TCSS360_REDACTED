@@ -371,7 +371,6 @@ public class AuthorUI {
                     operationSuccess = true;
                     System.out.println(" Enter the full pathname for the file: ");
                     userInput = stdin.nextLine();
-                    System.out.println("\n");
                     myRole.editManuscript(theManuscript, userInput);
                     System.out.println("\n \"" + theManuscript.getTitle() + "\" successfully uploaded.\n\n");
                     backCaller = PageStatus.BACK; // Tell calling method to hold.
