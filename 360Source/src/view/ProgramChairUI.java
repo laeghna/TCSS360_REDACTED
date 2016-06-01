@@ -79,12 +79,12 @@ public class ProgramChairUI {
 			
 			printHeader();
 			
-			stdout.println(" Program Chair Options "
-			           + "\n ----------------------"
-			           + "\n 1> View Manuscripts"
-			           + "\n 2> Accept/Reject Manuscript" 
-			           + "\n 3> Designate Subprogram Chair" 
-			           + "\n 4> Assign Manuscript to Subprogram Chair");
+			stdout.println("\n Program Chair Options "
+			             + "\n ----------------------"
+			             + "\n 1> View Manuscripts"
+			             + "\n 2> Accept/Reject Manuscript" 
+			             + "\n 3> Designate Subprogram Chair" 
+			             + "\n 4> Assign Manuscript to Subprogram Chair");
 		     printSubMenuBackAndExit();
 			
 			do {
@@ -304,7 +304,7 @@ public class ProgramChairUI {
 		do {
 			printHeader();
 			
-			System.out.println(" Registered Users"
+			System.out.println("\n Registered Users"
 			               + "\n -----------------");
 			
 			int i = 0;
@@ -365,7 +365,7 @@ public class ProgramChairUI {
 		
 		do {
 			printHeader();
-			stdout.println(" Manuscripts to Accept or Reject");
+			stdout.println("\n Manuscripts to Accept or Reject");
 			stdout.println(" --------------------------------");
 			
 			int i = 1;
@@ -423,7 +423,7 @@ public class ProgramChairUI {
 		boolean operationSuccess = false;
 		
 		printHeader();
-		stdout.println(String.format(" Accepting/Rejecting \"%s\".\n", manuscript.getTitle()));
+		stdout.println(String.format("\n Accepting/Rejecting \"%s\".\n", manuscript.getTitle()));
 		stdout.print(" Current Acceptance Status: ");
 		
 		AcceptanceStatus status = manuscript.getAcceptance();
