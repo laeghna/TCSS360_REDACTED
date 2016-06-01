@@ -328,6 +328,7 @@ public class GeneralUI {
         
         printHeader();
         System.out.println("Conference: " + currConf.toString());
+        System.out.println(String.format("Submission Deadline: %s", currConf.getSubmissionDeadline().toString()));
         
         String Title, pName = null;
         
@@ -417,6 +418,7 @@ public class GeneralUI {
             backFlag = authUI.displayMainMenu();
             break;
         }
+        
         return backFlag;        
     }
 

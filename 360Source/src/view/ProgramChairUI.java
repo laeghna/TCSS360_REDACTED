@@ -124,6 +124,10 @@ public class ProgramChairUI {
                                      + "integer or letter value."); 
 					break;
 				}
+				if(backCallee == PageStatus.EXIT) {
+					
+					backCaller = PageStatus.EXIT;
+				}
 			} while(!opSucc);
 		} while(backCallee == PageStatus.BACK || backCallee == PageStatus.GOTO_MAIN_MENU);
 		
@@ -213,15 +217,18 @@ public class ProgramChairUI {
 			stdout.println(String.format("Logged into conference %s as Program Chair.\n\n", myConference.toString()));
 			stdout.println(String.format("Assigning a manuscript to %s.\n", 
 										 myRegisteredUsers.get(subprogramChair.getUserName())));
-			stdout.println("Assigned Manuscripts: ");
+			stdout.println("Assigned Manuscripts: \n");
 			
+			int i = 1;
 			for(Manuscript m : myConference.getSPCsManuscripts(subprogramChair.getUserName())) {
 				
+				stdout.print(i++);
+				stdout.print("> ");
 				stdout.println(m.getTitle());
 			}
 			
 			stdout.println("\nAvailable Manuscripts:\n");
-			int i = 1;
+			i = 1;
 			for(Manuscript man : myConference.getManuscripts()) {
 				stdout.println(String.format("%d> %s", i++, man.getTitle()));
 			}
@@ -239,6 +246,7 @@ public class ProgramChairUI {
 					option = 0;
 				}
 				
+					
 				if(option > 0 && option <= myConference.getManuscripts().size()) {
 					
 					operationSuccess = true;
@@ -246,10 +254,10 @@ public class ProgramChairUI {
 					
 					try {
 						// If the subprogram chair can be assigned a paper.
-						if(myConference.getSPCsManuscripts(subprogramChair.getUserName()).size() <= SubprogramChair.MAXPAPERS) {
+						if(myConference.getSPCsManuscripts(subprogramChair.getUserName()).size() < SubprogramChair.MAXPAPERS) {
 							paper.setSPCsUsername(subprogramChair.getUserName());
 						} else {
-							System.out.println("SUBPROGRAM CHAIR CANNOT BE ASSIGNED MORE PAPERS. RETURNING TO MAIN MENU.");
+							System.out.println("SUBPROGRAM CHAIR CANNOT BE ASSIGNED MORE PAPERS. RETURNING TO MAIN MENU.\n\n");
 							backCaller = PageStatus.GOTO_MAIN_MENU;
 						}
 						
@@ -425,7 +433,7 @@ public class ProgramChairUI {
 			stdout.println("Pending.");
 		}
 		
-		stdout.println("1> Accept" + 
+		stdout.println("1> Accept\n" + 
 					   "2> Reject");
 		printSubMenuBackAndExit();
 		
@@ -476,7 +484,12 @@ public class ProgramChairUI {
 		
 		for(Manuscript m : myConference.getManuscripts()) {
 			stdout.println(m.toString());
-			stdout.println("\n\n");
+			RegisteredUser r = myRegisteredUsers.get(m.getSPCsUsername());
+			String name = "NONE";
+			if(r != null) {
+				name = r.getFullName();
+			}
+			stdout.println(String.format("SUBPROGRAM CHAIR: %s\n", name));
 		}
 		
 		printSubMenuBackAndExit();

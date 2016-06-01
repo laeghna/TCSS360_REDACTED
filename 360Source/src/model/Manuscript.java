@@ -351,7 +351,7 @@ public class Manuscript implements Serializable {
 	 */
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("TITLE: " + myTitle + ". Recommendation: ");
+		sb.append("TITLE: " + myTitle + ". RECOMMENDATION: ");
 		
 		switch(myRecommendation) {
 		
@@ -372,18 +372,18 @@ public class Manuscript implements Serializable {
 			break;
 		}
 		
-		sb.append("Acceptance Status: ");
+		sb.append("ACCEPTANCE STATUS: ");
 		
 		switch (myAcceptance) {
 		
 		case ACCEPTED:
-			sb.append("Accepted. \n");
+			sb.append("Accepted.");
 			break;
 		case REJECTED:
-			sb.append("Rejected. \n");
+			sb.append("Rejected.");
 			break;
 		default:
-			sb.append("Pending. \n");
+			sb.append("Pending.");
 			break;
 		}
 		

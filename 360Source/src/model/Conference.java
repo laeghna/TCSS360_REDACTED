@@ -169,8 +169,9 @@ public class Conference implements Serializable {
 		ArrayList<Manuscript> res = new ArrayList<Manuscript>();
 		
 		for(Manuscript m : myManuscripts) {
-			if(theirUsername.equals(m.getSPCsUsername()));
-			res.add(m);
+			if(theirUsername.equals(m.getSPCsUsername())) {
+				res.add(m);
+			}
 		}
 		
 		return res;
