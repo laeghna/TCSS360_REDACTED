@@ -97,8 +97,8 @@ public class AuthorUI {
                 
                 if (userInput.length() > 1 || Character.isWhitespace(userInput.charAt(0))) {
                     
-                    System.out.println("Invalid entry. Please enter a valid corresponding"
-                                     + "integer or letter value.\n\n"); 
+                    System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                     + " integer or letter value.\n\n"); 
                     operationSuccess = false;
                 } else {
                 
@@ -139,8 +139,8 @@ public class AuthorUI {
                         
                     default:
                         operationSuccess = false;
-                        System.out.println("Invalid entry. Please enter a valid corresponding"
-                                         + "integer or letter value.\n\n"); 
+                        System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                         + " integer or letter value.\n\n"); 
                         break;
                     }
                 }
@@ -178,8 +178,8 @@ public class AuthorUI {
             
             if (userInput.length() > 1 || Character.isWhitespace(userInput.charAt(0))) {
                 
-                System.out.println("Invalid entry. Please enter a valid corresponding"
-                                 + "integer or letter value.\n\n"); 
+                System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                 + " integer or letter value.\n\n"); 
                 operationSuccess = false;
             } else {
             
@@ -197,8 +197,8 @@ public class AuthorUI {
                     
                 default:
                     operationSuccess = false;
-                    System.out.println("Invalid entry. Please enter a valid corresponding"
-                                     + "integer or letter value.\n\n"); 
+                    System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                     + " integer or letter value.\n\n"); 
                     break;
                 }
             }
@@ -389,8 +389,8 @@ public class AuthorUI {
                     
                 default:
                     operationSuccess = false;
-                    System.out.println("Invalid entry. Please enter a valid corresponding"
-                                     + "integer or letter value.\n\n"); 
+                    System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                     + " integer or letter value.\n\n"); 
                     break;
                 }
             }
