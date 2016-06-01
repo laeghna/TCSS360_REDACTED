@@ -91,6 +91,7 @@ public class ProgramChairUI {
 				
 				System.out.print(" Please enter a selection: ");
 				uIn = stdin.nextLine();
+				System.out.println("\n");
 				switch(uIn.charAt(0)) {
 				case '1':
 					opSucc = true;
@@ -120,8 +121,8 @@ public class ProgramChairUI {
 					break;
 				default:
 					opSucc = false;
-                    System.out.println("Invalid entry. Please enter a valid corresponding"
-                                     + "integer or letter value."); 
+                    System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                     + " integer or letter value.\n\n"); 
 					break;
 				}
 				if(backCallee == PageStatus.EXIT) {
@@ -145,7 +146,8 @@ public class ProgramChairUI {
 		do {
 			printHeader();
 			
-			stdout.println("\nSELECT A PROGRAM CHAIR TO ASSIGN A MANUSCRIPT:\n");
+			stdout.println("\n Subprogram Chairs"
+			             + "\n ------------------");
 			
 			HashMap<String, SubprogramChair> spcs = myConference.getSPCs();
 			
@@ -167,9 +169,10 @@ public class ProgramChairUI {
 			
 			do {
 				
-				stdout.print("Please enter the corresponding number of the SPC to assign a Manuscript: ");
+				stdout.print(" Please enter your selection: ");
 				
 				uIn = stdin.nextLine();
+				System.out.println("\n");
 				int option = 0;
 				try {
 					option = Integer.parseInt(uIn);
@@ -196,7 +199,8 @@ public class ProgramChairUI {
 					backCaller = PageStatus.BACK; // Tel the caller to hold.
 				} else {
 					opSucc = false;
-					stdout.println("Invalid Input. Try again.");
+                    System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                     + " integer or letter value.\n\n"); 
 				}
 			} while(!opSucc);
 		} while(backCallee == PageStatus.BACK);
@@ -214,10 +218,10 @@ public class ProgramChairUI {
 		
 		do {
 			printHeader();
-			stdout.println(String.format("Logged into conference %s as Program Chair.\n\n", myConference.toString()));
 			stdout.println(String.format("Assigning a manuscript to %s.\n", 
 										 myRegisteredUsers.get(subprogramChair.getUserName())));
-			stdout.println("Assigned Manuscripts: \n");
+			stdout.println("\n Assigned Manuscripts"
+			             + "\n ---------------------");
 			
 			int i = 1;
 			for(Manuscript m : myConference.getSPCsManuscripts(subprogramChair.getUserName())) {
@@ -227,7 +231,8 @@ public class ProgramChairUI {
 				stdout.println(m.getTitle());
 			}
 			
-			stdout.println("\nAvailable Manuscripts:\n");
+			stdout.println("\n Available Manuscripts"
+			             + "\n ----------------------");
 			i = 1;
 			for(Manuscript man : myConference.getManuscripts()) {
 				stdout.println(String.format("%d> %s", i++, man.getTitle()));
@@ -236,9 +241,10 @@ public class ProgramChairUI {
 			
 			do {
 				
-				stdout.print("Please enter the corresponding number of the Manuscript to assign: ");
+				stdout.print("Please enter your selection: ");
 				int option = 0;
 				uIn = stdin.nextLine();
+				System.out.println("\n");
 				
 				try{
 					option = Integer.parseInt(uIn);
@@ -276,8 +282,8 @@ public class ProgramChairUI {
 					backCaller = PageStatus.BACK; // Tell the caller to hold.
 				} else {
 				    operationSuccess = false;
-                    System.out.println("Invalid entry. Please enter a valid corresponding"
-                                     + "integer or letter value."); 
+                    System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                     + " integer or letter value.\n\n"); 
 				}
 			} while (!operationSuccess);
 		} while(backCallee == PageStatus.BACK);
@@ -316,8 +322,9 @@ public class ProgramChairUI {
 	        printSubMenuBackAndExit();
 			do {
 				
-				stdout.print(" Please enter the corresponding number of the user to designate as Subprogram Chair: ");
+				stdout.print(" Please enter your selection: ");
 				uIn = stdin.nextLine();
+				System.out.println("\n");
 				int option = 0;
 				try {
 					option = Integer.parseInt(uIn);
@@ -338,8 +345,8 @@ public class ProgramChairUI {
 					backCaller = PageStatus.BACK; // Tell calling method to hold.
 				} else {
 					opSucc = false;
-                    System.out.println("Invalid entry. Please enter a valid corresponding"
-                                     + "integer or letter value."); 
+                    System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                     + " integer or letter value.\n\n"); 
 				}
 			} while(!opSucc);
 		} while (backCallee == PageStatus.BACK);
@@ -358,9 +365,8 @@ public class ProgramChairUI {
 		
 		do {
 			printHeader();
-			stdout.println(String.format("Logged into conference %s as Program Chair.", myConference.toString()));
-			stdout.println("Accepting/Rejecting a Manuscript.\n");
-			stdout.println("AVAILABLE MANUSCRIPTS:\n");
+			stdout.println(" Manuscripts to Accept or Reject");
+			stdout.println(" --------------------------------");
 			
 			int i = 1;
 			for(Manuscript man : myConference.getManuscripts()) {
@@ -370,9 +376,10 @@ public class ProgramChairUI {
 			
 			do {
 				
-				stdout.print("Select the number of the paper to accept/reject: ");
+				stdout.print(" Please enter your selection: ");
 				int option = 0;
 				uIn = stdin.nextLine();
+				System.out.println("\n");
 				
 				try {
 					option = Integer.parseInt(uIn);
@@ -398,7 +405,8 @@ public class ProgramChairUI {
 					backCallee = PageStatus.EXIT; // Exit outer loop.
 					backCaller = PageStatus.BACK; // Tell calling method to hold.
 				} else {
-					stdout.println("Invalid input. Try again.");
+                    System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                     + " integer or letter value.\n\n");
 				}
 			} while(!opSucc);
 		} while(backCallee == PageStatus.BACK);
@@ -415,9 +423,8 @@ public class ProgramChairUI {
 		boolean operationSuccess = false;
 		
 		printHeader();
-		stdout.println(String.format("Logged into conference %s as Program Chair.", myConference.toString()));
-		stdout.println(String.format("Accepting/Rejecting a %s.\n", manuscript.getTitle()));
-		stdout.print("Current Acceptance Status: ");
+		stdout.println(String.format(" Accepting/Rejecting \"%s\".\n", manuscript.getTitle()));
+		stdout.print(" Current Acceptance Status: ");
 		
 		AcceptanceStatus status = manuscript.getAcceptance();
 		
@@ -433,14 +440,15 @@ public class ProgramChairUI {
 			stdout.println("Pending.");
 		}
 		
-		stdout.println("1> Accept\n" + 
-					   "2> Reject");
+		stdout.println(" 1> Accept\n" + 
+					   " 2> Reject");
 		printSubMenuBackAndExit();
 		
 		do {
 			
-			stdout.print("Select an action: ");
+			stdout.print(" Please enter your selection: ");
 			uIn = stdin.nextLine();
+			System.out.println("\n");
 			
 			switch(uIn.charAt(0)) {
 			
@@ -461,8 +469,8 @@ public class ProgramChairUI {
 				backCaller = PageStatus.BACK;
 			default:
 			    operationSuccess = false;
-                System.out.println("Invalid entry. Please enter a valid corresponding"
-                                 + "integer or letter value."); 
+                System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                 + " integer or letter value.\n\n"); 
 				break;
 			}
 		} while(!operationSuccess);
@@ -480,7 +488,7 @@ public class ProgramChairUI {
 		
 		printHeader();
 		
-		stdout.println("\nAT A GLANCE VIEW: \n");
+		stdout.println("\n AT A GLANCE VIEW: \n");
 		
 		for(Manuscript m : myConference.getManuscripts()) {
 			stdout.println(m.toString());
@@ -489,14 +497,15 @@ public class ProgramChairUI {
 			if(r != null) {
 				name = r.getFullName();
 			}
-			stdout.println(String.format("SUBPROGRAM CHAIR: %s\n", name));
+			stdout.println(String.format(" SUBPROGRAM CHAIR: %s\n", name));
 		}
 		
 		printSubMenuBackAndExit();
 		do {
 			
-			stdout.print("Enter an Action: ");
+			stdout.print(" Please enter your selection: ");
 			uIn = stdin.nextLine();
+			System.out.println("\n");
 			if(uIn.length() > 0 && uIn.charAt(0) == 'e') {
 				operationSuccess = true; // Exit the loop.
 				backCaller = PageStatus.EXIT; // Tell the caller to exit.
@@ -505,8 +514,8 @@ public class ProgramChairUI {
 				backCaller = PageStatus.BACK; // Tell the caller to hold.
 			} else {
 			    operationSuccess = false;
-                System.out.println("Invalid entry. Please enter a valid corresponding"
-                                 + "integer or letter value."); 
+                System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                 + " integer or letter value.\n\n"); 
 			}
 		} while(!operationSuccess);
 		
@@ -515,9 +524,9 @@ public class ProgramChairUI {
 	
     private void printSubMenuBackAndExit() {
         
-        System.out.println("\n --"
-                         + "\n b> Back"
-                         + "\n e> Exit/Logout"
-                         + "\n");
+        System.out.println(" --"
+                       + "\n b> Back"
+                       + "\n e> Exit/Logout"
+                       + "\n");
     }
 }
