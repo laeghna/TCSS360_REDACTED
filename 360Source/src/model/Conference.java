@@ -254,9 +254,9 @@ public class Conference implements Serializable {
 			throws NullPointerException, IllegalArgumentException {
 		
 		if(theManuscript == null) {
-			throw new NullPointerException("Paper is null.");
+			throw new NullPointerException(" Paper is null.");
 		} else if(new Date().after(mySubmissionDeadline)) {
-			throw new IllegalArgumentException("Submission Deadline has past.");
+			throw new IllegalArgumentException("\n Submission Deadline has passed.\n\n");
 		}
 		
 		myManuscripts.add(theManuscript);
