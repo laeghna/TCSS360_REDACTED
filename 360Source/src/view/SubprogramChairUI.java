@@ -30,7 +30,7 @@ public class SubprogramChairUI {
     private Conference myConference;
     
     /** The name of the user. */
-    private RegisteredUser mySelf;
+    private RegisteredUser myUser;
     
     private SubprogramChair myRole;
     
@@ -42,24 +42,24 @@ public class SubprogramChairUI {
     /** Holds the current menu choice selection. */
     private int mySelection;
     
-    public SubprogramChairUI(final Conference theConference, final RegisteredUser me,
+    public SubprogramChairUI(final Conference theConference, final RegisteredUser theUser,
     						 GeneralUI theParent) {
     	myParent = theParent;
         myConference = theConference;
-        mySelf = me;
-        myManuscripts = myConference.getSPCsManuscripts(me.getUsername());
+        myUser = theUser;
+        myManuscripts = myConference.getSPCsManuscripts(theUser.getUsername());
         mySelection = 0;
     }
     
     /** Prints out the header information. */
-    public void printHeader() {
-        System.out.println(myConference.toString());
-        System.out.println("Program Chair: " + mySelf.toString());
+    private void printHeader() {
+        System.out.println("MSEE CONFERENCE MANAGEMENT SYSTEM");
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println("Conference: " + myConference.toString());
+        System.out.println("Subprogram Chair: " + myUser.getFullName());
     }
 
     /**
-     * author: Anh Tran
-     * version: May 30 2016
      * Displays the main menu selections.
      */
     public PageStatus displayMainMenu() {
@@ -69,107 +69,96 @@ public class SubprogramChairUI {
         
     	Scanner myScanner = new Scanner(System.in);
         PrintStream stdout = new PrintStream(System.out);
+        boolean operationSuccess = false;
         String userInput = "";
 
         do {
-            boolean opSucc = false;
 
             printHeader();
             stdout.println(" Subprogram Chair Options");
             stdout.println(" -------------------------");
             stdout.println(" 1> Assign Manuscript to Reviewer");
-            stdout.println(" 2> Submit Manuscript Recommendation\n");
-            stdout.println(" b> Back");
-            stdout.println(" e> Exit\n");
+            stdout.println(" 2> Submit Manuscript Recommendation");
+            printSubMenuBackAndExit();
 
-            /*
-            //Don't know if we need this entry validation. Switch statement will handle it.
             do {
-                System.out.println("\nPlease enter a selection: ");
-                try {
-                    userInput = myScanner.nextLine();
-                } catch (Exception e) {
-                    System.out.println("Invalid Entry. Must enter a valid corresponding entry. ");
-                }
-                if (!userInput.equals("1") || !userInput.equals("2") || !userInput.equals("b") || !userInput.equals("e"))
-                    System.out.println("Invalid Entry. Must enter a valid corresponding entry.");
-            } while (!userInput.equals("1") || !userInput.equals("2") || !userInput.equals("b") || !userInput.equals("e"));
-            */
-            do {
-                stdout.print("Select an action: ");
+                stdout.print(" Please select an action: ");
                 userInput = myScanner.nextLine();
-                switch (userInput.charAt(0)) {
+                System.out.println("\n");
+                
+                if (userInput.length() == 0) {
+                    
+                    userInput = " ";
+                }
+                
+                if (userInput.length() > 1 || Character.isWhitespace(userInput.charAt(0))) {
+                    
+                    System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                     + " integer or letter value.\n\n"); 
+                    operationSuccess = false;
+                } else {
+                    
+                    switch (userInput.charAt(0)) {
+                    
                     case '1':
-                        opSucc = true;
+                        operationSuccess = true;
                         backCallee = displayAssignManuscriptsMenu();
                         break;
                     case '2':
-                        opSucc = true;
+                        operationSuccess = true;
                         backCallee = displayManuscriptToSubmitRecommendationMenu();
                         break;
                     case 'b':
-                        opSucc = true;
+                        operationSuccess = true;
                         backCallee = PageStatus.EXIT; // Exit outer loop.
                         backCaller = PageStatus.BACK; // Tell calling method to hold.
                         break;
                     case 'e':
-                        opSucc = true;
+                        operationSuccess = true;
                         backCallee = PageStatus.EXIT; // Exit outer loop.
                         backCaller = PageStatus.EXIT; // Tell calling method to retire.
                         break;
                     default:
-                        opSucc = false;
-                        stdout.println("Invalid option, try again.");
+                        operationSuccess = false;
+                        System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                         + " integer or letter value.\n\n"); 
                         break;
+                    }
                 }
-            }while(!opSucc);
+            }while(!operationSuccess);
         } while(backCallee == PageStatus.BACK || backCallee == PageStatus.GOTO_MAIN_MENU);
 
         return backCaller;
     }
 
-    /** Displays assign manuscript menu
-     * author Anh Tran
-     * version May 30 2016
+    /** 
+     * Displays assign manuscript menu
      */
-    public PageStatus displayAssignManuscriptsMenu() {
+    private PageStatus displayAssignManuscriptsMenu() {
 
         PageStatus backCaller = PageStatus.GOTO_MAIN_MENU; //Used to control what the calling method does.
         PageStatus backCallee = PageStatus.GOTO_MAIN_MENU; //Used to control we do based off the actions taken.
 
         Scanner myScanner = new Scanner(System.in);
         PrintStream stdout = new PrintStream(System.out);
+        boolean operationSuccess = false;
         String userInput = "";
         int counter = 0;
 
         do {
-            boolean opSucc = false;
-            stdout.println(" Assign Manuscript to Reviewer");
-            stdout.println(" -----------------------------\n");
-            stdout.println(" List of Manuscripts");
+
+            stdout.println(" Manuscripts to Assign");
+            stdout.println(" ----------------------");
             for (Manuscript paper : myManuscripts) {
                 stdout.println(" \"" + ++counter + ") " + paper.getTitle() + "\"");
             }
-            stdout.println("\n ---------------------------------");
-            stdout.println(" b> Back");
-            stdout.println(" e> Exit\n");
+            
+            printSubMenuBackAndExit();
 
-        /*
-        //Not needed. Validation handled in next do-while loop
-        do {
-            System.out.println("\nPlease enter a selection: ");
-            try {
-                mySelection = Integer.parseInt(myScanner.nextLine());
-            } catch (Exception e) {
-                System.out.println("Invalid Entry. Must enter a valid corresponding integer. ");
-            }
-            if (mySelection < 0 || mySelection > counter)
-                System.out.println("Invalid Entry. Must enter a valid corresponding integer.");
-        } while(mySelection < 0 || mySelection > counter);
-        */
             do {
-                stdout.print("Select manuscript number or action: ");
+                stdout.print(" Please enter your selection: ");
                 userInput = myScanner.nextLine();
+                System.out.println("\n");
                 int option = 0;
                 try {
                     option = Integer.parseInt(userInput);
@@ -182,23 +171,24 @@ public class SubprogramChairUI {
                     if(backCallee == PageStatus.EXIT) {
                         backCaller = PageStatus.EXIT;
                     }
-                    opSucc = true;
+                    operationSuccess = true;
                 }
                 else if(userInput.charAt(0) == 'b') {
-                    opSucc = true;
+                    operationSuccess = true;
                     backCallee = PageStatus.EXIT; // Exit outer loop.
                     backCaller = PageStatus.BACK; // Tell calling method to hold.
                 }
                 else if(userInput.charAt(0) == 'e') {
-                    opSucc = true;
+                    operationSuccess = true;
                     backCallee = PageStatus.EXIT; // Exit outer loop.
                     backCaller = PageStatus.EXIT; // Tell calling method to retire.
                 }
                 else {
-                    opSucc = false;
-                    stdout.println("Invalid option, try again.");
+                    operationSuccess = false;
+                    System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                     + " integer or letter value.\n\n");
                 }
-            }while(!opSucc);
+            }while(!operationSuccess);
         } while(backCallee == PageStatus.BACK);
 
         return backCaller;
@@ -208,30 +198,29 @@ public class SubprogramChairUI {
      * author Anh Tran
      * version May 30 2016
      */
-    public PageStatus displaySelectReviewerMenu() {
+    private PageStatus displaySelectReviewerMenu() {
 
         PageStatus backCaller = PageStatus.GOTO_MAIN_MENU; //Used to control what the calling method does.
         PageStatus backCallee = PageStatus.GOTO_MAIN_MENU; //Used to control we do based off the actions taken.
 
         Scanner myScanner = new Scanner(System.in);
         PrintStream stdout = new PrintStream(System.out);
+        boolean operationSuccess = false;
         String userInput = "";
         int counter = 0;
 
         do {
-            boolean opSucc = false;
             stdout.println("\n Select Reviewer to review " + myManuscripts.get(mySelection).getTitle() + "\n");
             String[] users = (String[]) myParent.getMyUsers().keySet().toArray(); //Casting with abandon
             for (int i = 0; i < users.length; i++) {
                 stdout.println(" \"" + ++counter + ") " + users[i] + "\"");
             }
-            stdout.println("\n ---------------------------------");
-            stdout.println(" b> Back");
-            stdout.println(" e> Exit\n");
+            printSubMenuBackAndExit();
 
             do {
-                stdout.print("Select reviewer to assign or action: ");
+                stdout.print(" Please enter your selection: ");
                 userInput = myScanner.nextLine();
+                System.out.println("\n");
                 int option = 0;
                 try {
                     option = Integer.parseInt(userInput);
@@ -239,7 +228,7 @@ public class SubprogramChairUI {
                     option = 0;
                 }
                 if(option > 0 && option <= counter) {
-                    opSucc = true;
+                    operationSuccess = true;
                     myManuscripts.get(mySelection).addReviewer(new Reviewer(users[option]));
 
                     if(backCallee == PageStatus.EXIT) {
@@ -247,20 +236,21 @@ public class SubprogramChairUI {
                     }
                 }
                 else if(userInput.charAt(0) == 'b') {
-                    opSucc = true;
+                    operationSuccess = true;
                     backCallee = PageStatus.EXIT; // Exit outer loop.
                     backCaller = PageStatus.BACK; // Tell calling method to hold.
                 }
                 else if(userInput.charAt(0) == 'e') {
-                    opSucc = true;
+                    operationSuccess = true;
                     backCallee = PageStatus.EXIT; // Exit outer loop.
                     backCaller = PageStatus.EXIT; // Tell calling method to retire.
                 }
                 else {
-                    opSucc = false;
-                    stdout.println("Invalid option, try again.");
+                    operationSuccess = false;
+                    System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                     + " integer or letter value.\n\n");
                 }
-            }while(!opSucc);
+            }while(!operationSuccess);
         }while(backCallee == PageStatus.BACK);
         return backCaller;
     }
@@ -269,25 +259,25 @@ public class SubprogramChairUI {
      * author Anh Tran
      * version May 30 2016
      */
-    public PageStatus displayManuscriptToSubmitRecommendationMenu() {
+    private PageStatus displayManuscriptToSubmitRecommendationMenu() {
 
         PageStatus backCaller = PageStatus.GOTO_MAIN_MENU; //Used to control what the calling method does.
         PageStatus backCallee = PageStatus.GOTO_MAIN_MENU; //Used to control we do based off the actions taken.
 
         Scanner myScanner = new Scanner(System.in);
         PrintStream stdout = new PrintStream(System.out);
+        boolean operationSuccess = false;
         String userInput = "";
         int counter = 0;
 
         do {
-            boolean opSucc = false;
-            stdout.println("Select Manuscript to submit recommendation to: \n");
+
+            stdout.println(" Select Manuscript to submit recommendation to: \n");
             for (Manuscript paper : myManuscripts) {
                 stdout.println(" \"" + ++counter + ") " + paper.getTitle() + "\tRecommendation: " + paper.getRecommendation());
             }
-            stdout.println("b> Back");
-            stdout.println("e> Exit\n");
-            stdout.print("Select Manuscript or action: ");
+            printSubMenuBackAndExit();
+            stdout.println(" Please enter your selection: ");
             do{
                 userInput = myScanner.nextLine();
                 int option = 0;
@@ -299,26 +289,27 @@ public class SubprogramChairUI {
                 if(option > 0 && option <= counter) {
                     mySelection = option;
                     backCallee = displaySubmitRecommendationMenu();
-                    opSucc = true;
+                    operationSuccess = true;
                     if(backCallee == PageStatus.EXIT) {
                         backCaller = PageStatus.EXIT;
                     }
                 }
                 else if(userInput.charAt(0) == 'b') {
-                    opSucc = true;
+                    operationSuccess = true;
                     backCallee = PageStatus.EXIT; // Exit outer loop.
                     backCaller = PageStatus.BACK; // Tell calling method to hold.
                 }
                 else if(userInput.charAt(0) == 'e') {
-                    opSucc = true;
+                    operationSuccess = true;
                     backCallee = PageStatus.EXIT; // Exit outer loop.
                     backCaller = PageStatus.EXIT; // Tell calling method to retire.
                 }
                 else {
-                    opSucc = false;
-                    stdout.println("Invalid option, try again.");
+                    operationSuccess = false;
+                    System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                     + " integer or letter value.\n\n");
                 }
-            }while(!opSucc);
+            }while(!operationSuccess);
         }while(backCallee == PageStatus.BACK);
 
         return backCaller;
@@ -328,62 +319,70 @@ public class SubprogramChairUI {
      * author Anh Tran
      * version May 30 2016
      */
-    public PageStatus displaySubmitRecommendationMenu() {
+    private PageStatus displaySubmitRecommendationMenu() {
         PageStatus backCaller = PageStatus.GOTO_MAIN_MENU; //Used to control what the calling method does.
         PageStatus backCallee = PageStatus.GOTO_MAIN_MENU; //Used to control we do based off the actions taken.
 
         Scanner myScanner = new Scanner(System.in);
         PrintStream stdout = new PrintStream(System.out);
+        boolean operationSuccess = false;
         String userInput = "";
-        int counter = 0;
 
         do {
-            boolean opSucc = false;
-            stdout.println("Select Recommendation to give to " + myManuscripts.get(mySelection).getTitle() + "\n");
+
+            stdout.println(" Select Recommendation to give to " + myManuscripts.get(mySelection).getTitle() + "\n");
             stdout.println(" 1> Strong Accect");
             stdout.println(" 2> Accept");
             stdout.println(" 3> Reject");
-            stdout.println(" 4> Strong Reject\n");
-            stdout.println("b> Back");
-            stdout.println("e> Exit\n");
-            stdout.print("Select Recommendation or action: ");
+            stdout.println(" 4> Strong Reject");
+            printSubMenuBackAndExit();
+            stdout.print(" Please enter your selection: ");
             do {
                 userInput = myScanner.nextLine();
                 switch (userInput.charAt(0)) {
                     case '1':
-                        opSucc = true;
+                        operationSuccess = true;
                         myManuscripts.get(mySelection).setRecommendation(Recommendation.STRONG_ACCEPT);
                         break;
                     case '2':
-                        opSucc = true;
+                        operationSuccess = true;
                         myManuscripts.get(mySelection).setRecommendation(Recommendation.ACCEPT);
                         break;
                     case '3':
-                        opSucc = true;
+                        operationSuccess = true;
                         myManuscripts.get(mySelection).setRecommendation(Recommendation.REJECT);
                         break;
                     case '4':
-                        opSucc = true;
+                        operationSuccess = true;
                         myManuscripts.get(mySelection).setRecommendation(Recommendation.STRONG_REJECT);
                         break;
                     case 'b':
-                        opSucc = true;
+                        operationSuccess = true;
                         backCallee = PageStatus.EXIT; // Exit outer loop.
                         backCaller = PageStatus.BACK; // Tell calling method to hold.
                         break;
                     case 'e':
-                        opSucc = true;
+                        operationSuccess = true;
                         backCallee = PageStatus.EXIT; // Exit outer loop.
                         backCaller = PageStatus.EXIT; // Tell calling method to retire.
                         break;
                     default:
-                        opSucc = false;
-                        stdout.println("Invalid option, try again.");
+                        operationSuccess = false;
+                        System.out.println(" Invalid entry. Please enter a valid corresponding"
+                                         + " integer or letter value.\n\n");
                         break;
                 }
-            } while(!opSucc);
+            } while(!operationSuccess);
         } while(backCallee == PageStatus.BACK);
 
         return backCaller;
+    }
+    
+    private void printSubMenuBackAndExit() {
+        
+        System.out.print(" --"
+                     + "\n b> Back"
+                     + "\n e> Exit/Logout"
+                     + "\n\n");
     }
 }
