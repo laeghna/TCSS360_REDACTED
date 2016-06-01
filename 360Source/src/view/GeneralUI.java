@@ -78,7 +78,7 @@ public class GeneralUI {
 	            }
             }
             
-        } while (userInput.charAt(0) != 'x');   
+        } while (userInput.length() > 0 && userInput.charAt(0) != 'x');   
     }
     
     private void printHeader() {
