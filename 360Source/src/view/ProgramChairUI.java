@@ -235,7 +235,7 @@ public class ProgramChairUI {
 			             + "\n ----------------------");
 			i = 1;
 			for(Manuscript man : myConference.getManuscripts()) {
-				stdout.println(String.format("%d> %s", i++, man.getTitle()));
+				stdout.println(String.format("%d> \"%s\"", i++, man.getTitle()));
 			}
 	        printSubMenuBackAndExit();
 			
@@ -370,7 +370,7 @@ public class ProgramChairUI {
 			
 			int i = 1;
 			for(Manuscript man : myConference.getManuscripts()) {
-				stdout.println(String.format("%d> %s", i++, man.getTitle()));
+				stdout.println(String.format("%d> \"%s\"", i++, man.getTitle()));
 			}
 	        printSubMenuBackAndExit();
 			

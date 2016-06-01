@@ -159,7 +159,7 @@ public class SubprogramChairUI {
             stdout.println("\n Manuscripts to Assign");
             stdout.println(" ----------------------");
             for (Manuscript paper : myManuscripts) {
-                stdout.println(" \"" + ++counter + ") " + paper.getTitle() + "\"");
+                stdout.println(" " + ++counter + ") \"" + paper.getTitle() + "\"");
             }
             
             printSubMenuBackAndExit();
@@ -220,7 +220,7 @@ public class SubprogramChairUI {
         do {
             
             printHeader();
-            stdout.println("\n Select Reviewer to review " + myManuscripts.get(mySelection - 1).getTitle() + "\n");
+            stdout.println("\n Select Reviewer to review \"" + myManuscripts.get(mySelection - 1).getTitle() + "\"\n");
             String[] users = new String [myConference.getReviewers().keySet().size()]; //Casting with abandon
 
             int j = 0;
@@ -368,7 +368,7 @@ public class SubprogramChairUI {
         do {
 
             printHeader();
-            stdout.println("\n Select Recommendation to give to " + myManuscripts.get(mySelection - 1).getTitle() + "\n");
+            stdout.println("\n Select Recommendation to give to \"" + myManuscripts.get(mySelection - 1).getTitle() + "\"\n");
             stdout.println("---------------------------------------------");
             stdout.println(" 1> Strong Accect");
             stdout.println(" 2> Accept");
@@ -445,7 +445,7 @@ public class SubprogramChairUI {
             }
             
             for (int i = 0; i < users.length; i++) {
-                stdout.println(" \"" + ++counter + ") " + users[i] + "\"");
+                stdout.println(" " + ++counter + ") " + users[i] + "");
             }
             printSubMenuBackAndExit();
 

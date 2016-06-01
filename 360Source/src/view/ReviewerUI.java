@@ -189,7 +189,7 @@ public class ReviewerUI {
 
         do {
 
-            System.out.println(" Submit Review for " + myManuscripts.get(mySelection - 1).getTitle());
+            System.out.println(" Submit Review for \"" + myManuscripts.get(mySelection - 1).getTitle() + "\"");
             printSubMenuBackAndExit();
 
             do {
