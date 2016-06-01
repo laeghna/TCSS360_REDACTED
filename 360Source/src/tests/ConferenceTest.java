@@ -8,12 +8,17 @@ package tests;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Timer;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import model.Conference;
+import model.Manuscript;
+import model.ProgramChair;
+import model.SubprogramChair;
 
 public class ConferenceTest {
 
@@ -25,15 +30,33 @@ public class ConferenceTest {
 	@Before
 	public void initializeConferences() {
 		
-		Date passedDL = new Date(0L);
+		Date passedDL = new Date(System.currentTimeMillis() + 1);
 		Date upcomingDL = new Date(System.currentTimeMillis() + 1000000000L);
 		
 		submissionDeadlineUpcoming = new Conference("UrMum",
-				new ProgramChair("Kek", new ArrayList<SubprogramChair>()), );
+				new ProgramChair("Kek", new ArrayList<String>()), upcomingDL, upcomingDL, upcomingDL);
+		submissionDeadlinePassed = new Conference("UrMum",
+				new ProgramChair("Kek", new ArrayList<String>()), passedDL, passedDL, passedDL);
 	}
+	@Test (expected=IllegalArgumentException.class)
+	public void testAddingManuscriptAfterDeadline() {
+		Manuscript m = new Manuscript(" 0"," 0"," 0"," 0");
+		
+		Timer t = new Timer();
+		// Necessary for the deadline to pass.
+		for(int i = 0; i < 1000000; i++) {
+			
+			int j = i * 9001;
+		}
+		
+		submissionDeadlinePassed.addManuscript(m);
+	}
+	
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void testAddingManuscript() {
+		Manuscript m = new Manuscript(" 0"," 0"," 0"," 0");
+		
+		submissionDeadlineUpcoming.addManuscript(m);
+		assertEquals(submissionDeadlineUpcoming.getManuscripts().size(), 1);
 	}
-
 }
