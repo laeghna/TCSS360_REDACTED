@@ -42,6 +42,7 @@ public class GeneralUI {
         
         String userInput = null;
         Scanner stdin = new Scanner(System.in);
+        boolean operationSuccess = false;
         PrintStream stdout = new PrintStream(System.out);
         
         do {
@@ -58,23 +59,34 @@ public class GeneralUI {
             userInput = stdin.nextLine();
             System.out.println();
             
-            switch(userInput.charAt(0)) {
+            if (userInput.length() > 1 || Character.isWhitespace(userInput.charAt(0))) {
                 
-            case '1':
-                displayLogin();
-                break;
+                System.out.println("Invalid entry. Please enter a valid corresponding"
+                                 + "integer or letter value.\n\n"); 
+                operationSuccess = false;
+            } else {
             
-            case '2':
-                displayRegister();
-                break;
-            
-            case 'x':
-                break;
+                switch(userInput.charAt(0)) {
                 
-            default:
-                stdout.println("Invalid entry. Please enter a valid corresponding"
-                             + "integer or letter value.");
-                break;
+                case '1':
+                    operationSuccess = true;
+                    displayLogin();
+                    break;
+                
+                case '2':
+                    operationSuccess = true;
+                    displayRegister();
+                    break;
+                
+                case 'x':
+                    break;
+                    
+                default:
+                    operationSuccess = false;
+                    stdout.println("Invalid entry. Please enter a valid corresponding"
+                                 + "integer or letter value.");
+                    break;
+                }
             }
             
         } while (userInput.charAt(0) != 'x');   
